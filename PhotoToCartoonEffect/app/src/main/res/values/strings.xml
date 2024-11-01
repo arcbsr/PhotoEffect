@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">PhotoToCartoonEffect</string>
+    <string name="camera_permission">Camera permission is required to take photos</string>
+    <string name="storage_permission">Storage permission is required to save and load images</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="select_image">Select Image</string>
+    <string name="apply_effect">Apply Effect</string>
+    <string name="save_image">Save Image</string>
+    <string name="storage_permission_title">Storage Permission Required</string>
+    <string name="storage_permission_description">This app needs access to your storage to save and load images.</string>
+    <string name="grant_permission">Grant Permission</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

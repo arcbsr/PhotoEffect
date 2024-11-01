@@ -1,33 +1,68 @@
 # Gradle files
 .gradle/
 build/
+*/build/
 
 # Local configuration file (sdk path, etc)
 local.properties
 
-# Log/OS Files
+# User-specific files
+.idea/
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/gradle.xml
+.idea/**/libraries
+.idea/shelf/
+.idea/modules.xml
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Android Studio specific files
+*.iml
+*.hprof
 *.log
 
-# Android Studio generated files and folders
+# Generated files
 captures/
-.externalNativeBuild/
-.cxx/
-*.apk
-output.json
+outputs/
+gen/
+android/utility/
 
-# IntelliJ
-*.iml
-.idea/
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
-
-# Keystore files
+# Keystore files (do not share in version control)
 *.jks
 *.keystore
 
-# Google Services (e.g. APIs or Firebase)
-google-services.json
+# Kotlin build cache
+*.kts.cache
 
-# Android Profiling
-*.hprof
+# Ignore all debug or release builds
+*/build/
+app/build/
+app/release/
+app/debug/
+
+# Build output from the NDK
+obj/
+
+# Gradle Wrapper binaries
+gradle-wrapper.jar
+
+# Unnecessary files generated during packaging
+*.apk
+*.ap_
+*.aab
+
+# IntelliJ
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+
+# Misc
+.gradle
+/local.properties
+/.idea/workspace.xml
+.DS_Store
+/build/
+.cxx/
