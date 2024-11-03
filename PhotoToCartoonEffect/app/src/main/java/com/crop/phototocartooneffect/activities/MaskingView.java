@@ -39,27 +39,69 @@ public class MaskingView extends View {
         maskStack.push(Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)); // Initial empty state
     }
 
+    private float scaleFactor = 1.0f;
+    private static final float SCALE_STEP = 0.1f;
+    private static final float MIN_SCALE = 0.5f;
+    private static final float MAX_SCALE = 2.0f;
+
+    public void scaleIn() {
+        if (scaleFactor < MAX_SCALE) {
+            scaleFactor += SCALE_STEP;
+            updateMaskBitmap();
+        }
+    }
+
+    public void scaleOut() {
+        if (scaleFactor > MIN_SCALE) {
+            scaleFactor -= SCALE_STEP;
+            updateMaskBitmap();
+        }
+    }
+
+    public void scaleMaskBitmapToScreenSize() {
+        if (maskBitmap != null) {
+            int screenWidth = getWidth();
+            int screenHeight = getHeight();
+
+            float widthRatio = (float) screenWidth / maskBitmap.getWidth();
+            float heightRatio = (float) screenHeight / maskBitmap.getHeight();
+
+            float scaleFactor = Math.min(widthRatio, heightRatio);
+
+            int newWidth = (int) (maskBitmap.getWidth() * scaleFactor);
+            int newHeight = (int) (maskBitmap.getHeight() * scaleFactor);
+
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(maskBitmap, newWidth, newHeight, true);
+            maskBitmap = scaledBitmap;
+
+            invalidate();
+        }
+    }
+
+
+    private void updateMaskBitmap() {
+        if (maskBitmap != null) {
+            int newWidth = (int) (maskBitmap.getWidth() * scaleFactor);
+            int newHeight = (int) (maskBitmap.getHeight() * scaleFactor);
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(maskBitmap, newWidth, newHeight, true);
+            maskBitmap = scaledBitmap;
+            invalidate();
+        }
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (originalBitmap != null) {
-            // Calculate the center position
-            int canvasWidth = getWidth();
-            int canvasHeight = getHeight();
-            int bitmapWidth = originalBitmap.getWidth();
-            int bitmapHeight = originalBitmap.getHeight();
-
-            // Calculate x and y position to center the bitmap
-            float x = (canvasWidth - bitmapWidth) / 2f;
-            float y = (canvasHeight - bitmapHeight) / 2f;
-
             // Draw the original bitmap in the center
 //            canvas.drawBitmap(originalBitmap, x, y, null);
         }
 
         // Draw the mask bitmap
         if (maskBitmap != null) {
-            canvas.drawBitmap(maskBitmap, 0, 0, null);
+            float x = (getWidth() - maskBitmap.getWidth()) / 2f;
+            float y = (getHeight() - maskBitmap.getHeight()) / 2f;
+            canvas.drawBitmap(maskBitmap, x, y, null);
         }
 
         // Draw the path on the canvas (temporary visual feedback)
@@ -115,6 +157,7 @@ public class MaskingView extends View {
 
     public void setMaskBitmap(Bitmap mask) {
         this.maskBitmap = mask;
+        scaleMaskBitmapToScreenSize();
         invalidate();
     }
 

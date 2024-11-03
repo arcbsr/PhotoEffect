@@ -19,6 +19,7 @@
     <color name="white_900">#FF212121</color>
     <color name="orange_001">#FFFF8800</color>
     <color name="orange">#FFFF8800</color>
-    <color name="title">#0F0F0F</color>
+    <color name="semi_white">#4A808080</color>
+    <color name="title">#FF757575</color>
     <color name="details">#2E2E2E</color>
 </resources>

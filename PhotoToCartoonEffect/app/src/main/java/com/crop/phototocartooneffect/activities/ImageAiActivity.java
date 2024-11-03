@@ -6,44 +6,100 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.renderscript.RenderScript;
-import android.widget.Toast;
+import android.widget.ImageView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.crop.phototocartooneffect.R;
+import com.crop.phototocartooneffect.adapters.MenuAdapter;
+import com.crop.phototocartooneffect.animations.DepthPageTransformer;
+import com.crop.phototocartooneffect.dialogfragment.ErrorDialog;
+import com.crop.phototocartooneffect.dialogfragment.LoadingDialog;
 import com.crop.phototocartooneffect.fragments.ImageAiFragment;
 import com.crop.phototocartooneffect.renderengins.ImageEffect;
-import com.crop.phototocartooneffect.renderengins.apis.fashion.FashionEffect;
 import com.crop.phototocartooneffect.renderengins.apis.fashion.FashionEffectService;
 import com.crop.phototocartooneffect.renderengins.apis.imgtoimage.ImageToImageService;
+import com.crop.phototocartooneffect.renderengins.apis.imgupload.ImageRemoveBgService;
 import com.crop.phototocartooneffect.renderengins.effects.BackgroundRemoveFML;
-import com.crop.phototocartooneffect.utils.RLog;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import java.util.ArrayList;
 
-public class ImageAiActivity extends AppCompatActivity {
+public class ImageAiActivity extends AppCompatActivity implements ImageEffect.ImageEffectCallback {
 
     private static final int SELECT_PICTURE = 1;
     private ArrayList<VideoFrames> bitmaps = new ArrayList<>();
     private RenderScript rs;
+    LoadingDialog loadingDialog;
 
-    private enum ImageCreationType {
-        FIREBASE_ML_SEGMENTATION, IMAGE_EFFECT_IMG2IMG, IMAGE_EFFECT_FASHION
+    @Override
+    public void onSuccess(Bitmap result, String key) {
+        onFinished();
+        if (result != null) {
+            showImageInFragment("original", key);
+        }
     }
 
-    private ImageCreationType imageCreationType = ImageCreationType.IMAGE_EFFECT_IMG2IMG;
+    @Override
+    public void onError(Exception e) {
+        onFinished();
+        ErrorDialog.newInstance(e.getMessage()).show(getSupportFragmentManager(), "ErrorDialog");
+    }
+
+    @Override
+    public void onStartProcess() {
+        if (loadingDialog != null) {
+            loadingDialog.show(getSupportFragmentManager(), "LoadingDialog");
+        }
+
+    }
+
+    @Override
+    public void onFinished() {
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
+    }
+
+    public enum ImageCreationType {
+        FIREBASE_ML_SEGMENTATION, IMAGE_EFFECT_IMG2IMG, IMAGE_EFFECT_FASHION, MLB_BACKGROUND_REMOVE
+    }
+
+    private ImageCreationType imageCreationType = ImageCreationType.FIREBASE_ML_SEGMENTATION;
+    private ActivityResultLauncher<PickVisualMediaRequest> pickMediaLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_ai);
-
+        loadingDialog = new LoadingDialog();
         rs = RenderScript.create(this);
-
-        findViewById(R.id.img2imgCardView).setOnClickListener(v -> {
-            imageCreationType = ImageCreationType.IMAGE_EFFECT_IMG2IMG;
-            selectImage();
+        MenuAdapter menuAdapter = new MenuAdapter(this, new MenuAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(ImageCreationType CreationType) {
+                imageCreationType = CreationType;
+                pickMediaLauncher.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build());
+            }
         });
+        ViewPager2 viewPager = findViewById(R.id.viewPager);
+        viewPager.setAdapter(menuAdapter);
+        viewPager.setPageTransformer(new DepthPageTransformer());
+        ((DotsIndicator) findViewById(R.id.dots_indicator)).attachTo(viewPager);
+        pickMediaLauncher = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(),
+                uri -> {
+                    if (uri != null) {
+                        loadImage(uri, 0);
+                    }
+                });
     }
 
     private void selectImage() {
@@ -69,41 +125,49 @@ public class ImageAiActivity extends AppCompatActivity {
     private void loadImage(Uri uri, int position) {
         ImageLoader.getInstance().loadBitmap(this, uri, position, (bitmap, keyValue, pos) -> {
             bitmaps.add(new VideoFrames(keyValue, pos));
+            ((ImageView) findViewById(R.id.imageView_original)).
+                    setImageBitmap(ImageLoader.getInstance().getBitmap(keyValue));
+//            findViewById(R.id.imageView_original).setOnClickListener(v -> {
+//                applyImageEffect(keyValue);
+//            });
             applyImageEffect(keyValue);
         });
     }
 
     private void applyImageEffect(String keyValue) {
-        ImageEffect imageEffect = createImageEffect();
 
-        imageEffect.applyEffectWithData(new ImageEffect.ImageEffectCallback() {
-            @Override
-            public void onSuccess(Bitmap result, String url) {
-                RLog.e("ImageAiActivity", "Image Effect Success: " + url);
-                ImageLoader.getInstance().loadBitmap(ImageAiActivity.this, url, System.currentTimeMillis() + "", (bitmap, keyValue1, position) -> {
 
-                    showImageInFragment(keyValue, keyValue1);
-                });
+        ImageEffect imageEffect = createImageEffect(keyValue);
+        if (imageEffect.isBitmapHolder()) {
+            Bitmap bitmap = ImageLoader.getInstance().getBitmap(keyValue);
+            if (bitmap == null) {
+                ErrorDialog.newInstance("Image loading error").show(getSupportFragmentManager(), "ErrorDialog");
+                return;
             }
-
-            @Override
-            public void onError(Exception e) {
-                Toast.makeText(ImageAiActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }, this);
+            imageEffect.applyEffect(ImageLoader.getInstance().getBitmap(keyValue), this);
+        } else {
+            imageEffect.applyEffectWithData(this, this);
+        }
     }
 
-    private ImageEffect createImageEffect() {
-        String API_KEY= "";
-        if (imageCreationType == ImageCreationType.IMAGE_EFFECT_IMG2IMG) {
-            return new ImageToImageService("ultra realistic close up portrait ((beautiful pale cyberpunk female with heavy black eyeliner)), blue eyes, shaved side haircut, hyper detail, cinematic lighting, magic neon, dark red city, Canon EOS R3, nikon, f/1.4, ISO 200, 1/160s, 8K, RAW, unedited, symmetrical balance, in-frame, 8K",
-                    "",API_KEY);
-        } else if (imageCreationType == ImageCreationType.IMAGE_EFFECT_FASHION) {
-            return new FashionEffectService(":A realistic photo of a model wearing a beautiful t-shirt", "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/livewire-tmp/5dzoZ9qWI2FQxwceFDb3zULRtwCRmF-metaZjA5NjMyX3BhcmVudF8xXzE2NTMwMDMzODguanBn-.jpg", "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/livewire-tmp/5BDmwvtizESFRO24uGDW1iu1u5TXhB-metaM2JmZmFkY2U5NDNkOGU3MDJhZDE0YTk2OTY2NjQ0NjYuanBn-.jpg", "upper_body", API_KEY);
-
-        } else {
-            return new BackgroundRemoveFML();
+    private ImageEffect createImageEffect(String keyValue) {
+        String API_KEY = "y2muZahlFMmxbImwFaQR5gEnUxmhGhxSEaETL5pGPqOOLarir0CxVOy1S9Dl";
+        //"ultra realistic close up portrait ((beautiful pale cyberpunk female with heavy black eyeliner)), blue eyes, shaved side haircut, hyper detail, cinematic lighting, magic neon, dark red city, Canon EOS R3, nikon, f/1.4, ISO 200, 1/160s, 8K, RAW, unedited, symmetrical balance, in-frame, 8K",
+        switch (imageCreationType) {
+            case IMAGE_EFFECT_IMG2IMG:
+                return new ImageToImageService("ultra realistic full body neymar", API_KEY, this);
+            case IMAGE_EFFECT_FASHION:
+                return new FashionEffectService(
+                        ":A realistic photo of a model wearing a beautiful t-shirt",
+                        "",
+                        "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/livewire-tmp/5BDmwvtizESFRO24uGDW1iu1u5TXhB-metaM2JmZmFkY2U5NDNkOGU3MDJhZDE0YTk2OTY2NjQ0NjYuanBn-.jpg",
+                        "upper_body", API_KEY, this);
+            case FIREBASE_ML_SEGMENTATION:
+                return new BackgroundRemoveFML();
+            case MLB_BACKGROUND_REMOVE:
+                return new ImageRemoveBgService(API_KEY, this);
         }
+        return new BackgroundRemoveFML();
     }
 
     private void showImageInFragment(String originalKey, String processedKey) {

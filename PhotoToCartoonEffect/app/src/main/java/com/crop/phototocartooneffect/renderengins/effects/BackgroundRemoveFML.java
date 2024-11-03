@@ -6,7 +6,10 @@ import android.graphics.Color;
 
 import androidx.annotation.NonNull;
 
+import com.crop.phototocartooneffect.activities.ImageLoader;
 import com.crop.phototocartooneffect.renderengins.ImageEffect;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.segmentation.Segmentation;
 import com.google.mlkit.vision.segmentation.SegmentationMask;
@@ -16,6 +19,7 @@ import com.google.mlkit.vision.segmentation.selfie.SelfieSegmenterOptions;
 import java.nio.ByteBuffer;
 
 public class BackgroundRemoveFML implements ImageEffect {
+    private static final String IMAGE_TAG = "BackgroundRemoveFML";
     private Segmenter segmenter;
 
     public BackgroundRemoveFML() {
@@ -28,23 +32,38 @@ public class BackgroundRemoveFML implements ImageEffect {
 
     @Override
     public void applyEffect(@NonNull Bitmap bitmap, @NonNull ImageEffectCallback callback) {
+        callback.onStartProcess();
         InputImage inputImage = InputImage.fromBitmap(bitmap, 0);
 
         Segmentation.getClient(new SelfieSegmenterOptions.Builder()
                         .setDetectorMode(SelfieSegmenterOptions.SINGLE_IMAGE_MODE)
                         .build())
                 .process(inputImage)
-                .addOnSuccessListener(segmentationResult -> {
-                    Bitmap segmentedBitmap = createSegmentedBitmap(bitmap, segmentationResult);
-                    callback.onSuccess(segmentedBitmap,"");
+                .addOnSuccessListener(new OnSuccessListener<SegmentationMask>() {
+                    @Override
+                    public void onSuccess(SegmentationMask segmentationResult) {
+                        Bitmap segmentedBitmap = BackgroundRemoveFML.this.createSegmentedBitmap(bitmap, segmentationResult);
+                        ImageLoader.getInstance().loadBitmap(System.currentTimeMillis() + "", segmentedBitmap);
+                        callback.onSuccess(segmentedBitmap, System.currentTimeMillis() + "");
+                    }
                 })
-                .addOnFailureListener(callback::onError);
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.onError(e);
+                    }
+                });
     }
 
     @Override
     public void applyEffectWithData(@NonNull ImageEffectCallback callback, Context context) {
         // Implement the logic to apply the effect with additional data if needed
 
+    }
+
+    @Override
+    public Boolean isBitmapHolder() {
+        return true;
     }
 
     private Bitmap createSegmentedBitmap(Bitmap originalBitmap, SegmentationMask segmentationResult) {

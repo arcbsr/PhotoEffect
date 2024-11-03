@@ -21,11 +21,6 @@ class FashionEffect(
     private val fashionEffectRequest: FashionEffectRequest = effectRequest
     private val apiService: ModelsLabApiService = ApiClient.modelsLabApiService
 
-    init {
-//        val retrofit = Retrofit.Builder().baseUrl("https://modelslab.com/api/v6/")
-//            .addConverterFactory(GsonConverterFactory.create()).build()
-
-    }
 
     override fun applyEffectWithData(callback: ImageEffectCallback, context: Context) {
 
@@ -34,7 +29,7 @@ class FashionEffect(
 //        val jsonString = gson.toJson(fashionEffectRequest)
         RLog.d("FashionEffectRequest:", fashionEffectRequest)
 
-
+        callback.onStartProcess()
         // Launch the network request in a coroutine
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -45,41 +40,12 @@ class FashionEffect(
                 if (response.isSuccessful && response.body() != null) {
                     val fashionEffectResponse = response.body()!!
 
-                    // If status is "processing", wait based on ETA
-//                    if (fashionEffectResponse.status == "processing") {
-//                        withContext(Dispatchers.Main) {
-//                            Log.d(
-//                                "FashionEffect",
-//                                "Waiting for processing to complete..." + fashionEffectResponse.status
-//                            )
-////                            callback.onSuccess(fashionEffectResponse.fetch_result)
-//                        }
-//                    } else {
-//                        withContext(Dispatchers.Main) {
-//                            callback.onError(Exception("Image processing failed: ${fashionEffectResponse.message}"))
-//                            Log.e(
-//                                "FashionEffect",
-//                                "Failed to apply effect: ${fashionEffectResponse.message}"
-//                            )
-//                        }
-//                    }
                     if (fashionEffectResponse.outputImageLinks.isNotEmpty()) {
                         withContext(Dispatchers.Main) {
 
                             RLog.e(
                                 "FashionEffectResponse:", fashionEffectResponse.outputImageLinks
                             )
-//                            ImageLoader.getInstance().loadBitmap(
-//                                context,
-//                                "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/temp/be4ccd86-d200-4588-a256-de00da62fa4b.png",
-//                                "newimage.png"
-//                            ) { bitmap: Bitmap?, _: Exception? ->
-//                                if (bitmap != null) {
-//                                    callback.onSuccess(bitmap)
-//                                } else {
-//                                    callback.onError(Exception("Failed to load bitmap"))
-//                                }
-//                            }
                         }
                     } else {
                         withContext(Dispatchers.Main) {
@@ -105,6 +71,10 @@ class FashionEffect(
                 }
             }
         }
+    }
+
+    override fun isBitmapHolder(): Boolean {
+        return false
     }
 
     override fun applyEffect(bitmap: Bitmap, callback: ImageEffectCallback) {

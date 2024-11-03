@@ -10,8 +10,15 @@ public interface ImageEffect {
         void onSuccess(Bitmap result, String key);
 
         void onError(Exception e);
+
+        void onStartProcess();
+
+        void onFinished();
     }
 
     void applyEffect(@NonNull Bitmap bitmap, @NonNull ImageEffectCallback callback);
+
     void applyEffectWithData(@NonNull ImageEffectCallback callback, Context context);
+
+    Boolean isBitmapHolder();
 }

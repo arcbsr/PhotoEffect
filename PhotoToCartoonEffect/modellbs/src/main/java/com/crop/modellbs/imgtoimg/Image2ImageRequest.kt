@@ -21,12 +21,12 @@ data class Image2ImageRequest(
     val webhook: String?,
     val track_id: String?
 ) {
-    constructor(prompt: String, initImage: String, key:String) : this(
+    constructor(prompt: String, key:String) : this(
 
         key = key,
         prompt = prompt,
         negative_prompt = image2ImageRequest!!.negative_prompt,
-        init_image = initImage,
+        init_image = image2ImageRequest!!.init_image,
         width = image2ImageRequest!!.width,
         height = image2ImageRequest!!.height,
         samples = image2ImageRequest!!.samples,

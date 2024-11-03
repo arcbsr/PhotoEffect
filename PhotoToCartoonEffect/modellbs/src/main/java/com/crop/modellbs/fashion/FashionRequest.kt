@@ -9,7 +9,7 @@ data class FashionEffectRequest(
     val key: String?,
     val prompt: String?,
     val negative_prompt: String?,
-    val init_image: String?,
+    var init_image: String?,
     val cloth_image: String?,
     val cloth_type: String?,
     val guidance_scale: Float = 7.5f,

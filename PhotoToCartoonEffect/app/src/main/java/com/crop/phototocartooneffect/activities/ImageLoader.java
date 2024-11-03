@@ -3,10 +3,18 @@ package com.crop.phototocartooneffect.activities;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.Base64;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
+import com.crop.phototocartooneffect.renderengins.apis.OnImageLoadedListener2;
+import com.crop.phototocartooneffect.utils.RLog;
+
+import java.io.ByteArrayOutputStream;
 
 import retrofit2.http.Url;
 
@@ -48,6 +56,42 @@ public class ImageLoader {
 
     }
 
+    public String getBitmapAsBase64(Bitmap bitmap) {
+        String base64 = "";
+
+        if (bitmap != null) {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            base64 = "data:image/jpeg;base64," + Base64.encodeToString(byteArray, Base64.DEFAULT);
+            RLog.e("getBitmapAsBase64", "Base64 encoding successful>>" + base64);
+        } else {
+        }
+
+        return base64;
+    }
+
+    public String getBitmapAsBase64(String key) {
+        // Log key and ensure the cache is checked properly
+        RLog.e("getBitmapAsBase64", "Looking for bitmap with key: " + key);
+
+        Bitmap cachedBitmap = bitmapCache.getBitmapFromCache(key);
+        String base64 = "";
+
+        if (cachedBitmap != null) {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            cachedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            base64 = "data:image/jpeg;base64," + Base64.encodeToString(byteArray, Base64.DEFAULT);
+            RLog.e("getBitmapAsBase64", "Base64 encoding successful.");
+        } else {
+            RLog.e("getBitmapAsBase64", "Bitmap not found in cache for key: " + key);
+        }
+
+        return base64;
+    }
+
+
     interface OnImageLoadedListener {
         void onImageLoaded(Bitmap bitmap, String keyValue, int position);
     }
@@ -56,64 +100,69 @@ public class ImageLoader {
         bitmapCache.addBitmapToCache(key, bitmap);
     }
 
+    public void loadBitmap(Context context, String url, String key2, com.crop.phototocartooneffect.renderengins.apis.OnImageLoadedListener2 listener) {
+        Bitmap cachedBitmap = bitmapCache.getBitmapFromCache(key2);
+
+        if (cachedBitmap != null) {
+            listener.onImageLoaded(cachedBitmap, key2, 0);
+        } else {
+            Glide.with(context).asBitmap().load(url).into(new com.bumptech.glide.request.target.SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, com.bumptech.glide.request.transition.Transition<? super Bitmap> transition) {
+                    bitmapCache.addBitmapToCache(key2, resource);
+                    listener.onImageLoaded(resource, key2, 0);
+                }
+
+                @Override
+                public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                    super.onLoadFailed(errorDrawable);
+                    if (listener instanceof com.crop.phototocartooneffect.renderengins.apis.OnImageLoadedListener2) {
+                        listener.onErrorLoaded(url, 0);
+                    }
+                }
+            });
+        }
+    }
+
     public void loadBitmap(Context context, String url, String key2, OnImageLoadedListener listener) {
         Bitmap cachedBitmap = bitmapCache.getBitmapFromCache(key2);
 
         if (cachedBitmap != null) {
             listener.onImageLoaded(cachedBitmap, key2, 0);
         } else {
-            Glide.with(context)
-                    .asBitmap()
-                    .load(url)
-                    .into(new com.bumptech.glide.request.target.SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, com.bumptech.glide.request.transition.Transition<? super Bitmap> transition) {
-                            bitmapCache.addBitmapToCache(key2, resource);
-                            listener.onImageLoaded(resource, key2, 0);
-                        }
-                    });
+            Glide.with(context).asBitmap().load(url).into(new com.bumptech.glide.request.target.SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, com.bumptech.glide.request.transition.Transition<? super Bitmap> transition) {
+                    bitmapCache.addBitmapToCache(key2, resource);
+                    listener.onImageLoaded(resource, key2, 0);
+                }
+
+                @Override
+                public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                    super.onLoadFailed(errorDrawable);
+                    if (listener instanceof OnImageLoadedListener2) {
+                        ((OnImageLoadedListener2) listener).onErrorLoaded(url, 0);
+                    }
+                }
+            });
         }
     }
 
     public void loadBitmap(Context context, Uri uri, int position, OnImageLoadedListener listener) {
-        String key2 = uri.toString();
+        String key2 = System.currentTimeMillis() + "_" + position;
         Bitmap cachedBitmap = bitmapCache.getBitmapFromCache(key2);
 
         if (cachedBitmap != null) {
             listener.onImageLoaded(cachedBitmap, key2, position);
         } else {
-            Glide.with(context)
-                    .asBitmap()
-                    .load(uri)
-                    .into(new com.bumptech.glide.request.target.SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, com.bumptech.glide.request.transition.Transition<? super Bitmap> transition) {
-                            bitmapCache.addBitmapToCache(key2, resource);
-                            listener.onImageLoaded(resource, key2, position);
-                        }
-                    });
-        }
-
-        if (true) {
-            return;
-        }
-        String key = uri.toString();
-        Bitmap bitmap = bitmapCache.getBitmapFromCache(key);
-
-        if (bitmap == null) {
-            try {
-                // Load the Bitmap from the URI
-                bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri));
-
-                // Add the Bitmap to the cache
-                if (bitmap != null) {
-                    bitmapCache.addBitmapToCache(key, bitmap);
+            Glide.with(context).asBitmap().load(uri).into(new com.bumptech.glide.request.target.SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, com.bumptech.glide.request.transition.Transition<? super Bitmap> transition) {
+                    bitmapCache.addBitmapToCache(key2, resource);
+                    listener.onImageLoaded(resource, key2, position);
                 }
-            } catch (Exception e) {
-                Log.e("ImageLoader", "Error loading image", e);
-            }
+            });
         }
 
-//        return bitmap;
     }
 }
