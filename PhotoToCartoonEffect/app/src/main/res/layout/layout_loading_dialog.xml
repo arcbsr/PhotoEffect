@@ -3,14 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/semi_white"
     android:gravity="center">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/img2imgCardView"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        app:cardBackgroundColor="@color/white"
+        app:cardBackgroundColor="@color/gradient_end"
         app:cardCornerRadius="5dp"
         app:cardElevation="3dp"
         app:cardMaxElevation="5dp"
@@ -18,10 +17,10 @@
         app:cardUseCompatPadding="true">
 
         <RelativeLayout
-            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:padding="10dp">
 
             <ProgressBar
                 android:id="@+id/loadingProgressBar"
@@ -36,10 +35,19 @@
                 android:id="@+id/aiProcessMessageTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:letterSpacing=".2"
-                android:text="Image Processing..."
+                android:letterSpacing=".1"
+                android:text="Image Analysis in Progress..."
+                android:textColor="@color/title"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/aiProcessMessageTextView"
+                android:layout_centerHorizontal="true"
+                android:text="Loading Data, Please wait..."
+                android:textColor="@color/details"
                 android:textStyle="bold" />
 
         </RelativeLayout>

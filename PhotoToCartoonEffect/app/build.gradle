@@ -72,6 +72,7 @@ dependencies {
     implementation project(path: ':modellbs')
     implementation project(path: ':networklibs')
     implementation 'com.google.android.material:material:1.2.1'
+    implementation("com.tbuonomo:dotsindicator:5.0")
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
     implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.4'
     implementation 'org.tensorflow:tensorflow-lite:2.6.0'

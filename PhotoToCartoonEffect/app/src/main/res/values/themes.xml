@@ -4,8 +4,8 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@color/white</item>
+        <item name="colorPrimary">@color/gradient_end</item>
+        <item name="colorPrimaryDark">@color/gradient_start</item>
         <item name="colorAccent">@color/white</item>
         <item name="android:windowBackground">@color/white</item>    </style>
 

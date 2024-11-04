@@ -12,6 +12,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="demo_description">This is a description of the card content. It can be multiple lines long and will automatically wrap to fit the available space.</string>
+    <string name="featured_ai">Featured AI</string>
 
 
 </resources>

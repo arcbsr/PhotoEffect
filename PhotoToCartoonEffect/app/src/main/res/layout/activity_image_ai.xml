@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_gradient"
+    android:background="@color/black"
     tools:context=".activities.ImageAiActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -18,11 +18,12 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:title="Home" />
+            app:title="AI Pixello "
+            app:titleTextColor="@color/head_title" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -30,52 +31,88 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout">
 
-        <!--        <androidx.recyclerview.widget.RecyclerView-->
-        <!--            android:id="@+id/recyclerView"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent"-->
-        <!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />-->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp">
+            android:layout_height="wrap_content">
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/dots_indicator"
-                android:clipChildren="false"
-                android:clipToPadding="false" />
-
-            <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-                android:id="@+id/dots_indicator"
+            <TextView
+                android:id="@+id/title_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="10dp"
-                app:dotsColor="@color/white_200"
-                app:dotsCornerRadius="2dp"
-                app:dotsSize="8dp"
-                app:dotsSpacing="4dp"
-                app:dotsWidthFactor=".5"
-                app:progressMode="true"
-                app:selectedDotColor="@color/orange" />
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/featured_ai"
+                android:textAllCaps="true"
+                android:textColor="@color/title"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/show_all_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/title_text"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:text="Show All >>"
+                android:textColor="@color/title" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_text"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+
+            <TextView
+                android:id="@+id/title_text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/recyclerView_top"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/featured_ai"
+                android:textAllCaps="true"
+                android:textColor="@color/title"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/show_all_text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/title_text2"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:text="Show All >>"
+                android:textColor="@color/title" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_text2"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
         </RelativeLayout>
+    </ScrollView>
 
-        <ImageView
-            android:id="@+id/imageView_original"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_centerInParent="true"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:visibility="gone" />
+    <ImageView
+        android:id="@+id/imageView_original"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
 
-
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </RelativeLayout>
-
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

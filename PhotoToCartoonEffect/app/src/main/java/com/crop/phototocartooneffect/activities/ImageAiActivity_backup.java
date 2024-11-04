@@ -12,14 +12,10 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.crop.phototocartooneffect.R;
-import com.crop.phototocartooneffect.adapters.ItemAdapter;
 import com.crop.phototocartooneffect.adapters.MenuAdapter;
-import com.crop.phototocartooneffect.animations.DepthPageTransformer;
 import com.crop.phototocartooneffect.dialogfragment.ErrorDialog;
 import com.crop.phototocartooneffect.dialogfragment.LoadingDialog;
 import com.crop.phototocartooneffect.fragments.ImageAiFragment;
@@ -28,13 +24,11 @@ import com.crop.phototocartooneffect.renderengins.apis.fashion.FashionEffectServ
 import com.crop.phototocartooneffect.renderengins.apis.imgtoimage.ImageToImageService;
 import com.crop.phototocartooneffect.renderengins.apis.imgupload.ImageRemoveBgService;
 import com.crop.phototocartooneffect.renderengins.effects.BackgroundRemoveFML;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import java.util.ArrayList;
 
-public class ImageAiActivity extends AppCompatActivity implements ImageEffect.ImageEffectCallback {
+public class ImageAiActivity_backup extends AppCompatActivity implements ImageEffect.ImageEffectCallback {
 
     private static final int SELECT_PICTURE = 1;
     private ArrayList<VideoFrames> bitmaps = new ArrayList<>();
@@ -80,7 +74,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_ai);
+        setContentView(R.layout.activity_image_ai_backup);
         loadingDialog = new LoadingDialog();
         rs = RenderScript.create(this);
 //        MenuAdapter menuAdapter = new MenuAdapter(this, new MenuAdapter.OnItemClickListener() {
@@ -99,32 +93,12 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
 //        viewPager.setAdapter(menuAdapter);
 ////        viewPager.setPageTransformer(new DepthPageTransformer());
 //        ((DotsIndicator) findViewById(R.id.dots_indicator)).attachTo(viewPager);
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerView_top);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        ItemAdapter adapter = new ItemAdapter(this, new ItemAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(ImageCreationType CreationType) {
-                imageCreationType = CreationType;
-                if (imageCreationType == ImageCreationType.IMAGE_EFFECT_IMG2IMG) {
-                    applyImageEffect("");
-                } else {
-                    pickMediaLauncher.launch(new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build());
-                }
-            }
-        }); // Replace YourAdapter with your actual adapter
-        recyclerView.setAdapter(adapter);
-
-        RecyclerView recyclerView2 = findViewById(R.id.recyclerView_2);
-        recyclerView2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView2.setAdapter(adapter);
-
-        pickMediaLauncher = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-            if (uri != null) {
-                loadImage(uri, 0);
-            }
-        });
+        pickMediaLauncher = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(),
+                uri -> {
+                    if (uri != null) {
+                        loadImage(uri, 0);
+                    }
+                });
     }
 
     private void selectImage() {
@@ -150,7 +124,8 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
     private void loadImage(Uri uri, int position) {
         ImageLoader.getInstance().loadBitmap(this, uri, position, (bitmap, keyValue, pos) -> {
             bitmaps.add(new VideoFrames(keyValue, pos));
-            ((ImageView) findViewById(R.id.imageView_original)).setImageBitmap(ImageLoader.getInstance().getBitmap(keyValue));
+            ((ImageView) findViewById(R.id.imageView_original)).
+                    setImageBitmap(ImageLoader.getInstance().getBitmap(keyValue));
 //            findViewById(R.id.imageView_original).setOnClickListener(v -> {
 //                applyImageEffect(keyValue);
 //            });
@@ -175,13 +150,17 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
     }
 
     private ImageEffect createImageEffect(String keyValue) {
-        String API_KEY = "";
+        String API_KEY = "Kv36AX1iMgccy5D8XxXehWeEj4uqXA0wgrQlAXPovC5J4UQ4HipS5NC1lR6H";
         //"ultra realistic close up portrait ((beautiful pale cyberpunk female with heavy black eyeliner)), blue eyes, shaved side haircut, hyper detail, cinematic lighting, magic neon, dark red city, Canon EOS R3, nikon, f/1.4, ISO 200, 1/160s, 8K, RAW, unedited, symmetrical balance, in-frame, 8K",
         switch (imageCreationType) {
             case IMAGE_EFFECT_IMG2IMG:
                 return new ImageToImageService("ultra realistic full body neymar", API_KEY, this);
             case IMAGE_EFFECT_FASHION:
-                return new FashionEffectService(":A realistic photo of a model wearing a beautiful t-shirt", "", "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/livewire-tmp/5BDmwvtizESFRO24uGDW1iu1u5TXhB-metaM2JmZmFkY2U5NDNkOGU3MDJhZDE0YTk2OTY2NjQ0NjYuanBn-.jpg", "upper_body", API_KEY, this);
+                return new FashionEffectService(
+                        ":A realistic photo of a model wearing a beautiful t-shirt",
+                        "",
+                        "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/livewire-tmp/5BDmwvtizESFRO24uGDW1iu1u5TXhB-metaM2JmZmFkY2U5NDNkOGU3MDJhZDE0YTk2OTY2NjQ0NjYuanBn-.jpg",
+                        "upper_body", API_KEY, this);
             case FIREBASE_ML_SEGMENTATION:
                 return new BackgroundRemoveFML();
             case MLB_BACKGROUND_REMOVE:

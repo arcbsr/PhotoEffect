@@ -32,8 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/rounded_corner_background"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/thumb" />
+                    android:scaleType="centerCrop" />
 
                 <!-- Gradient Overlay on Thumbnail -->
 
@@ -51,8 +50,8 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/item_title_icon"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:layout_marginEnd="12dp"
                     android:src="@drawable/pro_icon_24" />
 
@@ -63,8 +62,8 @@
                     android:layout_weight="1"
                     android:text="Card Title"
                     android:textAllCaps="true"
+                    android:gravity="center_vertical"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <!-- Action Button -->
@@ -86,6 +85,9 @@
                 android:ellipsize="end"
                 android:justificationMode="inter_word"
                 android:maxLines="3"
+                android:minLines="3"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:paddingBottom="8dp"
                 android:text="@string/demo_description"
                 android:textColor="@color/white"

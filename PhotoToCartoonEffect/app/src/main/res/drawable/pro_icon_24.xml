@@ -7,26 +7,26 @@
 
     <!-- Base of the crown -->
     <path
-        android:fillColor="@color/orange"
+        android:fillColor="@color/yellow"
         android:pathData="M4,16h16l-2,3H6l-2,-3z" />
 
     <!-- Crown peaks -->
     <path
-        android:fillColor="@color/orange"
+        android:fillColor="@color/yellow"
         android:pathData="M6,15L4,9L7.5,12.5L9,8L12,11L15,8l1.5,4.5L20,9l-2,6z" />
 
     <!-- Center jewel -->
     <path
-        android:fillColor="@color/semi_white"
+        android:fillColor="@color/yellow"
         android:pathData="M12,13m-1.5,0a1.5,1.5 0 1,0 3,0a1.5,1.5 0 1,0 -3,0" />
 
     <!-- Left jewel -->
     <path
-        android:fillColor="@color/semi_white"
+        android:fillColor="@color/yellow"
         android:pathData="M7,13m-1,0a1,1 0 1,0 2,0a1,1 0 1,0 -2,0" />
 
     <!-- Right jewel -->
     <path
-        android:fillColor="@color/semi_white"
+        android:fillColor="@color/yellow"
         android:pathData="M17,13m-1,0a1,1 0 1,0 2,0a1,1 0 1,0 -2,0" />
 </vector>
