@@ -12,12 +12,14 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.adapters.ItemAdapter;
+import com.crop.phototocartooneffect.adapters.ItemAdapterFull;
 import com.crop.phototocartooneffect.adapters.MenuAdapter;
 import com.crop.phototocartooneffect.animations.DepthPageTransformer;
 import com.crop.phototocartooneffect.dialogfragment.ErrorDialog;
@@ -83,25 +85,10 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         setContentView(R.layout.activity_image_ai);
         loadingDialog = new LoadingDialog();
         rs = RenderScript.create(this);
-//        MenuAdapter menuAdapter = new MenuAdapter(this, new MenuAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(ImageCreationType CreationType) {
-//                imageCreationType = CreationType;
-//                if(imageCreationType == ImageCreationType.IMAGE_EFFECT_IMG2IMG){
-//                    applyImageEffect("");
-//                }else {
-//                    pickMediaLauncher.launch(new PickVisualMediaRequest.Builder()
-//                            .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build());
-//                }
-//            }
-//        });
-//        ViewPager2 viewPager = findViewById(R.id.viewPager);
-//        viewPager.setAdapter(menuAdapter);
-////        viewPager.setPageTransformer(new DepthPageTransformer());
-//        ((DotsIndicator) findViewById(R.id.dots_indicator)).attachTo(viewPager);
-
         RecyclerView recyclerView = findViewById(R.id.recyclerView_top);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        //        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        // Set up a GridLayoutManager with 2 rows (span count) and horizontal orientation
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false));
 
         ItemAdapter adapter = new ItemAdapter(this, new ItemAdapter.OnItemClickListener() {
             @Override
@@ -117,9 +104,17 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         recyclerView.setAdapter(adapter);
 
         RecyclerView recyclerView2 = findViewById(R.id.recyclerView_2);
-        recyclerView2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView2.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false));
         recyclerView2.setAdapter(adapter);
 
+        RecyclerView recyclerView3 = findViewById(R.id.recyclerView_3);
+        recyclerView3.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false));
+        recyclerView3.setAdapter(new ItemAdapterFull(this, new ItemAdapterFull.OnItemClickListener() {
+            @Override
+            public void onItemClick(ImageCreationType CreationType) {
+
+            }
+        }));
         pickMediaLauncher = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
             if (uri != null) {
                 loadImage(uri, 0);

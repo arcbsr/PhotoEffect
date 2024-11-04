@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/faceted_diamond.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Main diamond outline -->
+    <path
+        android:fillColor="#B0E0E6"
+    android:pathData="M12,2 L22,12 L12,22 L2,12 Z" />
+
+    <!-- Upper-left facet -->
+    <path
+        android:fillColor="#ADD8E6"
+        android:pathData="M12,2 L8,8 L12,12 L12,2 Z" />
+
+    <!-- Upper-right facet -->
+    <path
+        android:fillColor="#87CEEB"
+        android:pathData="M12,2 L16,8 L12,12 L12,2 Z" />
+
+    <!-- Left facet -->
+    <path
+        android:fillColor="#87CEFA"
+        android:pathData="M8,8 L4,12 L12,12 L8,8 Z" />
+
+    <!-- Right facet -->
+    <path
+        android:fillColor="#4682B4"
+        android:pathData="M16,8 L20,12 L12,12 L16,8 Z" />
+
+    <!-- Lower-left facet -->
+    <path
+        android:fillColor="#5F9EA0"
+        android:pathData="M4,12 L8,16 L12,12 L4,12 Z" />
+
+    <!-- Lower-right facet -->
+    <path
+        android:fillColor="#4682B4"
+        android:pathData="M20,12 L16,16 L12,12 L20,12 Z" />
+
+    <!-- Bottom facet -->
+    <path
+        android:fillColor="#B0C4DE"
+        android:pathData="M8,16 L12,22 L16,16 L8,16 Z" />
+</vector>
+
+
+
+
+

@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:gravity="center"> <!-- Light background to contrast the card -->
 
     <androidx.cardview.widget.CardView
         android:id="@+id/img2imgCardView"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        app:cardBackgroundColor="@color/gradient_end"
-        app:cardCornerRadius="5dp"
-        app:cardElevation="3dp"
-        app:cardMaxElevation="5dp"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        app:cardBackgroundColor="@null"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="8dp"
+        app:cardMaxElevation="10dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true">
 
@@ -20,25 +20,31 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:padding="10dp">
+            android:background="@color/white_800"
+            android:clipToOutline="true"
+            android:padding="16dp">
 
             <ProgressBar
                 android:id="@+id/loadingProgressBar"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_centerInParent="true"
                 android:indeterminate="true"
-                android:indeterminateDrawable="@drawable/circular_progress_drawable"
-                android:indeterminateDuration="1500" />
+                android:indeterminateDrawable="@drawable/circular_progress_drawable" />
 
             <TextView
                 android:id="@+id/aiProcessMessageTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:letterSpacing=".1"
-                android:text="Image Analysis in Progress..."
-                android:textColor="@color/title"
+                android:layout_marginTop="32dp"
+                android:letterSpacing=".12"
+                android:shadowColor="#80000000"
+                android:shadowRadius="4"
+                android:text="Analyzing Image..."
+                android:textColor="@color/white"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -46,9 +52,13 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/aiProcessMessageTextView"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:shadowColor="#60000000"
+                android:shadowRadius="3"
                 android:text="Loading Data, Please wait..."
-                android:textColor="@color/details"
-                android:textStyle="bold" />
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="italic" />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

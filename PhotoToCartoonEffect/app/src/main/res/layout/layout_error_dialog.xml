@@ -3,56 +3,67 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:background="#B3000000"
+    android:gravity="center"> <!-- Semi-transparent black overlay for focus -->
 
-    <LinearLayout
-        android:layout_width="300dp"
+    <androidx.cardview.widget.CardView
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@android:color/white"
-        android:elevation="8dp"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:backgroundTintMode="multiply"
+        app:cardBackgroundColor="@color/white_800"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="12dp"> <!-- Higher elevation for shadow effect -->
 
-        <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="16dp"
-            android:src="@android:drawable/ic_dialog_alert"
-            app:tint="@android:color/holo_red_dark" />
-
-        <TextView
-            android:id="@+id/errorTitleTextView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:text="Error"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            android:padding="24dp"> <!-- Gradient background -->
 
-        <TextView
-            android:id="@+id/errorMessageTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:gravity="center"
-            android:text="An unexpected error occurred. Please try again."
-            android:textColor="@android:color/darker_gray"
-            android:textSize="16sp" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/error_icon"
+                app:tint="@color/gold" />
 
-        <Button
-            android:id="@+id/dismissButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/holo_red_light"
-            android:padding="12dp"
-            android:text="Dismiss"
-            android:foreground="?attr/selectableItemBackground"
-            android:textColor="@android:color/white" />
+            <TextView
+                android:id="@+id/errorTitleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:text="Oops!"
+                android:textColor="@color/gold"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/errorMessageTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:gravity="center"
+                android:lineSpacingExtra="4sp"
+                android:text="Something went wrong. Please try again later."
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
+            <Button
+                android:id="@+id/dismissButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/gold"
+                android:elevation="6dp"
+                android:padding="14dp"
+                android:text="Dismiss"
+                android:textAllCaps="false"
+                android:textColor="@color/red"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </LinearLayout>
