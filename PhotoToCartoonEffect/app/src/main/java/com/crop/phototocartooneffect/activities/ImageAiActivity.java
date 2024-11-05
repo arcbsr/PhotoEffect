@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.renderscript.RenderScript;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
@@ -29,12 +31,20 @@ import com.crop.phototocartooneffect.renderengins.ImageEffect;
 import com.crop.phototocartooneffect.renderengins.apis.fashion.FashionEffectService;
 import com.crop.phototocartooneffect.renderengins.apis.imgtoimage.ImageToImageService;
 import com.crop.phototocartooneffect.renderengins.apis.imgupload.ImageRemoveBgService;
+import com.crop.phototocartooneffect.renderengins.apis.monster.MonsterApiClient;
 import com.crop.phototocartooneffect.renderengins.effects.BackgroundRemoveFML;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import java.util.ArrayList;
+
+import crocodile8.image_picker_plus.ImageFormat;
+import crocodile8.image_picker_plus.ImagePickerPlus;
+import crocodile8.image_picker_plus.ImageTransformation;
+import crocodile8.image_picker_plus.PickRequest;
+import crocodile8.image_picker_plus.PickSource;
+import crocodile8.image_picker_plus.TypeFilter;
 
 public class ImageAiActivity extends AppCompatActivity implements ImageEffect.ImageEffectCallback {
 
@@ -77,13 +87,30 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
     }
 
     private ImageCreationType imageCreationType = ImageCreationType.FIREBASE_ML_SEGMENTATION;
-    private ActivityResultLauncher<PickVisualMediaRequest> pickMediaLauncher;
+    private ActivityResultLauncher<Intent> pickMediaLauncher;
+    private ActivityResultLauncher<PickVisualMediaRequest> pickDMediaLauncher;
+
+    private void openImagePicker() {
+        ImageTransformation transformation = new ImageTransformation(1024, ImageFormat.JPEG, null);
+
+        PickRequest pickRequest = new PickRequest(PickSource.GALLERY,    // Pick from GALLERY
+                new TypeFilter(),                  // TypeFilter (null for default)
+                transformation,        // Set transformation options
+                false                  // allowMultipleSelection
+        );
+
+        Intent intent = ImagePickerPlus.INSTANCE.createIntent(this, pickRequest);
+        pickMediaLauncher.launch(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_ai);
         loadingDialog = new LoadingDialog();
+        findViewById(R.id.newButton).setOnClickListener(v -> {
+            openImagePicker();
+        });
         rs = RenderScript.create(this);
         RecyclerView recyclerView = findViewById(R.id.recyclerView_top);
         //        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -97,7 +124,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                 if (imageCreationType == ImageCreationType.IMAGE_EFFECT_IMG2IMG) {
                     applyImageEffect("");
                 } else {
-                    pickMediaLauncher.launch(new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build());
+                    pickDMediaLauncher.launch(new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build());
                 }
             }
         }); // Replace YourAdapter with your actual adapter
@@ -115,7 +142,33 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
 
             }
         }));
-        pickMediaLauncher = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+        pickMediaLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+
+                ((ImageView) findViewById(R.id.imageView_original)).setImageURI(result.getData().getData());
+                findViewById(R.id.imageView_original).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        ImageLoader.getInstance().loadBitmap(ImageAiActivity.this, result.getData().getData(),
+                                -1, new ImageLoader.OnImageLoadedListener() {
+                                    @Override
+                                    public void onImageLoaded(Bitmap bitmap, String keyValue, int position) {
+                                        ImageEffect imageEffect = new MonsterApiClient(
+                                                ""
+                                                , ImageAiActivity.this,
+                                                "Create a fantasy avatar inspired by a mystical forest monster. The avatar should feature vibrant green skin with luminescent markings, large expressive eyes that change color based on mood, and textured, leaf-like ears. Add a flowing mane resembling vines and flowers, and give the avatar an enchanting aura with sparkling light effects surrounding it. The background should be a magical forest scene, with soft, glowing lights and whimsical plants. The overall style should be whimsical and colorful, appealing to a fantasy-loving audience."
+                                        );
+                                        imageEffect.applyEffect(bitmap, ImageAiActivity.this);
+                                    }
+                                });
+                    }
+                });
+                Toast.makeText(this, "Image picked successfully!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        pickDMediaLauncher = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
             if (uri != null) {
                 loadImage(uri, 0);
             }
@@ -170,7 +223,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
     }
 
     private ImageEffect createImageEffect(String keyValue) {
-        String API_KEY = "";
+        String API_KEY = "";//Kv36AX1iMgccy5D8XxXehWeEj4uqXA0wgrQlAXPovC5J4UQ4HipS5NC1lR6H
         //"ultra realistic close up portrait ((beautiful pale cyberpunk female with heavy black eyeliner)), blue eyes, shaved side haircut, hyper detail, cinematic lighting, magic neon, dark red city, Canon EOS R3, nikon, f/1.4, ISO 200, 1/160s, 8K, RAW, unedited, symmetrical balance, in-frame, 8K",
         switch (imageCreationType) {
             case IMAGE_EFFECT_IMG2IMG:

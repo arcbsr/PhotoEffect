@@ -33,15 +33,15 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
         this.context = context;
         this.listener = listener;
         // Initialize menu items
-        menuItems.add(new MenuItem(R.drawable.thumb, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.FIREBASE_ML_SEGMENTATION));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
-        menuItems.add(new MenuItem(R.drawable.thumb, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.FIREBASE_ML_SEGMENTATION));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
-        Collections.shuffle(menuItems);
+//        menuItems.add(new MenuItem(R.drawable.thumb, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.FIREBASE_ML_SEGMENTATION));
+//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
+//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
+//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
+//        menuItems.add(new MenuItem(R.drawable.thumb, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.FIREBASE_ML_SEGMENTATION));
+//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
+//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
+//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
+//        Collections.shuffle(menuItems);
     }
 
     @NonNull
