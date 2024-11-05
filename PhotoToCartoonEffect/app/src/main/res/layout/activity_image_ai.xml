@@ -58,6 +58,7 @@
         android:text="open"
         android:textColor="@color/white"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
@@ -65,7 +66,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -142,7 +143,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/featured_ai"
-                android:textColor="@color/title"
+                android:textColor="@color/gold"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -156,9 +157,10 @@
                 android:clickable="true"
                 android:drawableRight="@drawable/right_arrow"
                 android:drawablePadding="10dp"
+                android:drawableTint="@color/gold"
                 android:foreground="?attr/selectableItemBackground"
                 android:text="See All"
-                android:textColor="@color/details"
+                android:textColor="@color/gold"
                 android:textSize="18sp" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -177,7 +179,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/featured_ai"
-                android:textColor="@color/title"
+                android:textColor="@color/gold"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -191,9 +193,10 @@
                 android:clickable="true"
                 android:drawableRight="@drawable/right_arrow"
                 android:drawablePadding="10dp"
+                android:drawableTint="@color/gold"
                 android:foreground="?attr/selectableItemBackground"
                 android:text="See All"
-                android:textColor="@color/details"
+                android:textColor="@color/gold"
                 android:textSize="18sp" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -212,7 +215,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/user_create"
-                android:textColor="@color/title"
+                android:textColor="@color/gold"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -233,6 +236,7 @@
         android:layout_height="300dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

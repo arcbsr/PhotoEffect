@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.activities.ImageAiActivity;
+import com.crop.phototocartooneffect.models.MenuItem;
 import com.crop.phototocartooneffect.utils.RLog;
 import com.crop.phototocartooneffect.utils.Utils;
 
@@ -35,13 +36,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         this.listener = listener;
         // Initialize menu items
         menuItems.add(new MenuItem(R.drawable.thumb, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb4, ImageAiActivity.ImageCreationType.FIREBASE_ML_SEGMENTATION));
-//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb5, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
-//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb6, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
-//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb3, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
-//        menuItems.add(new MenuItem(R.drawable.thumb, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb4, ImageAiActivity.ImageCreationType.FIREBASE_ML_SEGMENTATION));
-//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb5, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
-//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb6, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
-//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb3, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb5, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb6, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb3, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
+        menuItems.add(new MenuItem(R.drawable.thumb, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb4, ImageAiActivity.ImageCreationType.FIREBASE_ML_SEGMENTATION));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb5, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb6, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb3, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
     }
 
     @NonNull
@@ -94,42 +95,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                     }
                 }
             });
-        }
-    }
-
-    private class MenuItem {
-        private int iconResId;
-        private String title;
-        private String description;
-        private int thumbResId;
-        private ImageAiActivity.ImageCreationType imageCreationType;
-
-        public MenuItem(int iconResId, String title, String description, int thumbResId, ImageAiActivity.ImageCreationType imageCreationType) {
-            this.iconResId = iconResId;
-            this.title = title;
-            this.description = description;
-            this.thumbResId = thumbResId;
-            this.imageCreationType = imageCreationType;
-        }
-
-        public int getIconResId() {
-            return iconResId;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public int getThumbResId() {
-            return thumbResId;
-        }
-
-        public ImageAiActivity.ImageCreationType getImageCreationType() {
-            return imageCreationType;
         }
     }
 }

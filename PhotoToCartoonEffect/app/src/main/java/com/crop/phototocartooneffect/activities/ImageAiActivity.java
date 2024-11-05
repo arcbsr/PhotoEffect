@@ -83,7 +83,8 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
     }
 
     public enum ImageCreationType {
-        FIREBASE_ML_SEGMENTATION, IMAGE_EFFECT_IMG2IMG, IMAGE_EFFECT_FASHION, MLB_BACKGROUND_REMOVE
+        FIREBASE_ML_SEGMENTATION, IMAGE_EFFECT_IMG2IMG, IMAGE_EFFECT_FASHION, MLB_BACKGROUND_REMOVE,
+        MONSTER_AI
     }
 
     private ImageCreationType imageCreationType = ImageCreationType.FIREBASE_ML_SEGMENTATION;
@@ -124,7 +125,8 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                 if (imageCreationType == ImageCreationType.IMAGE_EFFECT_IMG2IMG) {
                     applyImageEffect("");
                 } else {
-                    pickDMediaLauncher.launch(new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build());
+//                    pickDMediaLauncher.launch(new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build());
+                    openImagePicker();
                 }
             }
         }); // Replace YourAdapter with your actual adapter
@@ -139,32 +141,38 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         recyclerView3.setAdapter(new ItemAdapterFull(this, new ItemAdapterFull.OnItemClickListener() {
             @Override
             public void onItemClick(ImageCreationType CreationType) {
-
+                imageCreationType = CreationType;
+                openImagePicker();
             }
         }));
         pickMediaLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-
-                ((ImageView) findViewById(R.id.imageView_original)).setImageURI(result.getData().getData());
-                findViewById(R.id.imageView_original).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        ImageLoader.getInstance().loadBitmap(ImageAiActivity.this, result.getData().getData(),
-                                -1, new ImageLoader.OnImageLoadedListener() {
-                                    @Override
-                                    public void onImageLoaded(Bitmap bitmap, String keyValue, int position) {
-                                        ImageEffect imageEffect = new MonsterApiClient(
-                                                ""
-                                                , ImageAiActivity.this,
-                                                "Create a fantasy avatar inspired by a mystical forest monster. The avatar should feature vibrant green skin with luminescent markings, large expressive eyes that change color based on mood, and textured, leaf-like ears. Add a flowing mane resembling vines and flowers, and give the avatar an enchanting aura with sparkling light effects surrounding it. The background should be a magical forest scene, with soft, glowing lights and whimsical plants. The overall style should be whimsical and colorful, appealing to a fantasy-loving audience."
-                                        );
-                                        imageEffect.applyEffect(bitmap, ImageAiActivity.this);
-                                    }
-                                });
-                    }
-                });
-                Toast.makeText(this, "Image picked successfully!", Toast.LENGTH_SHORT).show();
+                if (result.getData().getData() != null) {
+                    loadImage(result.getData().getData(), 0);
+                }
+//                ((ImageView) findViewById(R.id.imageView_original)).setImageURI(result.getData().getData());
+//                findViewById(R.id.imageView_original).setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                        if (result.getData().getData() != null) {
+//                            loadImage(result.getData().getData(), 0);
+//                        }
+//                        ImageLoader.getInstance().loadBitmap(ImageAiActivity.this, result.getData().getData(),
+//                                -1, new ImageLoader.OnImageLoadedListener() {
+//                                    @Override
+//                                    public void onImageLoaded(Bitmap bitmap, String keyValue, int position) {
+//                                        ImageEffect imageEffect = new MonsterApiClient(
+//                                                ""
+//                                                , ImageAiActivity.this,
+//                                                "Create a fantasy avatar inspired by a mystical forest monster. The avatar should feature vibrant green skin with luminescent markings, large expressive eyes that change color based on mood, and textured, leaf-like ears. Add a flowing mane resembling vines and flowers, and give the avatar an enchanting aura with sparkling light effects surrounding it. The background should be a magical forest scene, with soft, glowing lights and whimsical plants. The overall style should be whimsical and colorful, appealing to a fantasy-loving audience."
+//                                        );
+//                                        imageEffect.applyEffect(bitmap, ImageAiActivity.this);
+//                                    }
+//                                });
+//                    }
+//                });
+//                Toast.makeText(this, "Image picked successfully!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -234,6 +242,12 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                 return new BackgroundRemoveFML();
             case MLB_BACKGROUND_REMOVE:
                 return new ImageRemoveBgService(API_KEY, this);
+            case MONSTER_AI:
+                return new MonsterApiClient(
+                        ""
+                        , ImageAiActivity.this,
+                        "Side photo of a demon , shadow, in the kitchen , sitting at the table , fade artwork by van gogh. high res"
+                );
         }
         return new BackgroundRemoveFML();
     }
