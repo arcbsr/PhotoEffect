@@ -121,10 +121,6 @@ public class ImageLoader {
                             listener.onErrorLoaded(url, 0);
                         }
                     }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-                    }
                 });
             } catch (Exception e) {
                 if (listener instanceof OnImageLoadedListener2) {
