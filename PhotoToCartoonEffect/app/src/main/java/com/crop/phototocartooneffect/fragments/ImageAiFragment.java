@@ -1,22 +1,20 @@
 // ImageAiFragment.java
 package com.crop.phototocartooneffect.fragments;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.crop.phototocartooneffect.R;
-import com.crop.phototocartooneffect.activities.ImageAiActivity;
-import com.crop.phototocartooneffect.activities.ImageLoader;
-import com.crop.phototocartooneffect.activities.MaskingView;
+import com.crop.phototocartooneffect.adapters.ItemAdapter;
+import com.crop.phototocartooneffect.imageloader.ImageLoader;
+import com.google.android.material.appbar.AppBarLayout;
 import com.jsibbold.zoomage.ZoomageView;
 
 public class ImageAiFragment extends Fragment {
@@ -25,7 +23,17 @@ public class ImageAiFragment extends Fragment {
 
     String originalBitmapKey, createBitmapKey;
 
-    public ImageAiFragment(String originalBitmapKey, String createBitmapKey) {
+    public static ImageAiFragment newInstance(String originalBitmapKey, String createBitmapKey) {
+        ImageAiFragment fragment = new ImageAiFragment(originalBitmapKey, createBitmapKey);
+        Bundle args = new Bundle();
+        // You can add arguments here if needed
+        // args.putString(ARG_PARAM1, param1);
+        // args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    private ImageAiFragment(String originalBitmapKey, String createBitmapKey) {
         // Required empty public constructor
         this.originalBitmapKey = originalBitmapKey;
         this.createBitmapKey = createBitmapKey;
@@ -35,41 +43,9 @@ public class ImageAiFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_editing, container, false);
-//        maskingView = view.findViewById(R.id.maskingView);
-
         ZoomageView originalImageView = view.findViewById(R.id.myZoomageView);
         originalImageView.setImageBitmap(ImageLoader.getInstance().getBitmap(createBitmapKey));
 
         return view;
     }
 }
-//void backup(){
-//    view.findViewById(R.id.doneButton).setOnClickListener(new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            maskingView.clear();
-//        }
-//    });
-//    view.findViewById(R.id.undoButton).setOnClickListener(new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            maskingView.undoMask();
-//        }
-//    });
-//    view.findViewById(R.id.scaleButton_in).setOnClickListener(new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            maskingView.scaleIn();
-//        }
-//    });
-//    view.findViewById(R.id.scaleButton_out).setOnClickListener(new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            maskingView.scaleOut();
-//        }
-//    });
-//    maskingView.setOriginalBitmap(ImageLoader.getInstance().getBitmap(originalBitmapKey));
-//    maskingView.setMaskBitmap(ImageLoader.getInstance().getBitmap(createBitmapKey));
-//    ((ImageView) view.findViewById(R.id.fullscreenImageView)).setImageBitmap(ImageLoader.getInstance().getBitmap(createBitmapKey));
-//}
-

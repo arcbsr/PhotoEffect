@@ -1,22 +1,19 @@
-package com.crop.phototocartooneffect.activities;
+package com.crop.phototocartooneffect.imageloader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Base64;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
+import com.crop.phototocartooneffect.activities.BitmapCache;
 import com.crop.phototocartooneffect.renderengins.apis.OnImageLoadedListener2;
 import com.crop.phototocartooneffect.utils.RLog;
 
 import java.io.ByteArrayOutputStream;
-
-import retrofit2.http.Url;
 
 public class ImageLoader {
 
@@ -92,7 +89,7 @@ public class ImageLoader {
     }
 
 
-    interface OnImageLoadedListener {
+    public interface OnImageLoadedListener {
         void onImageLoaded(Bitmap bitmap, String keyValue, int position);
     }
 

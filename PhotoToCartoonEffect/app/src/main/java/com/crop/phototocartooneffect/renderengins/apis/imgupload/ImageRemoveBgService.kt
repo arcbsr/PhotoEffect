@@ -9,8 +9,8 @@ import com.crop.modellbs.uploadimg.ImageUploadRequest
 import com.crop.networklibs.apis.ApiClient
 import com.crop.networklibs.apis.EffectResponse
 import com.crop.networklibs.apis.ModelsLabApiService
-import com.crop.phototocartooneffect.activities.ImageLoader
-import com.crop.phototocartooneffect.activities.ImageLoaderWithRetries
+import com.crop.phototocartooneffect.imageloader.ImageLoader
+import com.crop.phototocartooneffect.imageloader.ImageLoaderWithRetries
 import com.crop.phototocartooneffect.renderengins.ImageEffect
 import com.crop.phototocartooneffect.renderengins.ImageEffect.ImageEffectCallback
 import com.crop.phototocartooneffect.renderengins.apis.OnImageLoadedListener2
@@ -142,7 +142,8 @@ class ImageRemoveBgService(
         }
 
         RLog.e("FashionEffectResponse: finalImageLinks >>$isLoaded  : ", imageUrl)
-        ImageLoaderWithRetries(context).loadImage(imageUrl, object : OnImageLoadedListener2 {
+        ImageLoaderWithRetries(context)
+            .loadImage(imageUrl, object : OnImageLoadedListener2 {
             override fun onImageLoaded(bitmap: Bitmap?, keyValue: String?, position: Int) {
                 callback.onSuccess(bitmap, keyValue)
             }

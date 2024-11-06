@@ -1,19 +1,12 @@
-package com.crop.phototocartooneffect.activities;
+package com.crop.phototocartooneffect.imageloader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.load.engine.GlideException;
 import com.crop.phototocartooneffect.renderengins.apis.OnImageLoadedListener2;
 import com.crop.phototocartooneffect.utils.RLog;
 

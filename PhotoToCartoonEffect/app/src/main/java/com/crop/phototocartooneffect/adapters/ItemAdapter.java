@@ -28,7 +28,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onItemClick(ImageAiActivity.ImageCreationType imageCreationType);
+        void onItemClick(MenuItem item);
     }
 
     public ItemAdapter(Context context, OnItemClickListener listener) {
@@ -90,7 +90,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION && listener != null) {
-                        listener.onItemClick(item.getImageCreationType());
+                        listener.onItemClick(item);
                         RLog.e("MenuAdapter", "Clicked on item at position: " + position);
                     }
                 }

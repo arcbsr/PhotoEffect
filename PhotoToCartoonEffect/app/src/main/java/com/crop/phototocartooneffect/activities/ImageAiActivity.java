@@ -1,5 +1,6 @@
 package com.crop.phototocartooneffect.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -8,34 +9,33 @@ import android.provider.MediaStore;
 import android.renderscript.RenderScript;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.adapters.ItemAdapter;
 import com.crop.phototocartooneffect.adapters.ItemAdapterFull;
-import com.crop.phototocartooneffect.adapters.MenuAdapter;
-import com.crop.phototocartooneffect.animations.DepthPageTransformer;
 import com.crop.phototocartooneffect.dialogfragment.ErrorDialog;
 import com.crop.phototocartooneffect.dialogfragment.LoadingDialog;
 import com.crop.phototocartooneffect.fragments.ImageAiFragment;
+import com.crop.phototocartooneffect.fragments.MainFragment;
+import com.crop.phototocartooneffect.imageloader.ImageLoader;
+import com.crop.phototocartooneffect.models.MenuItem;
 import com.crop.phototocartooneffect.renderengins.ImageEffect;
 import com.crop.phototocartooneffect.renderengins.apis.fashion.FashionEffectService;
 import com.crop.phototocartooneffect.renderengins.apis.imgtoimage.ImageToImageService;
 import com.crop.phototocartooneffect.renderengins.apis.imgupload.ImageRemoveBgService;
 import com.crop.phototocartooneffect.renderengins.apis.monster.MonsterApiClient;
 import com.crop.phototocartooneffect.renderengins.effects.BackgroundRemoveFML;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
-import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
+import com.crop.phototocartooneffect.utils.RLog;
 
 import java.util.ArrayList;
 
@@ -46,7 +46,7 @@ import crocodile8.image_picker_plus.PickRequest;
 import crocodile8.image_picker_plus.PickSource;
 import crocodile8.image_picker_plus.TypeFilter;
 
-public class ImageAiActivity extends AppCompatActivity implements ImageEffect.ImageEffectCallback {
+public class ImageAiActivity extends AppCompatActivity implements ImageEffect.ImageEffectCallback, ItemAdapter.OnItemClickListener {
 
     private static final int SELECT_PICTURE = 1;
     private ArrayList<VideoFrames> bitmaps = new ArrayList<>();
@@ -57,7 +57,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
     public void onSuccess(Bitmap result, String key) {
         onFinished();
         if (result != null) {
-            showImageInFragment("original", key);
+            showImageInFragment(ImageAiFragment.newInstance("original", key));
         }
     }
 
@@ -82,69 +82,60 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         }
     }
 
-    public enum ImageCreationType {
-        FIREBASE_ML_SEGMENTATION, IMAGE_EFFECT_IMG2IMG, IMAGE_EFFECT_FASHION, MLB_BACKGROUND_REMOVE,
-        MONSTER_AI
+    @Override
+    public void onItemClick(MenuItem item) {
+        selectedRenderItem = item;
+        openImagePicker(pickSource);
     }
 
-    private ImageCreationType imageCreationType = ImageCreationType.FIREBASE_ML_SEGMENTATION;
-    private ActivityResultLauncher<Intent> pickMediaLauncher;
-    private ActivityResultLauncher<PickVisualMediaRequest> pickDMediaLauncher;
+    public enum ImageCreationType {
+        FIREBASE_ML_SEGMENTATION, IMAGE_EFFECT_IMG2IMG, IMAGE_EFFECT_FASHION, MLB_BACKGROUND_REMOVE, MONSTER_AI
+    }
 
-    private void openImagePicker() {
+    private MenuItem selectedRenderItem;
+    PickSource pickSource = PickSource.GALLERY;
+    //    private ImageCreationType imageCreationType = ImageCreationType.FIREBASE_ML_SEGMENTATION;
+    private ActivityResultLauncher<Intent> pickMediaLauncher;
+
+    private void openImagePicker(PickSource pickSource) {
+
         ImageTransformation transformation = new ImageTransformation(1024, ImageFormat.JPEG, null);
 
-        PickRequest pickRequest = new PickRequest(PickSource.GALLERY,    // Pick from GALLERY
+        PickRequest pickRequest = new PickRequest(pickSource,    // Pick from GALLERY
                 new TypeFilter(),                  // TypeFilter (null for default)
                 transformation,        // Set transformation options
                 false                  // allowMultipleSelection
         );
+        PermissionAccess permissionAccess = new PermissionAccess();
+//        permissionAccess.requestCameraPermission(this);
+        permissionAccess.checkRequestCameraPermission(this, new PermissionAccess.PermissionCallback() {
+            @Override
+            public void onPermissionGranted() {
+                Intent intent = ImagePickerPlus.INSTANCE.createIntent(ImageAiActivity.this, pickRequest);
+                pickMediaLauncher.launch(intent);
+            }
 
-        Intent intent = ImagePickerPlus.INSTANCE.createIntent(this, pickRequest);
-        pickMediaLauncher.launch(intent);
+            @Override
+            public void onPermissionDenied() {
+
+            }
+        });
     }
+
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_ai);
         loadingDialog = new LoadingDialog();
+        toolbar = findViewById(R.id.appBarLayout);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         findViewById(R.id.newButton).setOnClickListener(v -> {
-            openImagePicker();
+            openImagePicker(pickSource);
         });
         rs = RenderScript.create(this);
-        RecyclerView recyclerView = findViewById(R.id.recyclerView_top);
-        //        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        // Set up a GridLayoutManager with 2 rows (span count) and horizontal orientation
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false));
-
-        ItemAdapter adapter = new ItemAdapter(this, new ItemAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(ImageCreationType CreationType) {
-                imageCreationType = CreationType;
-//                if (imageCreationType == ImageCreationType.IMAGE_EFFECT_IMG2IMG) {
-//                    applyImageEffect("");
-//                } else {
-//                    pickDMediaLauncher.launch(new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build());
-                openImagePicker();
-//                }
-            }
-        }); // Replace YourAdapter with your actual adapter
-        recyclerView.setAdapter(adapter);
-
-        RecyclerView recyclerView2 = findViewById(R.id.recyclerView_2);
-        recyclerView2.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false));
-        recyclerView2.setAdapter(adapter);
-
-        RecyclerView recyclerView3 = findViewById(R.id.recyclerView_3);
-        recyclerView3.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false));
-        recyclerView3.setAdapter(new ItemAdapterFull(this, new ItemAdapterFull.OnItemClickListener() {
-            @Override
-            public void onItemClick(ImageCreationType CreationType) {
-                imageCreationType = CreationType;
-                openImagePicker();
-            }
-        }));
         pickMediaLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                 if (result.getData().getData() != null) {
@@ -156,20 +147,19 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                     findViewById(R.id.imageView_original).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ImageLoader.getInstance().loadBitmap(ImageAiActivity.this, result.getData().getData(),
-                                    -1, new ImageLoader.OnImageLoadedListener() {
-                                        @Override
-                                        public void onImageLoaded(Bitmap bitmap, String keyValue, int position) {
-                                            imageCreationType = ImageCreationType.MLB_BACKGROUND_REMOVE;
-                                            loadImage(result.getData().getData(), 0);
+                            ImageLoader.getInstance().loadBitmap(ImageAiActivity.this, result.getData().getData(), -1, new ImageLoader.OnImageLoadedListener() {
+                                @Override
+                                public void onImageLoaded(Bitmap bitmap, String keyValue, int position) {
+                                    selectedRenderItem = new MenuItem(0, "Monster", "Monster", 0, ImageAiActivity.ImageCreationType.MONSTER_AI, "");
+                                    loadImage(result.getData().getData(), 0);
 //                                            ImageEffect imageEffect = new MonsterApiClient(
 //                                                    ""
 //                                                    , ImageAiActivity.this,
 //                                                    "Create a fantasy avatar inspired by a mystical forest monster. The avatar should feature vibrant green skin with luminescent markings, large expressive eyes that change color based on mood, and textured, leaf-like ears. Add a flowing mane resembling vines and flowers, and give the avatar an enchanting aura with sparkling light effects surrounding it. The background should be a magical forest scene, with soft, glowing lights and whimsical plants. The overall style should be whimsical and colorful, appealing to a fantasy-loving audience."
 //                                            );
 //                                            imageEffect.applyEffect(bitmap, ImageAiActivity.this);
-                                        }
-                                    });
+                                }
+                            });
                         }
                     });
                 } else {
@@ -178,91 +168,101 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                 }
             }
         });
-
-        pickDMediaLauncher = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-            if (uri != null) {
-                loadImage(uri, 0);
-            }
-        });
-    }
-
-    private void selectImage() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, SELECT_PICTURE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null) {
-            bitmaps.clear();
-            if (data.getData() != null) {
-                loadImage(data.getData(), -1);
-            } else if (data.getClipData() != null) {
-                //for (int i = 0; i < data.getClipData().getItemCount(); i++) {
-                loadImage(data.getClipData().getItemAt(0).getUri(), 0);
-                //}
-            }
+        if (savedInstanceState == null) {
+            showImageInFragment(MainFragment.newInstance(this));
+        } else {
+            finish();
         }
     }
 
+
     private void loadImage(Uri uri, int position) {
+
         ImageLoader.getInstance().loadBitmap(this, uri, position, (bitmap, keyValue, pos) -> {
             bitmaps.add(new VideoFrames(keyValue, pos));
-//            ((ImageView) findViewById(R.id.imageView_original)).setImageBitmap(ImageLoader.getInstance().getBitmap(keyValue));
-//            findViewById(R.id.imageView_original).setOnClickListener(v -> {
-//                applyImageEffect(keyValue);
-//            });
             applyImageEffect(keyValue);
         });
     }
 
     private void applyImageEffect(String keyValue) {
+        if (selectedRenderItem == null) {
+            return;
+        }
+        createImageEffect(selectedRenderItem, keyValue, this, this);
+    }
 
-
-        ImageEffect imageEffect = createImageEffect(keyValue);
+    private void createImageEffect(MenuItem selectedRenderItem, String bitmapKeyValue, Context context, ImageEffect.ImageEffectCallback callback) {
+        ImageEffect imageEffect;
+        String API_KEY = "Kv36AX1iMgccy5D8XxXehWeEj4uqXA0wgrQlAXPovC5J4UQ4HipS5NC1lR6H";
+        String MONSTER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IjM5ZmJhYTJmNzA4ZTc3NjEwNDc2NzU3MjYwNGM0ZjU2IiwiY3JlYXRlZF9hdCI6IjIwMjQtMTEtMDRUMTU6MDE6NDguMjMyOTIzIn0.QZtSSUEfdBYTMed9kQRwDbXnJ33j8IxC9rbn1r76TpQ";
+        switch (selectedRenderItem.getImageCreationType()) {
+            case IMAGE_EFFECT_IMG2IMG:
+                imageEffect = new ImageToImageService("Transform the image into a snack-shaped object, maintaining the original colors and textures. The result should resemble a recognizable snack item (e.g., potato chip, cookie, or candy) while preserving key features of the original image.", API_KEY, context);
+                break;
+            case IMAGE_EFFECT_FASHION:
+                imageEffect = new FashionEffectService(":A realistic photo of a model wearing a beautiful t-shirt", "", "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/livewire-tmp/5BDmwvtizESFRO24uGDW1iu1u5TXhB-metaM2JmZmFkY2U5NDNkOGU3MDJhZDE0YTk2OTY2NjQ0NjYuanBn-.jpg", "upper_body", API_KEY, context);
+                break;
+            case FIREBASE_ML_SEGMENTATION:
+                imageEffect = new BackgroundRemoveFML();
+                break;
+            case MLB_BACKGROUND_REMOVE:
+                imageEffect = new ImageRemoveBgService(API_KEY, context);
+                break;
+            case MONSTER_AI:
+                imageEffect = new MonsterApiClient(MONSTER_TOKEN, context, "Transform the image into a snack-shaped object. The result should look like a realistic, appetizing snack item while incorporating elements from the original image. Ensure the final image has a crisp, detailed appearance with proper lighting and textures.");
+                break;
+            default:
+                imageEffect = new BackgroundRemoveFML();
+        }
         if (imageEffect.isBitmapHolder()) {
-            Bitmap bitmap = ImageLoader.getInstance().getBitmap(keyValue);
+            Bitmap bitmap = ImageLoader.getInstance().getBitmap(bitmapKeyValue);
             if (bitmap == null) {
                 ErrorDialog.newInstance("Image loading error").show(getSupportFragmentManager(), "ErrorDialog");
                 return;
             }
-            imageEffect.applyEffect(ImageLoader.getInstance().getBitmap(keyValue), this);
+            imageEffect.applyEffect(ImageLoader.getInstance().getBitmap(bitmapKeyValue), callback);
         } else {
-            imageEffect.applyEffectWithData(this, this);
+            imageEffect.applyEffectWithData(callback, context);
         }
     }
 
-    private ImageEffect createImageEffect(String keyValue) {
-        String API_KEY = "Kv36AX1iMgccy5D8XxXehWeEj4uqXA0wgrQlAXPovC5J4UQ4HipS5NC1lR6H";
-        switch (imageCreationType) {
-            case IMAGE_EFFECT_IMG2IMG:
-                return new ImageToImageService("Transform the image into a snack-shaped object, maintaining the original colors and textures. The result should resemble a recognizable snack item (e.g., potato chip, cookie, or candy) while preserving key features of the original image.", API_KEY, this);
-            case IMAGE_EFFECT_FASHION:
-                return new FashionEffectService(":A realistic photo of a model wearing a beautiful t-shirt", "", "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/livewire-tmp/5BDmwvtizESFRO24uGDW1iu1u5TXhB-metaM2JmZmFkY2U5NDNkOGU3MDJhZDE0YTk2OTY2NjQ0NjYuanBn-.jpg", "upper_body", API_KEY, this);
-            case FIREBASE_ML_SEGMENTATION:
-                return new BackgroundRemoveFML();
-            case MLB_BACKGROUND_REMOVE:
-                return new ImageRemoveBgService(API_KEY, this);
-            case MONSTER_AI:
-                return new MonsterApiClient(
-                        ""
-                        , ImageAiActivity.this,
-                        "Transform the image into a snack-shaped object. The result should look like a realistic, appetizing snack item while incorporating elements from the original image. Ensure the final image has a crisp, detailed appearance with proper lighting and textures."
-                );
-        }
-        return new BackgroundRemoveFML();
-    }
+    private void showImageInFragment(Fragment fragment) {
+        if (!(fragment instanceof MainFragment)) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-    private void showImageInFragment(String originalKey, String processedKey) {
-        ImageAiFragment fragment = new ImageAiFragment(originalKey, processedKey);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+            // Hide MainFragment if it's currently visible
+            Fragment mainFragment = getSupportFragmentManager().findFragmentByTag("MAIN_FRAGMENT");
+            if (mainFragment != null) {
+                transaction.hide(mainFragment);
+            }
+
+            // Add the new fragment on top of MainFragment
+            transaction.add(R.id.fragment_container, fragment).addToBackStack(null)  // Add to back stack for proper back navigation
+                    .commit();
+
+            // Show the custom back button
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            toolbar.setNavigationIcon(R.drawable.ic_back_arrow);
+            toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        } else {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment, "MAIN_FRAGMENT").commit();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            toolbar.setNavigationIcon(null);
+            toolbar.setNavigationOnClickListener(null);
+        }
     }
 
     @Override
     public void onBackPressed() {
+        RLog.e("BackPressed", "fragment count " + getSupportFragmentManager().getBackStackEntryCount());
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (currentFragment instanceof MainFragment) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                toolbar.setNavigationIcon(null);
+                toolbar.setNavigationOnClickListener(null);
+            }
         } else {
             super.onBackPressed();
         }

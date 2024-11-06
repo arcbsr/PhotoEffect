@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.crop.networklibs.apis.MonsApiClient
 import com.crop.networklibs.apis.MonsterApiService
-import com.crop.phototocartooneffect.activities.ImageLoader
+import com.crop.phototocartooneffect.imageloader.ImageLoader
 import com.crop.phototocartooneffect.renderengins.ImageEffect
 import com.crop.phototocartooneffect.renderengins.apis.OnImageLoadedListener2
 import com.crop.phototocartooneffect.utils.RLog

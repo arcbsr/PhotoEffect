@@ -4,13 +4,11 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import com.crop.modellbs.fashion.FashionEffectRequest
-import com.crop.modellbs.imgtoimg.Image2ImageRequest
-import com.crop.modellbs.removebg.ImageRemoveBGRequest
 import com.crop.modellbs.uploadimg.ImageUploadRequest
 import com.crop.networklibs.apis.ApiClient
 import com.crop.networklibs.apis.EffectResponse
 import com.crop.networklibs.apis.ModelsLabApiService
-import com.crop.phototocartooneffect.activities.ImageLoader
+import com.crop.phototocartooneffect.imageloader.ImageLoader
 import com.crop.phototocartooneffect.renderengins.ImageEffect
 import com.crop.phototocartooneffect.renderengins.ImageEffect.ImageEffectCallback
 import com.crop.phototocartooneffect.renderengins.apis.OnImageLoadedListener2

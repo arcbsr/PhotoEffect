@@ -21,7 +21,7 @@
     <color name="orange">#FFFF8800</color>
     <color name="yellow">#FFFFFF00</color>
 
-    <color name="gradient_start">#3E3D3D</color>
+    <color name="gradient_start">#101010</color>
     <color name="gradient_end">#FF000000</color>
     <color name="semi_white">#70808080</color>
     <color name="head_title">#FFEEEEEE</color>

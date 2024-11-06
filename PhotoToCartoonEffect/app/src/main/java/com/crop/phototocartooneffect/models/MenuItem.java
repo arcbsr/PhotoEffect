@@ -10,6 +10,17 @@ public class MenuItem {
     public boolean isBanner;
     private ImageAiActivity.ImageCreationType imageCreationType;
 
+    public String prompt;
+
+    public MenuItem(int iconResId, String title, String description, int thumbResId, ImageAiActivity.ImageCreationType imageCreationType, String prompt) {
+        this.iconResId = iconResId;
+        this.title = title;
+        this.description = description;
+        this.thumbResId = thumbResId;
+        this.imageCreationType = imageCreationType;
+        this.prompt = prompt;
+    }
+
     public MenuItem(int iconResId, String title, String description, int thumbResId, ImageAiActivity.ImageCreationType imageCreationType) {
         this.iconResId = iconResId;
         this.title = title;

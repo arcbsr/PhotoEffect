@@ -6,7 +6,7 @@ import android.graphics.Color;
 
 import androidx.annotation.NonNull;
 
-import com.crop.phototocartooneffect.activities.ImageLoader;
+import com.crop.phototocartooneffect.imageloader.ImageLoader;
 import com.crop.phototocartooneffect.renderengins.ImageEffect;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

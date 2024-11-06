@@ -62,4 +62,26 @@ public class PermissionAccess {
                     });
         }
     }
+
+    public void checkRequestCameraPermission(Activity activity, PermissionCallback callback) {
+        this.permissionCallback = callback;
+        if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissionCallback.onPermissionDenied();
+        } else {
+            permissionCallback.onPermissionGranted();
+        }
+    }
+
+    public void requestCameraPermission(AppCompatActivity activity) {
+        PermissionX.init(activity).permissions(android.Manifest.permission.CAMERA)
+                .request((allGranted, grantedList, deniedList) -> {
+                    if (allGranted) {
+                        permissionCallback.onPermissionGranted();
+                    } else {
+                        permissionCallback.onPermissionDenied();
+                    }
+                });
+    }
+
 }

@@ -38,9 +38,6 @@ class MainMenuFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_main_menu, container, false)
 
-        view.findViewById<CardView>(R.id.img2imgCardView).setOnClickListener {
-            // TODO: Add your click handling logic here
-        }
 
         return view
     }
