@@ -2,7 +2,9 @@ package com.crop.phototocartooneffect.renderengins.apis.imgtoimage
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import com.crop.modellbs.imgtoimg.Image2ImageRequest
+import com.crop.modellbs.uploadimg.ImageUploadRequest
 import com.crop.networklibs.apis.ApiClient
 import com.crop.networklibs.apis.EffectResponse
 import com.crop.networklibs.apis.ModelsLabApiService
@@ -22,26 +24,12 @@ class ImageToImageService(
 ) : ImageEffect {
 
     //TODO: Implement the logic to apply the image-to-image effect
-    private val image2ImageRequest: Image2ImageRequest = Image2ImageRequest(prompt, key)
+    private val prompt = prompt
+    private val key = key
     private val apiService: ModelsLabApiService = ApiClient.modelsLabApiService
     private val context = context
     override fun applyEffectWithData(callback: ImageEffectCallback, context: Context) {
-        callback.onStartProcess()
-        RLog.d("TextToImageRequest:", image2ImageRequest)
 
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                //TODO: Implement the logic to apply the image-to-image effect
-                val response = apiService.applyimg2imgEffect(image2ImageRequest)
-
-                // Handle response
-                handleResponse(response, callback)
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    logAndCallbackError(e, callback)
-                }
-            }
-        }
     }
 
     private suspend fun handleResponse(
@@ -70,7 +58,7 @@ class ImageToImageService(
     }
 
     override fun isBitmapHolder(): Boolean {
-        return false
+        return true
     }
 
     private fun handleSuccess(
@@ -104,6 +92,47 @@ class ImageToImageService(
     }
 
     override fun applyEffect(bitmap: Bitmap, callback: ImageEffectCallback) {
-        TODO("Not yet implemented")
+        if (bitmap == null) {
+            callback.onError(Exception("Bitmap is null"))
+            return
+        }
+        callback.onStartProcess()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val imageBase64 = ImageLoader.getInstance().getBitmapAsBase64(bitmap)
+                val imageUploadRequest =
+                    ImageUploadRequest(imageBase64, key)
+                Log.d("imageUploadRequest:", imageUploadRequest.toString())
+                val uploadResponse = apiService.applyImgUpload(imageUploadRequest)
+                RLog.d("uploadResponse:", uploadResponse.body())
+                if (uploadResponse.isSuccessful && uploadResponse.body() != null) {
+                    val uploadResponseBody = uploadResponse.body()!!
+                    val imageLink = uploadResponseBody.link
+                    if (imageLink.isNotEmpty()) {
+
+                        val image2ImageRequest: Image2ImageRequest =
+                            Image2ImageRequest(prompt, key, imageLink)
+                        RLog.d("TextToImageRequest:", image2ImageRequest)
+
+
+                        //TODO: Implement the logic to apply the image-to-image effect
+                        val response = apiService.applyimg2imgEffect(image2ImageRequest)
+
+                        // Handle response
+                        handleResponse(response, callback)
+
+                    } else {
+                        callback.onError(Exception("Image processing failed: ${uploadResponse.message()}"))
+                    }
+                } else {
+                    callback.onError(Exception("Image processing failed: ${uploadResponse.message()}"))
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    logAndCallbackError(e, callback)
+                }
+            }
+        }
     }
 }

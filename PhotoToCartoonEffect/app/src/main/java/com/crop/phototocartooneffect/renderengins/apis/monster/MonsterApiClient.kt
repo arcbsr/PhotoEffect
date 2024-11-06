@@ -25,9 +25,9 @@ class MonsterApiClient(
     private val prompt = RequestBody.create("text/plain".toMediaTypeOrNull(), promptText)
 
     companion object {
-        private const val MAX_RETRIES = 5
-        private const val RETRY_DELAY = 5000L
-        private const val INITIAL_DELAY = 2000L
+        const val MAX_RETRIES = 5
+        const val RETRY_DELAY = 5000L
+        const val INITIAL_DELAY = 2000L
         private const val MEDIA_TYPE_IMAGE = "image/jpeg"
     }
 

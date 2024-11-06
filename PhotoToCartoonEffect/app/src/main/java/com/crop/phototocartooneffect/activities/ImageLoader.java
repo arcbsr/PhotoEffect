@@ -106,21 +106,31 @@ public class ImageLoader {
         if (cachedBitmap != null) {
             listener.onImageLoaded(cachedBitmap, key2, 0);
         } else {
-            Glide.with(context).asBitmap().load(url).into(new com.bumptech.glide.request.target.SimpleTarget<Bitmap>() {
-                @Override
-                public void onResourceReady(Bitmap resource, com.bumptech.glide.request.transition.Transition<? super Bitmap> transition) {
-                    bitmapCache.addBitmapToCache(key2, resource);
-                    listener.onImageLoaded(resource, key2, 0);
-                }
-
-                @Override
-                public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                    super.onLoadFailed(errorDrawable);
-                    if (listener instanceof com.crop.phototocartooneffect.renderengins.apis.OnImageLoadedListener2) {
-                        listener.onErrorLoaded(url, 0);
+            try {
+                Glide.with(context).asBitmap().load(url).into(new com.bumptech.glide.request.target.SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, com.bumptech.glide.request.transition.Transition<? super Bitmap> transition) {
+                        bitmapCache.addBitmapToCache(key2, resource);
+                        listener.onImageLoaded(resource, key2, 0);
                     }
+
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        if (listener instanceof OnImageLoadedListener2) {
+                            listener.onErrorLoaded(url, 0);
+                        }
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
+            } catch (Exception e) {
+                if (listener instanceof OnImageLoadedListener2) {
+                    listener.onErrorLoaded(url, 0);
                 }
-            });
+            }
         }
     }
 

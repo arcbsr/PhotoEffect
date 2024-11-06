@@ -122,12 +122,12 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
             @Override
             public void onItemClick(ImageCreationType CreationType) {
                 imageCreationType = CreationType;
-                if (imageCreationType == ImageCreationType.IMAGE_EFFECT_IMG2IMG) {
-                    applyImageEffect("");
-                } else {
+//                if (imageCreationType == ImageCreationType.IMAGE_EFFECT_IMG2IMG) {
+//                    applyImageEffect("");
+//                } else {
 //                    pickDMediaLauncher.launch(new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build());
-                    openImagePicker();
-                }
+                openImagePicker();
+//                }
             }
         }); // Replace YourAdapter with your actual adapter
         recyclerView.setAdapter(adapter);
@@ -148,31 +148,34 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         pickMediaLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                 if (result.getData().getData() != null) {
-                    loadImage(result.getData().getData(), 0);
+                } else {
+                    return;
                 }
-//                ((ImageView) findViewById(R.id.imageView_original)).setImageURI(result.getData().getData());
-//                findViewById(R.id.imageView_original).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                        if (result.getData().getData() != null) {
-//                            loadImage(result.getData().getData(), 0);
-//                        }
-//                        ImageLoader.getInstance().loadBitmap(ImageAiActivity.this, result.getData().getData(),
-//                                -1, new ImageLoader.OnImageLoadedListener() {
-//                                    @Override
-//                                    public void onImageLoaded(Bitmap bitmap, String keyValue, int position) {
-//                                        ImageEffect imageEffect = new MonsterApiClient(
-//                                                ""
-//                                                , ImageAiActivity.this,
-//                                                "Create a fantasy avatar inspired by a mystical forest monster. The avatar should feature vibrant green skin with luminescent markings, large expressive eyes that change color based on mood, and textured, leaf-like ears. Add a flowing mane resembling vines and flowers, and give the avatar an enchanting aura with sparkling light effects surrounding it. The background should be a magical forest scene, with soft, glowing lights and whimsical plants. The overall style should be whimsical and colorful, appealing to a fantasy-loving audience."
-//                                        );
-//                                        imageEffect.applyEffect(bitmap, ImageAiActivity.this);
-//                                    }
-//                                });
-//                    }
-//                });
-//                Toast.makeText(this, "Image picked successfully!", Toast.LENGTH_SHORT).show();
+                if (findViewById(R.id.imageView_original).getVisibility() == View.VISIBLE) {
+                    ((ImageView) findViewById(R.id.imageView_original)).setImageURI(result.getData().getData());
+                    findViewById(R.id.imageView_original).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ImageLoader.getInstance().loadBitmap(ImageAiActivity.this, result.getData().getData(),
+                                    -1, new ImageLoader.OnImageLoadedListener() {
+                                        @Override
+                                        public void onImageLoaded(Bitmap bitmap, String keyValue, int position) {
+                                            imageCreationType = ImageCreationType.MLB_BACKGROUND_REMOVE;
+                                            loadImage(result.getData().getData(), 0);
+//                                            ImageEffect imageEffect = new MonsterApiClient(
+//                                                    ""
+//                                                    , ImageAiActivity.this,
+//                                                    "Create a fantasy avatar inspired by a mystical forest monster. The avatar should feature vibrant green skin with luminescent markings, large expressive eyes that change color based on mood, and textured, leaf-like ears. Add a flowing mane resembling vines and flowers, and give the avatar an enchanting aura with sparkling light effects surrounding it. The background should be a magical forest scene, with soft, glowing lights and whimsical plants. The overall style should be whimsical and colorful, appealing to a fantasy-loving audience."
+//                                            );
+//                                            imageEffect.applyEffect(bitmap, ImageAiActivity.this);
+                                        }
+                                    });
+                        }
+                    });
+                } else {
+                    loadImage(result.getData().getData(), 0);
+
+                }
             }
         });
 
@@ -206,7 +209,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
     private void loadImage(Uri uri, int position) {
         ImageLoader.getInstance().loadBitmap(this, uri, position, (bitmap, keyValue, pos) -> {
             bitmaps.add(new VideoFrames(keyValue, pos));
-            ((ImageView) findViewById(R.id.imageView_original)).setImageBitmap(ImageLoader.getInstance().getBitmap(keyValue));
+//            ((ImageView) findViewById(R.id.imageView_original)).setImageBitmap(ImageLoader.getInstance().getBitmap(keyValue));
 //            findViewById(R.id.imageView_original).setOnClickListener(v -> {
 //                applyImageEffect(keyValue);
 //            });
@@ -231,11 +234,10 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
     }
 
     private ImageEffect createImageEffect(String keyValue) {
-        String API_KEY = "";//Kv36AX1iMgccy5D8XxXehWeEj4uqXA0wgrQlAXPovC5J4UQ4HipS5NC1lR6H
-        //"ultra realistic close up portrait ((beautiful pale cyberpunk female with heavy black eyeliner)), blue eyes, shaved side haircut, hyper detail, cinematic lighting, magic neon, dark red city, Canon EOS R3, nikon, f/1.4, ISO 200, 1/160s, 8K, RAW, unedited, symmetrical balance, in-frame, 8K",
+        String API_KEY = "Kv36AX1iMgccy5D8XxXehWeEj4uqXA0wgrQlAXPovC5J4UQ4HipS5NC1lR6H";
         switch (imageCreationType) {
             case IMAGE_EFFECT_IMG2IMG:
-                return new ImageToImageService("ultra realistic full body neymar", API_KEY, this);
+                return new ImageToImageService("Transform the image into a snack-shaped object, maintaining the original colors and textures. The result should resemble a recognizable snack item (e.g., potato chip, cookie, or candy) while preserving key features of the original image.", API_KEY, this);
             case IMAGE_EFFECT_FASHION:
                 return new FashionEffectService(":A realistic photo of a model wearing a beautiful t-shirt", "", "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/livewire-tmp/5BDmwvtizESFRO24uGDW1iu1u5TXhB-metaM2JmZmFkY2U5NDNkOGU3MDJhZDE0YTk2OTY2NjQ0NjYuanBn-.jpg", "upper_body", API_KEY, this);
             case FIREBASE_ML_SEGMENTATION:
@@ -246,7 +248,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                 return new MonsterApiClient(
                         ""
                         , ImageAiActivity.this,
-                        "Side photo of a demon , shadow, in the kitchen , sitting at the table , fade artwork by van gogh. high res"
+                        "Transform the image into a snack-shaped object. The result should look like a realistic, appetizing snack item while incorporating elements from the original image. Ensure the final image has a crisp, detailed appearance with proper lighting and textures."
                 );
         }
         return new BackgroundRemoveFML();
