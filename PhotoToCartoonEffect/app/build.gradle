@@ -22,7 +22,10 @@ android {
             useSupportLibrary true
         }
     }
-
+    buildTypes.each {
+        it.buildConfigField 'String', 'MLAB_API_KEY', "\"$MLAB_API_KEY\""
+        it.buildConfigField 'String', 'MONS_TOKEN_KEY', "\"$MONS_TOKEN_KEY\""
+    }
     buildTypes {
         release {
             minifyEnabled false

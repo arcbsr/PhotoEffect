@@ -13,7 +13,10 @@ import android.view.ViewGroup;
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.adapters.ItemAdapter;
 import com.crop.phototocartooneffect.adapters.ItemAdapterFull;
+import com.crop.phototocartooneffect.dialogfragment.MenuFragmentDialog;
+import com.crop.phototocartooneffect.dialogfragment.ShowAllBottomFragment;
 import com.crop.phototocartooneffect.models.MenuItem;
+import com.crop.phototocartooneffect.utils.AppSettings;
 
 public class MainFragment extends Fragment {
     private ItemAdapter.OnItemClickListener listener;
@@ -55,6 +58,13 @@ public class MainFragment extends Fragment {
 
     private void init(View view) {
         // TODO: Initialize your views here
+        view.findViewById(R.id.header_tryButton).setOnClickListener(v -> {
+            listener.onItemClick(AppSettings.DEFAULT_ITEM);
+        });
+        view.findViewById(R.id.show_all_text).setOnClickListener(v -> {
+
+            ShowAllBottomFragment.newInstance(listener).show(getActivity().getSupportFragmentManager(), "ShowAllBottomFragment");
+        });
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_top);
         //        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         // Set up a GridLayoutManager with 2 rows (span count) and horizontal orientation

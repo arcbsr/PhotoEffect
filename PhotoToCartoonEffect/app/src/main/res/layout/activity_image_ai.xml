@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:title="AI Pixello"
+            app:title=""
             app:titleTextColor="@color/gold">
 
             <androidx.appcompat.widget.AppCompatButton
@@ -39,7 +39,7 @@
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
         </androidx.appcompat.widget.Toolbar>
 

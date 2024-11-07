@@ -5,19 +5,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.crop.phototocartooneffect.R;
-import com.crop.phototocartooneffect.adapters.ItemAdapter;
 import com.crop.phototocartooneffect.imageloader.ImageLoader;
-import com.google.android.material.appbar.AppBarLayout;
 import com.jsibbold.zoomage.ZoomageView;
 
-public class ImageAiFragment extends Fragment {
+public class ImageAiFragment extends BaseFragmentInterface {
 
 //    MaskingView maskingView;
 
@@ -47,5 +43,10 @@ public class ImageAiFragment extends Fragment {
         originalImageView.setImageBitmap(ImageLoader.getInstance().getBitmap(createBitmapKey));
 
         return view;
+    }
+
+    @Override
+    public void applyAppBAR() {
+
     }
 }

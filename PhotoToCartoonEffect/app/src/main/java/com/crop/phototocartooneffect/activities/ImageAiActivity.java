@@ -20,11 +20,14 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.crop.phototocartooneffect.BuildConfig;
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.adapters.ItemAdapter;
 import com.crop.phototocartooneffect.adapters.ItemAdapterFull;
 import com.crop.phototocartooneffect.dialogfragment.ErrorDialog;
 import com.crop.phototocartooneffect.dialogfragment.LoadingDialog;
+import com.crop.phototocartooneffect.dialogfragment.MenuFragmentDialog;
+import com.crop.phototocartooneffect.dialogfragment.MoreBottomFragment;
 import com.crop.phototocartooneffect.fragments.ImageAiFragment;
 import com.crop.phototocartooneffect.fragments.MainFragment;
 import com.crop.phototocartooneffect.imageloader.ImageLoader;
@@ -131,7 +134,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         loadingDialog = new LoadingDialog();
         toolbar = findViewById(R.id.appBarLayout);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
         findViewById(R.id.newButton).setOnClickListener(v -> {
             openImagePicker(pickSource);
         });
@@ -193,8 +196,8 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
 
     private void createImageEffect(MenuItem selectedRenderItem, String bitmapKeyValue, Context context, ImageEffect.ImageEffectCallback callback) {
         ImageEffect imageEffect;
-        String API_KEY = "Kv36AX1iMgccy5D8XxXehWeEj4uqXA0wgrQlAXPovC5J4UQ4HipS5NC1lR6H";
-        String MONSTER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IjM5ZmJhYTJmNzA4ZTc3NjEwNDc2NzU3MjYwNGM0ZjU2IiwiY3JlYXRlZF9hdCI6IjIwMjQtMTEtMDRUMTU6MDE6NDguMjMyOTIzIn0.QZtSSUEfdBYTMed9kQRwDbXnJ33j8IxC9rbn1r76TpQ";
+        String API_KEY = BuildConfig.MLAB_API_KEY;
+        String MONSTER_TOKEN = BuildConfig.MONS_TOKEN_KEY;
         switch (selectedRenderItem.getImageCreationType()) {
             case IMAGE_EFFECT_IMG2IMG:
                 imageEffect = new ImageToImageService("Transform the image into a snack-shaped object, maintaining the original colors and textures. The result should resemble a recognizable snack item (e.g., potato chip, cookie, or candy) while preserving key features of the original image.", API_KEY, context);
@@ -241,15 +244,22 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                     .commit();
 
             // Show the custom back button
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             toolbar.setNavigationIcon(R.drawable.ic_back_arrow);
             toolbar.setNavigationOnClickListener(v -> onBackPressed());
         } else {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment, "MAIN_FRAGMENT").commit();
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            toolbar.setNavigationIcon(null);
-            toolbar.setNavigationOnClickListener(null);
+            toolbar.setNavigationIcon(R.drawable.ic_menu);
+            toolbar.setNavigationOnClickListener(v -> openMenuScreen());
         }
+    }
+
+    private void openMenuScreen() {
+        MenuFragmentDialog menuFragmentDialog = new MenuFragmentDialog();
+        menuFragmentDialog.show(getSupportFragmentManager(), "MenuFragmentDialog");
+//        MoreBottomFragment moreBottomFragment = new MoreBottomFragment();
+//        moreBottomFragment.show(getSupportFragmentManager(), "MoreBottomFragment");
+
     }
 
     @Override
@@ -262,6 +272,9 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                 toolbar.setNavigationIcon(null);
                 toolbar.setNavigationOnClickListener(null);
+            } else {
+                toolbar.setNavigationIcon(R.drawable.ic_menu);
+                toolbar.setNavigationOnClickListener(v -> openMenuScreen());
             }
         } else {
             super.onBackPressed();

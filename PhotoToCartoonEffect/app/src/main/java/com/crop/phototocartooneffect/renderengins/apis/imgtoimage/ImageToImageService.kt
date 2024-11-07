@@ -111,7 +111,7 @@ class ImageToImageService(
                     val imageLink = uploadResponseBody.link
                     if (imageLink.isNotEmpty()) {
 
-                        val image2ImageRequest: Image2ImageRequest =
+                        val image2ImageRequest =
                             Image2ImageRequest(prompt, key, imageLink)
                         RLog.d("TextToImageRequest:", image2ImageRequest)
 

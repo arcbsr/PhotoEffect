@@ -32,6 +32,10 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
         this.context = context;
         this.listener = listener;
         // Initialize menu items
+        setData();
+    }
+
+    public void setData(){
         menuItems.add(new MenuItem(R.drawable.thumb, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
         menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
         menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
@@ -42,14 +46,12 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
         menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
         Collections.shuffle(menuItems);
     }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_item_image_full, parent, false);
         return new ViewHolder(view);
     }
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Calculate width based on column count and screen width
@@ -60,6 +62,7 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
         ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
         layoutParams.width = itemWidth;
 //        layoutParams.height = 600; // Random or dynamic height to create staggered effect
+        layoutParams.height = (int) (itemWidth * (4.0 / 3.0));
         holder.itemView.setLayoutParams(layoutParams);
         MenuItem item = menuItems.get(position);
         holder.bind(item);

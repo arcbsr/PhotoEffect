@@ -23,10 +23,13 @@
 
     <color name="gradient_start">#101010</color>
     <color name="gradient_end">#FF000000</color>
-    <color name="semi_white">#70808080</color>
+    <color name="semi_white">#45808080</color>
     <color name="head_title">#FFEEEEEE</color>
     <color name="title">#DAD9D9</color>
+    <color name="icons">#DAD9D9</color>
     <color name="details">#FFBDBDBD</color>
     <color name="gold">#FFD700</color>
     <color name="red">#F44336</color>
+    <color name="card_prnt" >#1E1E1E</color>
+    <color name="card_prnt_shadow" >#341E1E1E</color>
 </resources>

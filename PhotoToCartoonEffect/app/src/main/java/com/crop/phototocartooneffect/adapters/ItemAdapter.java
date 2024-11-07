@@ -15,10 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.activities.ImageAiActivity;
 import com.crop.phototocartooneffect.models.MenuItem;
+import com.crop.phototocartooneffect.utils.AppSettings;
 import com.crop.phototocartooneffect.utils.RLog;
 import com.crop.phototocartooneffect.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
@@ -35,7 +37,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         this.context = context;
         this.listener = listener;
         // Initialize menu items
+        menuItems.add(AppSettings.DEFAULT_ITEM);
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb5, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb6, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb3, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
         menuItems.add(new MenuItem(R.drawable.thumb, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb4, ImageAiActivity.ImageCreationType.FIREBASE_ML_SEGMENTATION));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb5, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb6, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb3, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
+    }
+
+    public void setData() {
         menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb5, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
         menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb6, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
         menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb3, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
@@ -52,15 +64,22 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         return new ViewHolder(view);
     }
 
+    private int columnCount = 2;
+
+    public void setColumnCount(int columnCount) {
+        this.columnCount = columnCount;
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Calculate width based on column count and screen width
-        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels - 40; // Adjust for padding
-        int itemWidth = screenWidth / 2;
+        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels; // Adjust for padding
+        int itemWidth = screenWidth / columnCount;
 
         // Set the width to fit columns and apply a varying height for staggered effect
         ViewGroup.LayoutParams layoutParams = holder.cardView.getLayoutParams();
-        layoutParams.height = Utils.getDevicePixelWidth(240); // Set height based on device pixels for staggered effect
+//        layoutParams.height = Utils.getDevicePixelWidth(240); // Set height based on device pixels for staggered effect
+        layoutParams.height = (int) (itemWidth * (4.0 / 3.0));
         layoutParams.width = itemWidth;
         holder.cardView.setLayoutParams(layoutParams);
         MenuItem item = menuItems.get(position);
@@ -90,7 +109,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION && listener != null) {
-                        listener.onItemClick(item);
+                        if (listener != null)
+                            listener.onItemClick(item);
                         RLog.e("MenuAdapter", "Clicked on item at position: " + position);
                     }
                 }
