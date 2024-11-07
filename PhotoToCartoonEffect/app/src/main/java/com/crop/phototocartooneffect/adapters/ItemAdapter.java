@@ -109,8 +109,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION && listener != null) {
-                        if (listener != null)
-                            listener.onItemClick(item);
+
+                        listener.onItemClick(item);
                         RLog.e("MenuAdapter", "Clicked on item at position: " + position);
                     }
                 }

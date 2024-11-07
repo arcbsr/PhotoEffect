@@ -22,16 +22,16 @@
                 android:layout_height="@dimen/bnr_size"
                 android:layout_margin="10dp"
                 android:clickable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="@color/gradient_start"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="5dp"
-                app:cardMaxElevation="5dp"
-                app:cardPreventCornerOverlap="true">
+                app:cardCornerRadius="10dp"
+                app:cardElevation="15dp"
+                app:cardMaxElevation="15dp"
+                app:cardPreventCornerOverlap="true"
+                app:cardUseCompatPadding="false">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@drawable/card_background"
                     android:orientation="vertical">
 
 
@@ -52,6 +52,22 @@
                             android:background="@drawable/gradient_overlay" />
 
                         <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_margin="20dp"
+                            android:background="@drawable/button_selector"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:text="Delicious"
+                            android:textColor="@color/white"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/header_tryButton"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/banner_btn_height"
@@ -61,13 +77,12 @@
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="16dp"
                             android:layout_marginBottom="16dp"
-                            android:background="@drawable/round_button_background"
+                            android:background="@drawable/button_selector"
                             android:clickable="true"
-                            android:foreground="?attr/selectableItemBackground"
                             android:text="Try Now"
                             android:textAllCaps="false"
                             android:textColor="@color/white"
-                            app:backgroundTint="@color/white_700" />
+                            app:backgroundTint="@color/semi_white" />
 
 
                     </RelativeLayout>
@@ -100,7 +115,6 @@
                     android:layout_marginEnd="16dp"
                     android:clickable="true"
                     android:drawableRight="@drawable/right_arrow"
-                    android:drawablePadding="10dp"
                     android:drawableTint="@color/title"
                     android:text="See All"
                     android:textColor="@color/title"
@@ -135,7 +149,6 @@
                     android:layout_marginEnd="16dp"
                     android:clickable="true"
                     android:drawableRight="@drawable/right_arrow"
-                    android:drawablePadding="10dp"
                     android:drawableTint="@color/title"
                     android:text="See All"
                     android:textColor="@color/title"
