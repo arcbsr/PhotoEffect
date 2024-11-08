@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#00FFFFFF" /> <!-- Transparent base -->
+        </shape>
+    </item>
+
+    <!-- Neon Line -->
+    <item android:right="20dp" android:left="20dp">
+        <shape android:shape="rectangle">
+            <size android:height="4dp" /> <!-- Thickness of the neon line -->
+            <solid android:color="@color/gold" /> <!-- Neon color -->
+            <corners android:radius="2dp" />
+        </shape>
+    </item>
+</layer-list>

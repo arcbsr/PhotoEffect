@@ -7,15 +7,14 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/img2imgCardView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:clickable="true"
-        android:foreground="?attr/selectableItemBackground"
         app:cardBackgroundColor="@color/black"
         app:cardCornerRadius="10dp"
-        app:cardElevation="5dp"
-        app:cardMaxElevation="5dp"
+        app:cardElevation="15dp"
+        app:cardMaxElevation="15dp"
         app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="false">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -24,7 +23,7 @@
 
 
             <!-- Thumbnail Image with Rounded Corners -->
-            <FrameLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -35,14 +34,37 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/thumb" />
 
+                <ImageView
+                    android:id="@+id/item_thumb_overlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/thumb2" />
+
+                <ImageView
+                    android:id="@+id/item_thumb_shine"
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="-5dp"
+                    android:src="@drawable/shine_effect"
+                    android:visibility="invisible" />
+
+                <View
+                    android:visibility="invisible"
+                    android:id="@+id/shiningLine"
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="-5dp"
+                    android:background="@color/white" />
                 <!-- Gradient Overlay on Thumbnail -->
 
-            </FrameLayout>
+            </RelativeLayout>
 
-<!--            <View-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:background="@drawable/gradient_overlay" />-->
+            <!--            <View-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:background="@drawable/gradient_overlay" />-->
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

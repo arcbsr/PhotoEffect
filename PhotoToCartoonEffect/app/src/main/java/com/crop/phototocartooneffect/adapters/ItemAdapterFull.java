@@ -35,23 +35,25 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
         setData();
     }
 
-    public void setData(){
-        menuItems.add(new MenuItem(R.drawable.thumb, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
-        menuItems.add(new MenuItem(R.drawable.thumb, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
+    public void setData() {
+        menuItems.add(new MenuItem(R.drawable.placeholder, "Remove Background", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.MONSTER_AI));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.MONSTER_AI));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.MONSTER_AI));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.MONSTER_AI));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Remove Background", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.MONSTER_AI));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.MONSTER_AI));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.MONSTER_AI));
+        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.MONSTER_AI));
         Collections.shuffle(menuItems);
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_item_image_full, parent, false);
         return new ViewHolder(view);
     }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Calculate width based on column count and screen width
@@ -75,25 +77,24 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView thumbImageView, thumbImageView2, thumbImageView3, thumbImageView4, thumbImageView5;
-        private CardView cardView, cardView2, cardView3, cardView4, cardView5;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            thumbImageView = itemView.findViewById(R.id.item_thumb);
-            thumbImageView2 = itemView.findViewById(R.id.item_thumb2);
-            thumbImageView3 = itemView.findViewById(R.id.item_thumb3);
-            thumbImageView4 = itemView.findViewById(R.id.item_thumb4);
-            thumbImageView5 = itemView.findViewById(R.id.item_thumb5);
-            cardView = itemView.findViewById(R.id.img2imgCardView);
-            cardView2 = itemView.findViewById(R.id.img2imgCardView2);
-            cardView3 = itemView.findViewById(R.id.img2imgCardView3);
-            cardView4 = itemView.findViewById(R.id.img2imgCardView4);
-            cardView5 = itemView.findViewById(R.id.img2imgCardView5);
+
+            thumbImageView = itemView.findViewById(R.id.include_view11).findViewById(R.id.item_thumb);
+            thumbImageView2 = itemView.findViewById(R.id.include_view12).findViewById(R.id.item_thumb);
+            thumbImageView3 = itemView.findViewById(R.id.include_view21).findViewById(R.id.item_thumb);
+            thumbImageView4 = itemView.findViewById(R.id.include_view22).findViewById(R.id.item_thumb);
+            thumbImageView5 = itemView.findViewById(R.id.include_view3).findViewById(R.id.item_thumb);
         }
 
         public void bind(final MenuItem item) {
-//            thumbImageView.setImageResource(item.getThumbResId());
-            cardView.setOnClickListener(new View.OnClickListener() {
+            thumbImageView.setImageResource(item.getThumbResId());
+            thumbImageView2.setImageResource(item.getThumbResId());
+            thumbImageView3.setImageResource(item.getThumbResId());
+            thumbImageView4.setImageResource(item.getThumbResId());
+            thumbImageView5.setImageResource(item.getThumbResId());
+            thumbImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
