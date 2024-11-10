@@ -54,13 +54,15 @@ public class ShowAllBottomFragment extends BottomSheetDialogFragment {
 
     private void init(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_show_all);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false));
         ItemAdapter adapter = new ItemAdapter(getContext(), item -> {
             if (listener != null) {
+                dismiss();
                 listener.onItemClick(item);
             }
         }); // Replace YourAdapter with your actual adapter
-        adapter.setColumnCount(3);
+        adapter.setColumnCount(2);
+        adapter.setPadding(40);
         adapter.setData();
         recyclerView.setAdapter(adapter);
     }

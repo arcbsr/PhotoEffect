@@ -85,7 +85,7 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
             thumbImageView2 = itemView.findViewById(R.id.include_view12).findViewById(R.id.item_thumb);
             thumbImageView3 = itemView.findViewById(R.id.include_view21).findViewById(R.id.item_thumb);
             thumbImageView4 = itemView.findViewById(R.id.include_view22).findViewById(R.id.item_thumb);
-            thumbImageView5 = itemView.findViewById(R.id.include_view3).findViewById(R.id.item_thumb);
+            thumbImageView5 = itemView.findViewById(R.id.main_banner).findViewById(R.id.header_item_thumb);
         }
 
         public void bind(final MenuItem item) {

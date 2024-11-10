@@ -2,6 +2,8 @@ package com.crop.phototocartooneffect.renderengins.apis.imgtoimage
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.crop.modellbs.imgtoimg.Image2ImageRequest
 import com.crop.modellbs.uploadimg.ImageUploadRequest
@@ -69,8 +71,7 @@ class ImageToImageService(
             effectResponse.output ?: effectResponse.outputImageLinks
         )
 //        callback.onSuccess(null, effectResponse.output[0])
-        ImageLoader.getInstance().loadBitmap(
-            context,
+        ImageLoader.getInstance().loadBitmap(context,
             effectResponse.output[0],
             System.currentTimeMillis().toString(),
             object : OnImageLoadedListener2 {
@@ -82,11 +83,10 @@ class ImageToImageService(
                     callback.onError(Exception("Failed to load image"))
                 }
 
-            }
-        )
+            })
     }
 
-    private suspend fun logAndCallbackError(exception: Exception, callback: ImageEffectCallback) {
+    private fun logAndCallbackError(exception: Exception, callback: ImageEffectCallback) {
         RLog.e("Error applying effect: ", exception.message)
         callback.onError(exception)
     }
@@ -101,8 +101,7 @@ class ImageToImageService(
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val imageBase64 = ImageLoader.getInstance().getBitmapAsBase64(bitmap)
-                val imageUploadRequest =
-                    ImageUploadRequest(imageBase64, key)
+                val imageUploadRequest = ImageUploadRequest(imageBase64, key)
                 Log.d("imageUploadRequest:", imageUploadRequest.toString())
                 val uploadResponse = apiService.applyImgUpload(imageUploadRequest)
                 RLog.d("uploadResponse:", uploadResponse.body())
@@ -111,8 +110,7 @@ class ImageToImageService(
                     val imageLink = uploadResponseBody.link
                     if (imageLink.isNotEmpty()) {
 
-                        val image2ImageRequest =
-                            Image2ImageRequest(prompt, key, imageLink)
+                        val image2ImageRequest = Image2ImageRequest(prompt, key, imageLink)
                         RLog.d("TextToImageRequest:", image2ImageRequest)
 
 

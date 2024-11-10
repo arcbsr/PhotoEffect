@@ -70,9 +70,9 @@ public class AnimationUtils {
         view.post(() -> animator.start());
     }
 
-    public static void startRevealAnimation(int mainImageWidth, View shiningLine, ImageView overlayImageView) {
+    public static ValueAnimator startRevealAnimation(int mainImageWidth, View shiningLine, ImageView overlayImageView) {
         // Create a ValueAnimator that animates from 0 to the width of the main image
-        ValueAnimator animator = ValueAnimator.ofInt(0, mainImageWidth);
+        ValueAnimator animator = ValueAnimator.ofInt(-20, mainImageWidth + 20);
         animator.setDuration(AppSettings.ANIMATION_DURATION); // Set the duration for the full reveal
         animator.setInterpolator(new CycleInterpolator(.5f));
         animator.setRepeatCount(ValueAnimator.INFINITE);
@@ -105,6 +105,7 @@ public class AnimationUtils {
 
         // Start the animation
         animator.start();
+        return animator;
     }
 
 

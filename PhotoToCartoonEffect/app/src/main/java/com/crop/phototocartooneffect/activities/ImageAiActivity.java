@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.renderscript.RenderScript;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -58,30 +61,33 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
 
     @Override
     public void onSuccess(Bitmap result, String key) {
-        onFinished();
-        if (result != null) {
-            showImageInFragment(ImageAiFragment.newInstance("original", key));
-        }
+        new Handler(Looper.getMainLooper()).post(() -> {
+            onFinished();
+            if (result != null) {
+                showImageInFragment(ImageAiFragment.newInstance("original", key));
+            }
+        });
+
     }
 
     @Override
     public void onError(Exception e) {
-        onFinished();
-        ErrorDialog.newInstance(e.getMessage()).show(getSupportFragmentManager(), "ErrorDialog");
+        new Handler(Looper.getMainLooper()).post(() -> {
+            onFinished();
+            ErrorDialog.newInstance(e.getMessage()).show(getSupportFragmentManager(), "ErrorDialog");
+        });
+
     }
 
     @Override
     public void onStartProcess() {
-        if (loadingDialog != null) {
-            loadingDialog.show(getSupportFragmentManager(), "LoadingDialog");
-        }
 
     }
 
     @Override
     public void onFinished() {
         if (loadingDialog != null) {
-            loadingDialog.dismiss();
+            loadingDialog.dismissDialog();
         }
     }
 
@@ -131,7 +137,6 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_ai);
-        loadingDialog = new LoadingDialog();
         toolbar = findViewById(R.id.appBarLayout);
         setSupportActionBar(toolbar);
 
@@ -176,6 +181,12 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         } else {
             finish();
         }
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                handleBackPress();
+            }
+        });
     }
 
 
@@ -191,7 +202,11 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         if (selectedRenderItem == null) {
             return;
         }
-        createImageEffect(selectedRenderItem, keyValue, this, this);
+        loadingDialog = LoadingDialog.newInstance(selectedRenderItem, ImageLoader.getInstance().getBitmap(keyValue),
+                item -> createImageEffect(selectedRenderItem, keyValue, ImageAiActivity.this, ImageAiActivity.this));
+        if (loadingDialog != null) {
+            loadingDialog.show(getSupportFragmentManager(), "LoadingDialog");
+        }
     }
 
     private void createImageEffect(MenuItem selectedRenderItem, String bitmapKeyValue, Context context, ImageEffect.ImageEffectCallback callback) {
@@ -259,15 +274,16 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         menuFragmentDialog.show(getSupportFragmentManager(), "MenuFragmentDialog");
 //        MoreBottomFragment moreBottomFragment = new MoreBottomFragment();
 //        moreBottomFragment.show(getSupportFragmentManager(), "MoreBottomFragment");
-
     }
 
-    @Override
-    public void onBackPressed() {
-        RLog.e("BackPressed", "fragment count " + getSupportFragmentManager().getBackStackEntryCount());
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+    private void handleBackPress() {
+        int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
+        RLog.e("BackPressed", "fragment count " + backStackCount);
+
+        if (backStackCount > 0) {
             getSupportFragmentManager().popBackStack();
             Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
             if (currentFragment instanceof MainFragment) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                 toolbar.setNavigationIcon(null);
@@ -277,7 +293,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                 toolbar.setNavigationOnClickListener(v -> openMenuScreen());
             }
         } else {
-            super.onBackPressed();
+            finish(); // Or call super.onBackPressed() if you want to let the system handle it
         }
     }
 }

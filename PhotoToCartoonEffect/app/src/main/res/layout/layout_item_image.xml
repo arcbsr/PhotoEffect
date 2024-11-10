@@ -8,8 +8,6 @@
         android:id="@+id/img2imgCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        app:cardBackgroundColor="@color/black"
         app:cardCornerRadius="10dp"
         app:cardElevation="15dp"
         app:cardMaxElevation="15dp"
@@ -25,21 +23,32 @@
             <!-- Thumbnail Image with Rounded Corners -->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="visible">
+
+
+                <ImageView
+                    android:id="@+id/loading_image_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha=".3"
+                    android:scaleType="fitXY" />
 
                 <ImageView
                     android:id="@+id/item_thumb"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/thumb" />
+                    android:src="@drawable/placeholder" />
 
                 <ImageView
                     android:id="@+id/item_thumb_overlay"
                     android:layout_width="match_parent"
+
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/thumb2" />
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/item_thumb_shine"
@@ -50,13 +59,13 @@
                     android:visibility="invisible" />
 
                 <View
-                    android:visibility="invisible"
                     android:id="@+id/shiningLine"
                     android:layout_width="3dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="start"
                     android:layout_marginLeft="-5dp"
-                    android:background="@color/white" />
+                    android:background="@color/white"
+                    android:visibility="invisible" />
                 <!-- Gradient Overlay on Thumbnail -->
 
             </RelativeLayout>

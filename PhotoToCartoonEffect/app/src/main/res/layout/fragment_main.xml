@@ -16,149 +16,96 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/header_view"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/bnr_size"
-                android:layout_margin="10dp"
-                android:clickable="true"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="15dp"
-                app:cardMaxElevation="15dp"
-                app:cardPreventCornerOverlap="true"
-                app:cardUseCompatPadding="false">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/card_background"
-                    android:orientation="vertical">
-
-
-                    <!-- Thumbnail Image with Rounded Corners -->
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <ImageView
-                            android:id="@+id/header_item_thumb"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerCrop" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/gradient_overlay" />
-
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:layout_margin="20dp"
-                            android:background="@drawable/button_selector"
-                            android:paddingLeft="20dp"
-                            android:paddingRight="20dp"
-                            android:text="Delicious"
-                            android:textColor="@color/white"
-                            android:visibility="gone"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:id="@+id/header_tryButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/banner_btn_height"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginBottom="16dp"
-                            android:background="@drawable/button_selector"
-                            android:clickable="true"
-                            android:text="Try Now"
-                            android:textAllCaps="false"
-                            android:textColor="@color/white"
-                            app:backgroundTint="@color/semi_white" />
-
-
-                    </RelativeLayout>
-                </RelativeLayout>
-            </androidx.cardview.widget.CardView>
+            <include
+                android:id="@+id/main_banner"
+                layout="@layout/layout_item_banner" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/header_view"
+                android:layout_below="@id/main_banner"
                 android:visibility="visible">
 
-                <TextView
-                    android:id="@+id/title_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/featured_ai"
-                    android:textColor="@color/title"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                <RelativeLayout
+                    android:id="@+id/title_view_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/show_all_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@id/title_text"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="16dp"
-                    android:clickable="true"
-                    android:drawableRight="@drawable/right_arrow"
-                    android:drawableTint="@color/title"
-                    android:text="See All"
-                    android:textColor="@color/title"
-                    android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/title_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/featured_ai"
+                        android:textColor="@color/title"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/show_all_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@id/title_text"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="16dp"
+                        android:clickable="true"
+                        android:drawableRight="@drawable/right_arrow"
+                        android:drawableTint="@color/title"
+                        android:gravity="center"
+                        android:text="See All"
+                        android:textColor="@color/title"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView_top"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/title_text"
+                    android:layout_below="@id/title_view_root"
                     android:layout_marginTop="8dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                <TextView
-                    android:id="@+id/title_text2"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/title_view_root2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/recyclerView_top"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/featured_ai"
-                    android:textColor="@color/title"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:layout_below="@id/recyclerView_top">
 
-                <TextView
-                    android:id="@+id/show_all_text2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@id/title_text2"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="16dp"
-                    android:clickable="true"
-                    android:drawableRight="@drawable/right_arrow"
-                    android:drawableTint="@color/title"
-                    android:text="See All"
-                    android:textColor="@color/title"
-                    android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/title_text2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/featured_ai"
+                        android:textColor="@color/title"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/show_all_text2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@id/title_text2"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="16dp"
+                        android:clickable="true"
+                        android:drawableRight="@drawable/right_arrow"
+                        android:drawableTint="@color/title"
+                        android:gravity="center"
+                        android:text="See All"
+                        android:textColor="@color/title"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView_2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/title_text2"
+                    android:layout_below="@id/title_view_root2"
                     android:layout_marginTop="8dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

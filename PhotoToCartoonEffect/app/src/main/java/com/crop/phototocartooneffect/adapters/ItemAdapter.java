@@ -66,6 +66,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     }
 
     private int columnCount = 2;
+    private int padding = 0;
+
+    public void setPadding(int padding) {
+        this.padding = padding;
+    }
 
     public void setColumnCount(int columnCount) {
         this.columnCount = columnCount;
@@ -73,12 +78,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels; // Adjust for padding
+        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels - padding; // Adjust for padding
         int itemWidth = (screenWidth / columnCount);
 
         // Set the width to fit columns and apply a varying height for staggered effect
         ViewGroup.LayoutParams layoutParams = holder.cardView.getLayoutParams();
-        layoutParams.height = (int) (itemWidth * (4.0 / 3.0)); // Set height based on aspect ratio (4:3)
+        layoutParams.height = (int) (itemWidth * (3.0 / 3.0)); // Set height based on aspect ratio (4:3)
         layoutParams.width = itemWidth;
 
         // Get margin value from resources
@@ -119,16 +124,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
         public void bind(final MenuItem item) {
             thumbImageView.setImageResource(item.getThumbResId());
-            thumbImageView.setOnClickListener(v -> {
+            overlayImageView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION && listener != null) {
-//                    listener.onItemClick(item);
-                    if (v.getAnimation() != null) {
-                        v.getAnimation().cancel();
-                        v.setAnimation(null);
-                    } else {
-                        AnimationUtils.startRevealAnimation(v.getWidth(), lineView, overlayImageView);
-                    }
+                    listener.onItemClick(item);
+//                    if (item.animator != null) {
+//                        item.animator.end();
+//                        item.animator = null;
+//                    } else {
+//                        item.animator = AnimationUtils.startRevealAnimation(v.getWidth(), lineView, overlayImageView);
+//                        item.animator.start();
+//                    }
                     RLog.e("MenuAdapter", "Clicked on item at position: " + position);
                 }
             });

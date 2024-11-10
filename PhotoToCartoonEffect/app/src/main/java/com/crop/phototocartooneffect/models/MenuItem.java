@@ -1,10 +1,15 @@
 package com.crop.phototocartooneffect.models;
 
+import android.animation.ValueAnimator;
+import android.graphics.Bitmap;
+
 import com.crop.phototocartooneffect.activities.ImageAiActivity;
 
 public class MenuItem {
+    public ValueAnimator animator;
     private int iconResId;
     private String title;
+    public Bitmap bitmap;
     private String description;
     private int thumbResId;
     public boolean isBanner;
