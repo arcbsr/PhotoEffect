@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.crop.phototocartooneffect.R;
+import com.crop.phototocartooneffect.activities.MaskingView;
 import com.crop.phototocartooneffect.imageloader.ImageLoader;
 import com.jsibbold.zoomage.ZoomageView;
 
@@ -35,13 +36,55 @@ public class ImageAiFragment extends BaseFragmentInterface {
         this.createBitmapKey = createBitmapKey;
     }
 
+    private boolean isInit = false;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_editing, container, false);
-        ZoomageView originalImageView = view.findViewById(R.id.myZoomageView);
-        originalImageView.setImageBitmap(ImageLoader.getInstance().getBitmap(createBitmapKey));
+//        ZoomageView originalImageView = view.findViewById(R.id.myZoomageView);
+//        originalImageView.setImageBitmap(ImageLoader.getInstance().getBitmap(createBitmapKey));
 
+        MaskingView maskingView = view.findViewById(R.id.maskingView);
+        maskingView.post(new Runnable() {
+            @Override
+            public void run() {
+                isInit = true;
+                maskingView.setMaskBitmap(ImageLoader.getInstance().getBitmap(createBitmapKey));
+            }
+        });
+        view.findViewById(R.id.doneButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isInit) {
+                    maskingView.clear();
+                }
+            }
+        });
+        view.findViewById(R.id.undoButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isInit) {
+                    maskingView.undoMask();
+                }
+            }
+        });
+        view.findViewById(R.id.scaleButton_in).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isInit) {
+                    maskingView.scaleIn();
+                }
+            }
+        });
+        view.findViewById(R.id.scaleButton_out).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isInit) {
+                    maskingView.scaleOut();
+                }
+            }
+        });
         return view;
     }
 

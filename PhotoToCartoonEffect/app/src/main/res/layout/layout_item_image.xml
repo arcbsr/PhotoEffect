@@ -38,13 +38,11 @@
                     android:id="@+id/item_thumb"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/placeholder" />
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/item_thumb_overlay"
                     android:layout_width="match_parent"
-
                     android:layout_height="match_parent"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackgroundBorderless"

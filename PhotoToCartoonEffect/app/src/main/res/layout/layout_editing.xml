@@ -7,94 +7,102 @@
     android:background="@drawable/background_gradient"
     tools:context=".activities.ImageAiActivity">
 
-    <com.jsibbold.zoomage.ZoomageView
-        android:id="@+id/myZoomageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
+    <!--    <com.jsibbold.zoomage.ZoomageView-->
+    <!--        android:id="@+id/myZoomageView"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:zoomage_animateOnReset="true"-->
+    <!--        app:zoomage_autoCenter="true"-->
+    <!--        app:zoomage_autoResetMode="UNDER"-->
+    <!--        app:zoomage_maxScale="8"-->
+    <!--        app:zoomage_minScale="0.6"-->
+    <!--        app:zoomage_restrictBounds="false"-->
+    <!--        app:zoomage_translatable="true"-->
+    <!--        app:zoomage_zoomable="true" />-->
+
+    <!--     MaskingView for drawing or masking effects -->
+    <com.crop.phototocartooneffect.activities.MaskingView
+        android:id="@+id/maskingView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:zoomage_animateOnReset="true"
-        app:zoomage_autoCenter="true"
-        app:zoomage_autoResetMode="UNDER"
-        app:zoomage_maxScale="8"
-        app:zoomage_minScale="0.6"
-        app:zoomage_restrictBounds="false"
-        app:zoomage_translatable="true"
-        app:zoomage_zoomable="true" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- MaskingView for drawing or masking effects -->
-    <!--    <com.crop.phototocartooneffect.activities.MaskingView-->
-    <!--        android:id="@+id/maskingView"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+    <!-- Fullscreen ImageView for previewing or background display -->
+    <ImageView
+        android:id="@+id/fullscreenImageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!--    &lt;!&ndash; Fullscreen ImageView for previewing or background display &ndash;&gt;-->
-    <!--    <ImageView-->
-    <!--        android:id="@+id/fullscreenImageView"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        android:scaleType="fitCenter"-->
-    <!--        android:visibility="gone"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <!--    &lt;!&ndash; Scale In/Out Button (using a vector drawable icon) &ndash;&gt;-->
-    <!--    <ImageButton-->
-    <!--        android:id="@+id/scaleButton_in"-->
-    <!--        android:layout_width="48dp"-->
-    <!--        android:layout_height="48dp"-->
-    <!--        android:background="@drawable/circle_background"-->
-    <!--        android:backgroundTint="#66FFFFFF"-->
-    <!--        android:padding="8dp"-->
-    <!--        android:src="@drawable/ic_scale_in"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintEnd_toStartOf="@id/scaleButton_out"-->
-    <!--        app:layout_constraintTop_toTopOf="parent"-->
-    <!--        app:tint="@color/black" />-->
+        <!-- Scale In/Out Button (using a vector drawable icon) -->
+        <ImageButton
+            android:id="@+id/scaleButton_out"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="5dp"
+            android:background="@drawable/circle_background"
+            android:padding="8dp"
+            android:src="@drawable/ic_scale_out"
+            app:backgroundTint="@color/white"
+            app:tint="@color/white" />
 
-    <!--    <ImageButton-->
-    <!--        android:id="@+id/scaleButton_out"-->
-    <!--        android:layout_width="48dp"-->
-    <!--        android:layout_height="48dp"-->
-    <!--        android:background="@drawable/circle_background"-->
-    <!--        android:backgroundTint="#66FFFFFF"-->
-    <!--        android:padding="8dp"-->
-    <!--        android:src="@drawable/ic_scale_out"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent"-->
-    <!--        app:tint="@color/black" />-->
-    <!--    &lt;!&ndash; Undo Button (icon-based) &ndash;&gt;-->
-    <!--    <ImageButton-->
-    <!--        android:id="@+id/undoButton"-->
-    <!--        android:layout_width="48dp"-->
-    <!--        android:layout_height="48dp"-->
-    <!--        android:background="@drawable/circle_background"-->
-    <!--        android:backgroundTint="#66FFFFFF"-->
-    <!--        android:padding="8dp"-->
-    <!--        android:src="@drawable/ic_undo"-->
-    <!--        app:layout_constraintEnd_toStartOf="@id/scaleButton_in"-->
-    <!--        app:layout_constraintTop_toTopOf="parent"-->
-    <!--        app:tint="@color/black" />-->
+        <ImageButton
+            android:id="@+id/scaleButton_in"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="5dp"
+            android:layout_toStartOf="@id/scaleButton_out"
+            android:background="@drawable/circle_background"
+            android:padding="8dp"
+            android:src="@drawable/ic_scale_in"
+            app:backgroundTint="@color/white"
+            app:tint="@color/white" />
 
-    <!--    &lt;!&ndash; Done Button (icon-based) &ndash;&gt;-->
-    <!--    <ImageButton-->
-    <!--        android:id="@+id/doneButton"-->
-    <!--        android:layout_width="48dp"-->
-    <!--        android:layout_height="48dp"-->
-    <!--        android:background="@drawable/circle_background"-->
-    <!--        android:backgroundTint="#66FFFFFF"-->
-    <!--        android:padding="8dp"-->
-    <!--        android:src="@drawable/ic_done"-->
-    <!--        app:layout_constraintEnd_toStartOf="@id/undoButton"-->
-    <!--        app:layout_constraintTop_toTopOf="parent"-->
-    <!--        app:tint="@color/black" />-->
+        <!-- Undo Button (icon-based) -->
+        <ImageButton
+            android:id="@+id/undoButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="5dp"
+            android:layout_toStartOf="@id/scaleButton_in"
+            android:background="@drawable/circle_background"
+            android:padding="8dp"
+            android:src="@drawable/ic_undo"
+            app:backgroundTint="@color/white"
+            app:tint="@color/white" />
 
+        <!-- Done Button (icon-based) -->
+        <ImageButton
+            android:id="@+id/doneButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="5dp"
+            android:layout_toStartOf="@id/undoButton"
+            android:background="@drawable/circle_background"
+            android:padding="8dp"
+            android:src="@drawable/ic_done"
+            app:backgroundTint="@color/white"
+            app:tint="@color/white" />
+
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

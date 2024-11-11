@@ -53,6 +53,12 @@ public class ShowAllBottomFragment extends BottomSheetDialogFragment {
     }
 
     private void init(View view) {
+        view.findViewById(R.id.closeIcon).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_show_all);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false));
         ItemAdapter adapter = new ItemAdapter(getContext(), item -> {

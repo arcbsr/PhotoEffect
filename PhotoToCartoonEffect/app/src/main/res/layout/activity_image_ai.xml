@@ -28,7 +28,7 @@
                 android:layout_gravity="end"
                 android:layout_margin="12dp"
                 android:background="@drawable/button_selector"
-                app:backgroundTint="@color/gold"
+                app:backgroundTint="@color/orange"
                 android:clickable="true"
                 android:drawableRight="@drawable/pro_icon_24"
                 android:drawableTint="@color/white"

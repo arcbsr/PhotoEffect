@@ -73,13 +73,13 @@ public class PermissionAccess {
         }
     }
 
-    public void requestCameraPermission(AppCompatActivity activity) {
+    public void requestCameraPermission(AppCompatActivity activity, PermissionCallback callback) {
         PermissionX.init(activity).permissions(android.Manifest.permission.CAMERA)
                 .request((allGranted, grantedList, deniedList) -> {
                     if (allGranted) {
-                        permissionCallback.onPermissionGranted();
+                        callback.onPermissionGranted();
                     } else {
-                        permissionCallback.onPermissionDenied();
+                        callback.onPermissionDenied();
                     }
                 });
     }

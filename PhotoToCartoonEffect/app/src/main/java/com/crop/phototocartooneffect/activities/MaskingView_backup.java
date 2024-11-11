@@ -14,16 +14,15 @@ import android.view.View;
 
 import java.util.Stack;
 
-public class MaskingView extends View {
+public class MaskingView_backup extends View {
     private Bitmap originalBitmap;
     private Bitmap maskBitmap;
     private Paint paint;
     private Path path;
     private Stack<Bitmap> maskStack = new Stack<>();
     private boolean isErasing = false;
-    private float offsetX = 0f;
-    private float offsetY = 0f;
-    public MaskingView(Context context, AttributeSet attrs) {
+
+    public MaskingView_backup(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
@@ -71,8 +70,7 @@ public class MaskingView extends View {
 
             int newWidth = (int) (maskBitmap.getWidth() * scaleFactor);
             int newHeight = (int) (maskBitmap.getHeight() * scaleFactor);
-            offsetX = (getWidth() - newWidth) / 2f;
-            offsetY = (getHeight() - newHeight) / 2f;
+
             Bitmap scaledBitmap = Bitmap.createScaledBitmap(maskBitmap, newWidth, newHeight, true);
             maskBitmap = scaledBitmap;
 
@@ -83,12 +81,10 @@ public class MaskingView extends View {
 
     private void updateMaskBitmap() {
         if (maskBitmap != null) {
-//            int newWidth = (int) (maskBitmap.getWidth() * scaleFactor);
-//            int newHeight = (int) (maskBitmap.getHeight() * scaleFactor);
-//            offsetX = (getWidth() - newWidth) / 2f;
-//            offsetY = (getHeight() - newHeight) / 2f;
-//            Bitmap scaledBitmap = Bitmap.createScaledBitmap(maskBitmap, newWidth, newHeight, true);
-//            maskBitmap = scaledBitmap;
+            int newWidth = (int) (maskBitmap.getWidth() * scaleFactor);
+            int newHeight = (int) (maskBitmap.getHeight() * scaleFactor);
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(maskBitmap, newWidth, newHeight, true);
+            maskBitmap = scaledBitmap;
             invalidate();
         }
     }
@@ -96,11 +92,6 @@ public class MaskingView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.save();
-
-        // Apply scaling and translation to the canvas
-        canvas.translate(offsetX, offsetY);
-        canvas.scale(scaleFactor, scaleFactor);
         if (originalBitmap != null) {
             // Draw the original bitmap in the center
 //            canvas.drawBitmap(originalBitmap, x, y, null);
@@ -108,18 +99,14 @@ public class MaskingView extends View {
 
         // Draw the mask bitmap
         if (maskBitmap != null) {
-//            float x = (getWidth() - maskBitmap.getWidth()) / 2f;
-//            float y = (getHeight() - maskBitmap.getHeight()) / 2f;
-            canvas.drawBitmap(maskBitmap, offsetX, offsetY, null);
+            float x = (getWidth() - maskBitmap.getWidth()) / 2f;
+            float y = (getHeight() - maskBitmap.getHeight()) / 2f;
+            canvas.drawBitmap(maskBitmap, x, y, null);
         }
 
         // Draw the path on the canvas (temporary visual feedback)
         if (!isErasing) {
-            canvas.save();
-            canvas.translate(offsetX, offsetY);
-            canvas.scale(scaleFactor, scaleFactor);
             canvas.drawPath(path, paint);
-            canvas.restore();
         }
     }
 
@@ -137,8 +124,8 @@ public class MaskingView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float x = (event.getX() - offsetX) / scaleFactor;
-        float y = (event.getY() - offsetY) / scaleFactor;
+        float x = event.getX();
+        float y = event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 path.moveTo(x, y);

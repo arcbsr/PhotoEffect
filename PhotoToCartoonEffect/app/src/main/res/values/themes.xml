@@ -13,10 +13,10 @@
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/gradient_end</item>
         <item name="colorPrimaryDark">@color/gradient_end</item>
-        <item name="colorAccent">@color/white</item>
+        <item name="colorAccent">@color/card_prnt</item>
         <item name="android:windowBackground">@color/black</item>
-        <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:textColorPrimary">@color/title</item>
+        <item name="android:textColorSecondary">@color/details</item>
     </style>
 
     <style name="Theme.PhotoToCartoonEffect" parent="android:Theme.Material.Light.NoActionBar" />

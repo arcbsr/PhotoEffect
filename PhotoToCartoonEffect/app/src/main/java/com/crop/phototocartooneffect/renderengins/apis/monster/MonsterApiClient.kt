@@ -24,6 +24,8 @@ class MonsterApiClient(
     private val token = "Bearer $tokenText"
     private val prompt = RequestBody.create("text/plain".toMediaTypeOrNull(), promptText)
 
+    lateinit var job: Job
+
     companion object {
         const val MAX_RETRIES = 5
         const val RETRY_DELAY = 5000L
@@ -33,7 +35,7 @@ class MonsterApiClient(
 
     override fun applyEffect(bitmap: Bitmap, callback: ImageEffect.ImageEffectCallback) {
         callback.onStartProcess()
-        CoroutineScope(Dispatchers.IO).launch {
+        job = CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = generateImage(bitmap)
                 val processId = response.body()?.process_id.orEmpty()
@@ -52,6 +54,13 @@ class MonsterApiClient(
         }
     }
 
+    //TODO: Cancel job
+    public fun cancel() {
+        if (::job.isInitialized) {
+            job.cancel()
+        }
+    }
+
     private suspend fun generateImage(bitmap: Bitmap): Response<MonsterApiService.MonsEffectResponse> {
         val tempFile = createTempFile(bitmap)
         val imagePart = MultipartBody.Part.createFormData(
@@ -63,14 +72,14 @@ class MonsterApiClient(
     }
 
     private suspend fun pollImageProcessingStatus(
-        processId: String,
-        callback: ImageEffect.ImageEffectCallback
+        processId: String, callback: ImageEffect.ImageEffectCallback
     ) {
         repeat(MAX_RETRIES) { attempt ->
             RLog.d("ImageResponse", "Waiting for process to complete... Attempt $attempt")
 
-            val imgResponse =
-                apiService.getImageProcessingStatus(processId = processId, authorization = token)
+            val imgResponse = apiService.getImageProcessingStatus(
+                processId = processId, authorization = token
+            )
             val status = imgResponse.body()?.status
 
             if (imgResponse.isSuccessful) {
@@ -82,8 +91,7 @@ class MonsterApiClient(
 
                     "IN_PROGRESS" -> {
                         RLog.d(
-                            "ImageResponse",
-                            "Processing in progress, retrying in $RETRY_DELAY ms"
+                            "ImageResponse", "Processing in progress, retrying in $RETRY_DELAY ms"
                         )
                         delay(RETRY_DELAY)
                     }
@@ -111,7 +119,9 @@ class MonsterApiClient(
                 if (effectResponse?.status == "COMPLETED") {
                     handleSuccess(effectResponse, callback)
                 } else {
-                    reportError("Image is still processing: ${effectResponse?.status}", callback)
+                    reportError(
+                        "Image is still processing: ${effectResponse?.status}", callback
+                    )
                 }
             } else {
                 reportError("Failed to apply effect: ${response.message()}", callback)
@@ -128,17 +138,20 @@ class MonsterApiClient(
         )
         RLog.e("FashionEffectResponse: finalImageLink", imageUrl)
 
-        ImageLoader.getInstance()
-            .loadBitmap(context, imageUrl, System.currentTimeMillis().toString(),
-                object : OnImageLoadedListener2 {
-                    override fun onImageLoaded(bitmap: Bitmap?, keyValue: String?, position: Int) {
-                        callback.onSuccess(bitmap, keyValue)
-                    }
+        ImageLoader.getInstance().loadBitmap(context,
+            imageUrl,
+            System.currentTimeMillis().toString(),
+            object : OnImageLoadedListener2 {
+                override fun onImageLoaded(
+                    bitmap: Bitmap?, keyValue: String?, position: Int
+                ) {
+                    callback.onSuccess(bitmap, keyValue)
+                }
 
-                    override fun onErrorLoaded(url: String?, position: Int) {
-                        reportError("Failed to load image", callback)
-                    }
-                })
+                override fun onErrorLoaded(url: String?, position: Int) {
+                    reportError("Failed to load image", callback)
+                }
+            })
     }
 
     private fun createTempFile(bitmap: Bitmap): File {
@@ -160,7 +173,9 @@ class MonsterApiClient(
         callback.onError(exception)
     }
 
-    override fun applyEffectWithData(callback: ImageEffect.ImageEffectCallback, context: Context?) {
+    override fun applyEffectWithData(
+        callback: ImageEffect.ImageEffectCallback, context: Context?
+    ) {
         // Implementation placeholder
     }
 

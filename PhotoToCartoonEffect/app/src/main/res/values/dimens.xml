@@ -2,6 +2,6 @@
 <resources>
     <dimen name="banner_btn_height">30dp</dimen>
     <dimen name="bnr_size">160dp</dimen>
-    <dimen name="btn_radius">4dp</dimen>
+    <dimen name="btn_radius">8dp</dimen>
     <dimen name="item_margin">5dp</dimen>
 </resources>

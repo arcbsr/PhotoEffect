@@ -116,8 +116,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                 false                  // allowMultipleSelection
         );
         PermissionAccess permissionAccess = new PermissionAccess();
-//        permissionAccess.requestCameraPermission(this);
-        permissionAccess.checkRequestCameraPermission(this, new PermissionAccess.PermissionCallback() {
+        permissionAccess.requestCameraPermission(this, new PermissionAccess.PermissionCallback() {
             @Override
             public void onPermissionGranted() {
                 Intent intent = ImagePickerPlus.INSTANCE.createIntent(ImageAiActivity.this, pickRequest);
@@ -129,6 +128,18 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
 
             }
         });
+//        permissionAccess.checkRequestCameraPermission(this, new PermissionAccess.PermissionCallback() {
+//            @Override
+//            public void onPermissionGranted() {
+//                Intent intent = ImagePickerPlus.INSTANCE.createIntent(ImageAiActivity.this, pickRequest);
+//                pickMediaLauncher.launch(intent);
+//            }
+//
+//            @Override
+//            public void onPermissionDenied() {
+//
+//            }
+//        });
     }
 
     private Toolbar toolbar;

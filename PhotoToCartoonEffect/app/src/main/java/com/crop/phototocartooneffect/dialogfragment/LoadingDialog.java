@@ -9,8 +9,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -57,33 +60,42 @@ public class LoadingDialog extends DialogFragment {
         setStyle(DialogFragment.STYLE_NO_TITLE, com.crop.phototocartooneffect.R.style.FullScreenDialogStyle);
     }
 
+    private boolean isProcessing = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_loading_dialog, container, false);
-
+        isProcessing = false;
         setCancelable(false);
         ((ImageView) view.findViewById(R.id.item_thumb)).setScaleType(ImageView.ScaleType.FIT_CENTER);
         ((ImageView) view.findViewById(R.id.item_thumb)).setImageBitmap(bitmap);
         ((ImageView) view.findViewById(R.id.loading_image_background)).setImageBitmap(bitmap);
 
-        view.findViewById(R.id.loading_view_close).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
+        view.findViewById(R.id.loading_view_close).setOnClickListener(view1 -> {
+//            if (isProcessing) {
+//                Toast.makeText(getContext(), "Image is processing. Please wait...", Toast.LENGTH_SHORT).show();
+//            } else
+            dismiss();
         });
-        view.findViewById(R.id.loading_view_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((Button) view.findViewById(R.id.loading_view_button)).setText("Analysis");
-                view.findViewById(R.id.loading_view_button).setEnabled(false);
-                valueAnimator = AnimationUtils.startRevealAnimation(view.findViewById(R.id.item_thumb).getWidth(),
-                        view.findViewById(R.id.shiningLine), view.findViewById(R.id.item_thumb_overlay)
-                );
-                listener.onItemClick(item);
+
+        view.findViewById(R.id.loading_view_button).setOnClickListener(v -> {
+            isProcessing = true;
+            ((Button) view.findViewById(R.id.loading_view_button)).setText("Analysis");
+            view.findViewById(R.id.loading_view_button).setEnabled(false);
+//                view.findViewById(R.id.loading_view_close).setVisibility(View.GONE);
+            valueAnimator = AnimationUtils.startRevealAnimation(view.findViewById(R.id.item_thumb).getWidth(),
+                    view.findViewById(R.id.shiningLine), view.findViewById(R.id.item_thumb_overlay)
+            );
+
+            Button loadingButton = view.findViewById(R.id.loading_view_button);
+            Animation blinkAnimation = new AlphaAnimation(1.0f, 0.0f);
+            blinkAnimation.setDuration(500);
+            blinkAnimation.setRepeatCount(Animation.INFINITE);
+            blinkAnimation.setRepeatMode(Animation.REVERSE);
+            loadingButton.startAnimation(blinkAnimation);
+            listener.onItemClick(item);
 //                view.findViewById(R.id.loading_view_root2).setVisibility(View.GONE);
 //                view.findViewById(R.id.loading_view_root).setVisibility(View.VISIBLE);
-            }
         });
         return view;
     }
