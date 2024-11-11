@@ -46,18 +46,17 @@ public class ImageAiFragment extends BaseFragmentInterface {
 //        originalImageView.setImageBitmap(ImageLoader.getInstance().getBitmap(createBitmapKey));
 
         MaskingView maskingView = view.findViewById(R.id.maskingView);
-        maskingView.post(new Runnable() {
-            @Override
-            public void run() {
-                isInit = true;
-                maskingView.setMaskBitmap(ImageLoader.getInstance().getBitmap(createBitmapKey));
-            }
+        maskingView.post(() -> {
+            isInit = true;
+            maskingView.setOriginalBitmap(ImageLoader.getInstance().getBitmap(originalBitmapKey));
+            maskingView.setMaskBitmap(ImageLoader.getInstance().getBitmap(createBitmapKey));
         });
         view.findViewById(R.id.doneButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isInit) {
-                    maskingView.clear();
+//                    maskingView.clear();
+                    maskingView.setErasingMode(true);
                 }
             }
         });

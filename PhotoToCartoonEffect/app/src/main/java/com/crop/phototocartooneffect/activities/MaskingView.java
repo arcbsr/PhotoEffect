@@ -23,6 +23,12 @@ public class MaskingView extends View {
     private boolean isErasing = false;
     private float offsetX = 0f;
     private float offsetY = 0f;
+    private float scaleFactor = 1.0f;
+
+    private static final float SCALE_STEP = 0.1f;
+    private static final float MIN_SCALE = 0.5f;
+    private static final float MAX_SCALE = 2.0f;
+
     public MaskingView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -40,11 +46,6 @@ public class MaskingView extends View {
         maskStack.push(Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)); // Initial empty state
     }
 
-    private float scaleFactor = 1.0f;
-    private static final float SCALE_STEP = 0.1f;
-    private static final float MIN_SCALE = 0.5f;
-    private static final float MAX_SCALE = 2.0f;
-
     public void scaleIn() {
         if (scaleFactor < MAX_SCALE) {
             scaleFactor += SCALE_STEP;
@@ -59,140 +60,136 @@ public class MaskingView extends View {
         }
     }
 
-    public void scaleMaskBitmapToScreenSize() {
-        if (maskBitmap != null) {
+    public Bitmap scaleMaskBitmapToScreenSize(Bitmap bitmap) {
+        if (bitmap != null) {
             int screenWidth = getWidth();
             int screenHeight = getHeight();
 
-            float widthRatio = (float) screenWidth / maskBitmap.getWidth();
-            float heightRatio = (float) screenHeight / maskBitmap.getHeight();
+            float widthRatio = (float) screenWidth / bitmap.getWidth();
+            float heightRatio = (float) screenHeight / bitmap.getHeight();
 
-            float scaleFactor = Math.min(widthRatio, heightRatio);
+            scaleFactor = Math.min(widthRatio, heightRatio);
 
-            int newWidth = (int) (maskBitmap.getWidth() * scaleFactor);
-            int newHeight = (int) (maskBitmap.getHeight() * scaleFactor);
+            int newWidth = (int) (bitmap.getWidth() * scaleFactor);
+            int newHeight = (int) (bitmap.getHeight() * scaleFactor);
             offsetX = (getWidth() - newWidth) / 2f;
             offsetY = (getHeight() - newHeight) / 2f;
-            Bitmap scaledBitmap = Bitmap.createScaledBitmap(maskBitmap, newWidth, newHeight, true);
-            maskBitmap = scaledBitmap;
-
-            invalidate();
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+            return scaledBitmap;
         }
+        return null;
     }
 
-
-    private void updateMaskBitmap() {
-        if (maskBitmap != null) {
-//            int newWidth = (int) (maskBitmap.getWidth() * scaleFactor);
-//            int newHeight = (int) (maskBitmap.getHeight() * scaleFactor);
-//            offsetX = (getWidth() - newWidth) / 2f;
-//            offsetY = (getHeight() - newHeight) / 2f;
-//            Bitmap scaledBitmap = Bitmap.createScaledBitmap(maskBitmap, newWidth, newHeight, true);
-//            maskBitmap = scaledBitmap;
-            invalidate();
-        }
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        canvas.save();
-
-        // Apply scaling and translation to the canvas
-        canvas.translate(offsetX, offsetY);
-        canvas.scale(scaleFactor, scaleFactor);
-        if (originalBitmap != null) {
-            // Draw the original bitmap in the center
-//            canvas.drawBitmap(originalBitmap, x, y, null);
+        private void updateMaskBitmap () {
+            if (maskBitmap != null) {
+                invalidate();
+            }
         }
 
-        // Draw the mask bitmap
-        if (maskBitmap != null) {
-//            float x = (getWidth() - maskBitmap.getWidth()) / 2f;
-//            float y = (getHeight() - maskBitmap.getHeight()) / 2f;
-            canvas.drawBitmap(maskBitmap, offsetX, offsetY, null);
-        }
+        @Override
+        protected void onDraw (Canvas canvas){
+            super.onDraw(canvas);
 
-        // Draw the path on the canvas (temporary visual feedback)
-        if (!isErasing) {
+            // Apply scaling and translation to the canvas for consistent transformations
             canvas.save();
             canvas.translate(offsetX, offsetY);
             canvas.scale(scaleFactor, scaleFactor);
-            canvas.drawPath(path, paint);
+
+            // Draw the original bitmap
+            if (originalBitmap != null) {
+                float x = (getWidth() - originalBitmap.getWidth() * scaleFactor) / 2f / scaleFactor;
+                float y = (getHeight() - originalBitmap.getHeight() * scaleFactor) / 2f / scaleFactor;
+                canvas.drawBitmap(originalBitmap, x, y, null);
+            }
+
+            // Draw the mask bitmap
+            if (maskBitmap != null) {
+
+                float x = (getWidth() - maskBitmap.getWidth() * scaleFactor) / 2f / scaleFactor;
+                float y = (getHeight() - maskBitmap.getHeight() * scaleFactor) / 2f / scaleFactor;
+//                canvas.drawBitmap(maskBitmap, x, y, null);
+//                canvas.drawBitmap(maskBitmap, 0, 0, null); // (0,0) since canvas is already translated
+            }
+
+            // Draw the path
+            if (!isErasing) {
+                canvas.save();
+//                canvas.translate(offsetX / scaleFactor, offsetY / scaleFactor); // Apply inverse translation
+                canvas.drawPath(path, paint);
+                canvas.restore();
+            }
+
             canvas.restore();
         }
-    }
 
-    public void clear() {
-        saveMaskState();
-        Canvas canvas = new Canvas(maskBitmap);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR)); // Use clear mode for erasing
-        canvas.drawPath(path, paint); // Draw the path onto the mask bitmap
-        paint.setXfermode(null); // Reset Xfermode to allow normal drawing again
-        paint.setColor(Color.argb(128, 0, 255, 0)); // Reset color back to green or desired color
-        path.reset(); // Clear the path for the next drawing
-        invalidate(); // Redraw to show the updated mask
-    }
+        @Override
+        public boolean onTouchEvent (MotionEvent event){
+            // Adjust touch coordinates according to scale and offset
+            float x = (event.getX() - offsetX) / scaleFactor;
+            float y = (event.getY() - offsetY) / scaleFactor;
 
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    path.moveTo(x, y);
+                    invalidate();
+                    return true;
+                case MotionEvent.ACTION_MOVE:
+                    path.lineTo(x, y);
+                    invalidate();
+                    break;
+                case MotionEvent.ACTION_UP:
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        float x = (event.getX() - offsetX) / scaleFactor;
-        float y = (event.getY() - offsetY) / scaleFactor;
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                path.moveTo(x, y);
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                path.lineTo(x, y);
-                invalidate(); // Redraw to show the current path
-                break;
-            case MotionEvent.ACTION_UP:
-//                saveMaskState();
-//                Canvas canvas = new Canvas(maskBitmap);
-//                if (isErasing) {
-//                    paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR)); // Use clear mode for erasing
-//                } else {
-//                    paint.setXfermode(null); // Reset Xfermode for drawing
-//                }
-//                canvas.drawPath(path, paint); // Draw the path onto the mask bitmap
-//                path.reset(); // Clear the path for the next drawing
-//                invalidate(); // Redraw to show the updated mask
-                break;
+                    break;
+            }
+            return true;
         }
-        return true;
-    }
 
-    public void setOriginalBitmap(Bitmap bitmap) {
-        this.originalBitmap = bitmap;
-        invalidate();
-    }
-
-    public void setMaskBitmap(Bitmap mask) {
-        this.maskBitmap = mask;
-        scaleMaskBitmapToScreenSize();
-        invalidate();
-    }
-
-    private void saveMaskState() {
-        if (maskBitmap != null) {
-            maskStack.push(maskBitmap.copy(maskBitmap.getConfig(), true));
-        }
-    }
-
-    public void undoMask() {
-        if (!maskStack.isEmpty()) {
-            maskBitmap = maskStack.pop();
+        public void setOriginalBitmap (Bitmap bitmap){
+            this.originalBitmap = scaleMaskBitmapToScreenSize(bitmap);
             invalidate();
         }
-    }
 
-    public void setMaskBitmapSize(int width, int height) {
-        maskBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        maskBitmap.eraseColor(Color.TRANSPARENT);
-    }
+        public void setMaskBitmap (Bitmap mask){
+            this.maskBitmap = scaleMaskBitmapToScreenSize(mask);
+            invalidate();
+        }
 
-    public void setErasingMode(boolean erasing) {
-        isErasing = erasing;
+        private void saveMaskState () {
+            if (maskBitmap != null) {
+                maskStack.push(maskBitmap.copy(maskBitmap.getConfig(), true));
+            }
+        }
+
+        public void undoMask () {
+            if (!maskStack.isEmpty()) {
+                maskBitmap = maskStack.pop();
+                invalidate();
+            }
+        }
+
+        public void setMaskBitmapSize ( int width, int height){
+            maskBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            maskBitmap.eraseColor(Color.TRANSPARENT);
+        }
+
+        public void clear () {
+            setErasingMode(true);
+            // Save the drawn path to the mask bitmap
+            saveMaskState(); // Push the current state to maskStack for undo
+            Canvas canvas = new Canvas(originalBitmap);
+            canvas.drawPath(path, paint);
+            path.reset();
+            invalidate();
+            setErasingMode(false);
+        }
+
+        public void setErasingMode ( boolean erasing){
+            isErasing = erasing;
+            if (isErasing) {
+                paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR)); // Enable erase mode
+            } else {
+                paint.setXfermode(null); // Disable erase mode
+                paint.setColor(Color.argb(128, 0, 255, 0)); // Set color back to green
+            }
+        }
     }
-}

@@ -22,12 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         RLog.e("Rafiur>>>onCreate");
-        findViewById(R.id.btnGrantPermission).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                permissionAccess.requestStoragePermission(MainActivity.this);
-            }
-        });
+        findViewById(R.id.btnGrantPermission).setOnClickListener(v -> permissionAccess.requestStoragePermission(MainActivity.this));
 
     }
 

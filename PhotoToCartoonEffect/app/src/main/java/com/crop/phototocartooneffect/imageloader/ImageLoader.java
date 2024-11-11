@@ -152,7 +152,8 @@ public class ImageLoader {
     }
 
     public void loadBitmap(Context context, Uri uri, int position, OnImageLoadedListener listener) {
-        String key2 = System.currentTimeMillis() + "_" + position;
+        String key2 = "original";
+//                System.currentTimeMillis() + "_" + position;
         Bitmap cachedBitmap = bitmapCache.getBitmapFromCache(key2);
 
         if (cachedBitmap != null) {
