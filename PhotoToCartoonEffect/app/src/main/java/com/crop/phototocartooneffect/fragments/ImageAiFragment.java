@@ -42,48 +42,48 @@ public class ImageAiFragment extends BaseFragmentInterface {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_editing, container, false);
-//        ZoomageView originalImageView = view.findViewById(R.id.myZoomageView);
-//        originalImageView.setImageBitmap(ImageLoader.getInstance().getBitmap(createBitmapKey));
+        ZoomageView originalImageView = view.findViewById(R.id.myZoomageView);
+        originalImageView.setImageBitmap(ImageLoader.getInstance().getBitmap(createBitmapKey));
 
-        MaskingView maskingView = view.findViewById(R.id.maskingView);
-        maskingView.post(() -> {
-            isInit = true;
-            maskingView.setOriginalBitmap(ImageLoader.getInstance().getBitmap(originalBitmapKey));
-            maskingView.setMaskBitmap(ImageLoader.getInstance().getBitmap(createBitmapKey));
-        });
-        view.findViewById(R.id.doneButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isInit) {
-//                    maskingView.clear();
-                    maskingView.setErasingMode(true);
-                }
-            }
-        });
-        view.findViewById(R.id.undoButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isInit) {
-                    maskingView.undoMask();
-                }
-            }
-        });
-        view.findViewById(R.id.scaleButton_in).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isInit) {
-                    maskingView.scaleIn();
-                }
-            }
-        });
-        view.findViewById(R.id.scaleButton_out).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isInit) {
-                    maskingView.scaleOut();
-                }
-            }
-        });
+//        MaskingView maskingView = view.findViewById(R.id.maskingView);
+//        maskingView.post(() -> {
+//            isInit = true;
+//            maskingView.setOriginalBitmap(ImageLoader.getInstance().getBitmap(originalBitmapKey));
+//            maskingView.setMaskBitmap(ImageLoader.getInstance().getBitmap(createBitmapKey));
+//        });
+//        view.findViewById(R.id.doneButton).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (isInit) {
+////                    maskingView.clear();
+//                    maskingView.setErasingMode(true);
+//                }
+//            }
+//        });
+//        view.findViewById(R.id.undoButton).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (isInit) {
+//                    maskingView.undoMask();
+//                }
+//            }
+//        });
+//        view.findViewById(R.id.scaleButton_in).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (isInit) {
+//                    maskingView.scaleIn();
+//                }
+//            }
+//        });
+//        view.findViewById(R.id.scaleButton_out).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (isInit) {
+//                    maskingView.scaleOut();
+//                }
+//            }
+//        });
         return view;
     }
 

@@ -226,7 +226,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         String MONSTER_TOKEN = BuildConfig.MONS_TOKEN_KEY;
         switch (selectedRenderItem.getImageCreationType()) {
             case IMAGE_EFFECT_IMG2IMG:
-                imageEffect = new ImageToImageService("Transform the image into a snack-shaped object, maintaining the original colors and textures. The result should resemble a recognizable snack item (e.g., potato chip, cookie, or candy) while preserving key features of the original image.", API_KEY, context);
+                imageEffect = new ImageToImageService("Transform the image into a cartoon object, maintaining the original colors and textures. The result should resemble a recognizable snack item (e.g., potato chip, cookie, or candy) while preserving key features of the original image.", API_KEY, context);
                 break;
             case IMAGE_EFFECT_FASHION:
                 imageEffect = new FashionEffectService(":A realistic photo of a model wearing a beautiful t-shirt", "", "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/livewire-tmp/5BDmwvtizESFRO24uGDW1iu1u5TXhB-metaM2JmZmFkY2U5NDNkOGU3MDJhZDE0YTk2OTY2NjQ0NjYuanBn-.jpg", "upper_body", API_KEY, context);
@@ -238,7 +238,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                 imageEffect = new ImageRemoveBgService(API_KEY, context);
                 break;
             case MONSTER_AI:
-                imageEffect = new MonsterApiClient(MONSTER_TOKEN, context, "Transform the image into a snack-shaped object. The result should look like a realistic, appetizing snack item while incorporating elements from the original image. Ensure the final image has a crisp, detailed appearance with proper lighting and textures.");
+                imageEffect = new MonsterApiClient(MONSTER_TOKEN, context, "Side photo of a demon , shadow, in the kitchen , sitting at the table , fade artwork by van gogh. high res");
                 break;
             default:
                 imageEffect = new BackgroundRemoveFML();

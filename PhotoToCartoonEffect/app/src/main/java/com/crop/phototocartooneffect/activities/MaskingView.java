@@ -99,7 +99,7 @@ public class MaskingView extends View {
             if (originalBitmap != null) {
                 float x = (getWidth() - originalBitmap.getWidth() * scaleFactor) / 2f / scaleFactor;
                 float y = (getHeight() - originalBitmap.getHeight() * scaleFactor) / 2f / scaleFactor;
-                canvas.drawBitmap(originalBitmap, x, y, null);
+//                canvas.drawBitmap(originalBitmap, x, y, null);
             }
 
             // Draw the mask bitmap
@@ -107,7 +107,7 @@ public class MaskingView extends View {
 
                 float x = (getWidth() - maskBitmap.getWidth() * scaleFactor) / 2f / scaleFactor;
                 float y = (getHeight() - maskBitmap.getHeight() * scaleFactor) / 2f / scaleFactor;
-//                canvas.drawBitmap(maskBitmap, x, y, null);
+                canvas.drawBitmap(maskBitmap, x, y, null);
 //                canvas.drawBitmap(maskBitmap, 0, 0, null); // (0,0) since canvas is already translated
             }
 

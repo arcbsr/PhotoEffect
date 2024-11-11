@@ -76,12 +76,13 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView thumbImageView, thumbImageView2, thumbImageView3, thumbImageView4, thumbImageView5;
+        private ImageView thumbImageView,thumbOverlayImageView, thumbImageView2, thumbImageView3, thumbImageView4, thumbImageView5;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             thumbImageView = itemView.findViewById(R.id.include_view11).findViewById(R.id.item_thumb);
+            thumbOverlayImageView = itemView.findViewById(R.id.include_view11).findViewById(R.id.item_thumb_overlay);
             thumbImageView2 = itemView.findViewById(R.id.include_view12).findViewById(R.id.item_thumb);
             thumbImageView3 = itemView.findViewById(R.id.include_view21).findViewById(R.id.item_thumb);
             thumbImageView4 = itemView.findViewById(R.id.include_view22).findViewById(R.id.item_thumb);
@@ -94,7 +95,7 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
             thumbImageView3.setImageResource(item.getThumbResId());
             thumbImageView4.setImageResource(item.getThumbResId());
             thumbImageView5.setImageResource(item.getThumbResId());
-            thumbImageView.setOnClickListener(new View.OnClickListener() {
+            thumbOverlayImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
