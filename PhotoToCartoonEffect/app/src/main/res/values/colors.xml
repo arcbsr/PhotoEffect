@@ -23,6 +23,8 @@
     <color name="orange">#FFFF8800</color>
     <color name="yellow">#FFFFFF00</color>
 
+    <color name="selected">#ecebeb</color>
+    <color name="black_transparent">#81ECEBEB</color>
     <color name="gradient_start">#101010</color>
     <color name="gradient_end">#FF000000</color>
     <color name="semi_white">#45808080</color>
@@ -39,4 +41,5 @@
 
     <color name="btn_pressed_colorAccentLight">#C3298DE4</color>
     <color name="btn_pressed_colorAccent">#C11E88E5</color>
+    <color name="transparent">#00000000</color>
 </resources>

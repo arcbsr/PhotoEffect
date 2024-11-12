@@ -35,6 +35,7 @@ import com.crop.phototocartooneffect.fragments.ImageAiFragment;
 import com.crop.phototocartooneffect.fragments.MainFragment;
 import com.crop.phototocartooneffect.imageloader.ImageLoader;
 import com.crop.phototocartooneffect.models.MenuItem;
+import com.crop.phototocartooneffect.popeffect.color_splash_tool.ColorSplashActivity;
 import com.crop.phototocartooneffect.renderengins.ImageEffect;
 import com.crop.phototocartooneffect.renderengins.apis.fashion.FashionEffectService;
 import com.crop.phototocartooneffect.renderengins.apis.imgtoimage.ImageToImageService;
@@ -64,7 +65,11 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         new Handler(Looper.getMainLooper()).post(() -> {
             onFinished();
             if (result != null) {
-                showImageInFragment(ImageAiFragment.newInstance("original", key));
+//                showImageInFragment(ImageAiFragment.newInstance("original", key));
+                Intent intent = new Intent(ImageAiActivity.this, ColorSplashActivity.class);
+//                ColorSplashActivity.grayBitmap = ImageLoader.getInstance().getBitmap(key);
+                ColorSplashActivity.colorBitmap = ImageLoader.getInstance().getBitmap(key);
+                startActivity(intent);
             }
         });
 
@@ -158,9 +163,12 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         pickMediaLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                 if (result.getData().getData() != null) {
+
+
                 } else {
                     return;
                 }
+
                 if (findViewById(R.id.imageView_original).getVisibility() == View.VISIBLE) {
                     ((ImageView) findViewById(R.id.imageView_original)).setImageURI(result.getData().getData());
                     findViewById(R.id.imageView_original).setOnClickListener(new View.OnClickListener() {

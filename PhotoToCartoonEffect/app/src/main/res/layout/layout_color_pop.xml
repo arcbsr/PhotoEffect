@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="top"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/mainLayOut"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_transparent"
+        android:gravity="top"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <LinearLayout
+                android:id="@+id/topBar"
+                android:layout_width="wrap_content"
+                android:layout_height="?android:attr/actionBarSize"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/done_Btn"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:padding="12dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_done"
+                    app:tint="@color/white" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/resetBtn"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:padding="12dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_restore_m"
+                    app:tint="@color/white" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/undoBtn"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:padding="12dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_undo"
+                    app:tint="@color/white" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/fitBtn"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:padding="12dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_top_expand"
+                    app:tint="@color/white" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/imageViewContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9"
+            android:background="@color/black">
+
+            <com.crop.phototocartooneffect.popeffect.color_splash_tool.TouchImageView
+                android:id="@+id/drawingImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="matrix" />
+
+            <com.crop.phototocartooneffect.popeffect.color_splash_tool.BrushView
+                android:id="@+id/magnifyingView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerInParent="true"
+                android:minWidth="100dp"
+                android:minHeight="100dp"
+                android:padding="100dp"
+                android:visibility="gone" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="66dp"
+                android:layout_height="66dp"
+                android:background="#d2000000"
+                android:padding="8dp"
+                android:progressDrawable="@drawable/circular_progress_bar"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/preview"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="#d2000000"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/offsetDemo"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_centerInParent="true"
+                android:background="@color/transparent"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <LinearLayout
+                    android:id="@+id/bottomBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/bottom_bar_vsmall"
+                    android:layout_gravity="bottom"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/widthcontainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/widthText"
+                                style="@style/TextViewBasic"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="bottom"
+                                android:layout_weight="2"
+                                android:gravity="right|center_vertical"
+                                android:text="size" />
+
+                            <SeekBar
+                                android:id="@+id/widthSeekBar"
+                                style="@style/MySeekBar"
+                                android:layout_width="60dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="5"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="5dp"
+                                android:thumb="@drawable/progress_thumb_small" />
+
+                            <TextView
+                                android:id="@+id/opacityText"
+                                style="@style/TextViewBasic"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="bottom"
+                                android:layout_weight="2"
+                                android:gravity="right|center_vertical"
+                                android:paddingLeft="5dp"
+                                android:text="opacity" />
+
+                            <SeekBar
+                                android:id="@+id/opacitySeekBar"
+                                style="@style/MySeekBar"
+                                android:layout_width="60dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="5"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp"
+                                android:thumb="@drawable/progress_thumb_small" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/offsetLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/gradient_end"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="10dp">
+
+                        <TextView
+                            android:id="@+id/txt_offset"
+                            style="@style/TextViewBasic"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:layout_margin="7dp"
+                            android:gravity="center"
+                            android:text="offset" />
+
+                        <SeekBar
+                            android:id="@+id/offsetBar"
+                            style="@style/MySeekBar"
+                            android:layout_width="60dp"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/offsetOk"
+                            android:layout_toRightOf="@+id/txt_offset"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:thumb="@drawable/progress_thumb_small" />
+
+                        <ImageView
+                            android:id="@+id/offsetOk"
+                            android:layout_width="48dp"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentRight="true"
+                            android:layout_margin="5dp"
+                            android:padding="10dp"
+                            android:src="@drawable/info"
+                            android:visibility="invisible"
+                            app:tint="@color/white" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/recyclerViewHolder"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/pickColor"
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:clickable="true"
+                    android:padding="0dp"
+                    android:src="@drawable/placeholder"
+                    app:tint="@color/transparent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewColor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="5dp" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_gravity="center">
+
+                <LinearLayout
+                    android:id="@+id/bottomBar1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/newBtn_ai"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:padding="0dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/placeholder"
+                        app:tint="@color/transparent" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/colorBtn"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/placeholder"
+                        app:tint="@color/transparent" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/grayBtn"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/placeholder"
+                        app:tint="@color/white" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/recolorBtn"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/placeholder"
+                        app:tint="@color/transparent" />
+
+                    <!--<ImageView
+                        android:id="@+id/offsetBtn"
+                        style="@style/ImageViewBasic"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_pinch"
+                        app:tint="@color/white" />-->
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/zoomBtn"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/placeholder"
+                        app:tint="@color/white" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:padding="0dp" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@null" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@null" />
+
+                    <ImageView
+                        android:id="@+id/locking"
+                        android:layout_width="0dp"
+                        android:layout_height="20dp"
+                        android:layout_weight="1"
+                        android:paddingRight="10dp"
+                        android:scaleType="fitEnd"
+                        android:src="@drawable/placeholder" />
+
+                    <!--<ImageView
+                        android:id="@+id/offsetBtn"
+                        style="@style/ImageViewBasic"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_pinch"
+                        app:tint="@color/white" />-->
+
+                    <androidx.appcompat.widget.AppCompatImageView
+
+                        android:layout_width="0dp"
+                        android:layout_height="46dp"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        android:background="@null" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txt_ai"
+                    style="@style/TextViewBasic"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:paddingBottom="5dp"
+                    android:text="auto"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/txt_color"
+                    style="@style/TextViewBasic"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/txt_underline"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:paddingBottom="5dp"
+                    android:text="color"
+                    android:textStyle="normal" />
+
+
+                <TextView
+                    android:id="@+id/txt_gray"
+                    style="@style/TextViewBasic"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:paddingBottom="5dp"
+                    android:text="gray"
+                    android:textStyle="normal" />
+
+
+                <TextView
+                    android:id="@+id/txt_recolor"
+                    style="@style/TextViewBasic"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:drawableTint="@color/gold"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="5dp"
+                    android:text="recolor"
+                    android:textStyle="normal" />
+
+
+                <!-- <TextView
+                     android:id="@+id/txt_offst"
+                     style="@style/TextViewBasic"
+                     android:layout_width="0dp"
+                     android:layout_weight="1"
+                     android:gravity="center"
+                     android:onClick="onClick"
+                     android:paddingBottom="5dp"
+                     android:text="@string/offest"
+                     android:textStyle="normal" />-->
+
+
+                <TextView
+                    android:id="@+id/txt_pantool"
+                    style="@style/TextViewBasic"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:paddingBottom="5dp"
+                    android:text="move"
+                    android:textStyle="normal" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

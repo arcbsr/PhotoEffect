@@ -4,4 +4,7 @@
     <dimen name="bnr_size">160dp</dimen>
     <dimen name="btn_radius">8dp</dimen>
     <dimen name="item_margin">5dp</dimen>
+
+    <dimen name="bottom_bar_text_basic">10dp</dimen>
+    <dimen name="bottom_bar_vsmall">48dp</dimen>
 </resources>

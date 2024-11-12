@@ -15,5 +15,9 @@
     <string name="featured_ai">Featured AI</string>
     <string name="user_create">User\'s Chioce</string>
 
+    <string name="app_folder">/PhotoEditorApp</string>
+    <string name="app_file">PHOTO_</string>
+    <string name="directory_final">Avioeffect</string>
+    <string name="share_using">Share using</string>
 
 </resources>
