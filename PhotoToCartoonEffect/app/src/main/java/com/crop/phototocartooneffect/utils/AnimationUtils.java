@@ -2,6 +2,7 @@ package com.crop.phototocartooneffect.utils;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -108,5 +109,13 @@ public class AnimationUtils {
         return animator;
     }
 
+    public static ObjectAnimator smoothBlinkAnimation(View view) {
+        ObjectAnimator blinkAnimation = ObjectAnimator.ofFloat(view, "alpha", 1.0f, 0.6f, 0.3f, 0.6f, 1.0f); // Multiple keyframes for smooth fade
+        blinkAnimation.setDuration(2000); // Set the total duration for one cycle
+        blinkAnimation.setRepeatCount(ObjectAnimator.INFINITE); // Infinite repeat
+        blinkAnimation.setRepeatMode(ObjectAnimator.REVERSE); // Reverse animation back to start
+        blinkAnimation.start();
+        return blinkAnimation;
+    }
 
 }

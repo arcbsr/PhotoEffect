@@ -83,8 +83,9 @@ dependencies {
     implementation project(path: ':networklibs')
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'com.tbuonomo:dotsindicator:5.0'
-    implementation 'com.burhanrashid52:photoeditor:3.0.2'
     implementation 'com.github.Andrew0000:ImagePickerPlus:1.0.3'
+
+    implementation 'com.burhanrashid52:photoeditor:3.0.2'
     def lottieVersion = "3.4.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
     implementation 'androidx.palette:palette:1.0.0'

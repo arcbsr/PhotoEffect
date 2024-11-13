@@ -82,7 +82,7 @@ public class ImageAiFragment extends BaseFragmentInterface {
         mPhotoEditorView.getSource().setImageBitmap(createBitmap);
 //        CustomEffect customEffect = new CustomEffect.Builder(EffectFactory.EFFECT_BRIGHTNESS).setParameter("brightness", 0.5f).build();
         final PhotoEditor mPhotoEditor = new PhotoEditor.Builder(getContext(), mPhotoEditorView).build();
-        mPhotoEditor.addImage(createBitmap);
+//        mPhotoEditor.addImage(createBitmap);
 //        mPhotoEditor.setFilterEffect(customEffect);
 
 

@@ -1,5 +1,6 @@
 package com.crop.phototocartooneffect.dialogfragment;
 
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.res.ColorStateList;
@@ -121,16 +122,17 @@ public class LoadingDialog extends DialogFragment {
         );
 
 
-
-
-
         final AppCompatButton btnSave = view.findViewById(R.id.loading_view_button);
-        btnSave.setBackgroundTintList(ColorStateList.valueOf(paletteExtractor.getVibrantSwatch().getRgb()));
+        try {
+            btnSave.setBackgroundTintList(ColorStateList.valueOf(paletteExtractor.getVibrantSwatch().getRgb()));
 
-        btnSave.setTextColor(paletteExtractor.getVibrantSwatch().getBodyTextColor());
+            btnSave.setTextColor(paletteExtractor.getVibrantSwatch().getBodyTextColor());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         btnSave.setOnClickListener(v -> {
 
-            isProcessing = true;
+//            isProcessing = true;
             btnSave.setText("Analysis");
             btnSave.setEnabled(false);
             btnSave.setVisibility(View.INVISIBLE);
@@ -139,16 +141,17 @@ public class LoadingDialog extends DialogFragment {
 //            );
 //
 //            Button loadingButton = view.findViewById(R.id.loading_view_button);
-//            Animation blinkAnimation = new AlphaAnimation(1.0f, 0.0f);
+//            blinkAnimation = new AlphaAnimation(1.0f, 0.0f);
 //            blinkAnimation.setDuration(500);
 //            blinkAnimation.setRepeatCount(Animation.INFINITE);
 //            blinkAnimation.setRepeatMode(Animation.REVERSE);
-//            loadingButton.startAnimation(blinkAnimation);
+            blinkAnimation = AnimationUtils.smoothBlinkAnimation(view.findViewById(R.id.item_thumb));
             lottieAnimationView.playAnimation();
-            listener.onItemClick(item);
+//            listener.onItemClick(item);
         });
     }
 
+    ObjectAnimator blinkAnimation;
     ValueAnimator valueAnimator;
 
     @Override
@@ -161,6 +164,10 @@ public class LoadingDialog extends DialogFragment {
         if (valueAnimator != null) {
             valueAnimator.cancel();
             valueAnimator = null;
+        }
+        if (blinkAnimation != null) {
+            blinkAnimation.cancel();
+            blinkAnimation = null;
         }
         if (lottieAnimationView != null) {
             lottieAnimationView.cancelAnimation();

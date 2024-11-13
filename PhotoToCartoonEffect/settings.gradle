@@ -17,3 +17,4 @@ rootProject.name = "PhotoToCartoonEffect"
 include ':app'
 include ':modellbs'
 include ':networklibs'
+include ':photoeditor'

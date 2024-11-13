@@ -19,13 +19,10 @@ public class PaletteExtractor {
 
     public PaletteExtractor(Bitmap bitmap, final OnPaletteGeneratedListener listener) {
         // Generate the palette asynchronously and notify listener
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-            @Override
-            public void onGenerated(Palette p) {
-                palette = p;
-                if (listener != null) {
-                    listener.onPaletteGenerated(PaletteExtractor.this);
-                }
+        Palette.from(bitmap).generate(p -> {
+            palette = p;
+            if (listener != null) {
+                listener.onPaletteGenerated(PaletteExtractor.this);
             }
         });
     }

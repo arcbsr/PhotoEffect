@@ -3,8 +3,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-<!--    android:foreground="?attr/selectableItemBackgroundBorderless"-->
-<!--    android:clickable="true"-->
+    <!--    android:foreground="?attr/selectableItemBackgroundBorderless"-->
+    <!--    android:clickable="true"-->
     <androidx.cardview.widget.CardView
         android:id="@+id/header_view"
         android:layout_width="match_parent"
@@ -31,9 +31,9 @@
                 <ImageView
                     android:id="@+id/header_item_thumb"
                     android:layout_width="match_parent"
-                    android:src="@drawable/thumb2"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/thumb2" />
 
                 <View
                     android:layout_width="match_parent"
@@ -66,12 +66,13 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
-                    android:background="@drawable/button_selector_violate"
-                    android:paddingBottom="5dp"
+                    android:background="@drawable/button_selector"
+                    android:backgroundTint="@color/violate"
+                    android:padding="5dp"
                     android:text="Try Now"
-                    android:textStyle="bold"
                     android:textAllCaps="false"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
 
 
             </RelativeLayout>

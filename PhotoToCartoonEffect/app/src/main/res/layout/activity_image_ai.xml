@@ -26,7 +26,7 @@
                 android:layout_height="@dimen/banner_btn_height"
                 android:layout_gravity="end"
                 android:layout_margin="12dp"
-                android:visibility="invisible"
+                android:visibility="visible"
                 android:background="@drawable/button_selector"
                 app:backgroundTint="@color/orange"
                 android:clickable="true"
