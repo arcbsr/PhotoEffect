@@ -31,6 +31,7 @@ import com.crop.phototocartooneffect.dialogfragment.ErrorDialog;
 import com.crop.phototocartooneffect.dialogfragment.LoadingDialog;
 import com.crop.phototocartooneffect.dialogfragment.MenuFragmentDialog;
 import com.crop.phototocartooneffect.dialogfragment.MoreBottomFragment;
+import com.crop.phototocartooneffect.fragments.BaseFragmentInterface;
 import com.crop.phototocartooneffect.fragments.ImageAiFragment;
 import com.crop.phototocartooneffect.fragments.MainFragment;
 import com.crop.phototocartooneffect.imageloader.ImageLoader;
@@ -65,11 +66,12 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         new Handler(Looper.getMainLooper()).post(() -> {
             onFinished();
             if (result != null) {
-//                showImageInFragment(ImageAiFragment.newInstance("original", key));
-                Intent intent = new Intent(ImageAiActivity.this, ColorSplashActivity.class);
-//                ColorSplashActivity.grayBitmap = ImageLoader.getInstance().getBitmap(key);
-                ColorSplashActivity.colorBitmap = ImageLoader.getInstance().getBitmap(key);
-                startActivity(intent);
+                BaseFragmentInterface fragment = ImageAiFragment.newInstance("original", key);
+                fragment.applyAppBAR(toolbar);
+                showImageInFragment(fragment);
+//                Intent intent = new Intent(ImageAiActivity.this, ColorSplashActivity.class);
+//                ColorSplashActivity.colorBitmap = ImageLoader.getInstance().getBitmap(key);
+//                startActivity(intent);
             }
         });
 
@@ -174,19 +176,16 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                     findViewById(R.id.imageView_original).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ImageLoader.getInstance().loadBitmap(ImageAiActivity.this, result.getData().getData(), -1, new ImageLoader.OnImageLoadedListener() {
-                                @Override
-                                public void onImageLoaded(Bitmap bitmap, String keyValue, int position) {
-                                    selectedRenderItem = new MenuItem(0, "Monster", "Monster", 0, ImageAiActivity.ImageCreationType.MONSTER_AI, "");
-                                    loadImage(result.getData().getData(), 0);
+                            ImageLoader.getInstance().loadBitmap(ImageAiActivity.this, result.getData().getData(), -1, (bitmap, keyValue, position) -> {
+                                selectedRenderItem = new MenuItem(0, "Monster", "Monster", 0, ImageCreationType.MONSTER_AI, "");
+                                loadImage(result.getData().getData(), 0);
 //                                            ImageEffect imageEffect = new MonsterApiClient(
 //                                                    ""
 //                                                    , ImageAiActivity.this,
 //                                                    "Create a fantasy avatar inspired by a mystical forest monster. The avatar should feature vibrant green skin with luminescent markings, large expressive eyes that change color based on mood, and textured, leaf-like ears. Add a flowing mane resembling vines and flowers, and give the avatar an enchanting aura with sparkling light effects surrounding it. The background should be a magical forest scene, with soft, glowing lights and whimsical plants. The overall style should be whimsical and colorful, appealing to a fantasy-loving audience."
 //                                            );
 //                                            imageEffect.applyEffect(bitmap, ImageAiActivity.this);
-                                }
-                            });
+                            }, true);
                         }
                     });
                 } else {
@@ -214,7 +213,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         ImageLoader.getInstance().loadBitmap(this, uri, position, (bitmap, keyValue, pos) -> {
             bitmaps.add(new VideoFrames(keyValue, pos));
             applyImageEffect(keyValue);
-        });
+        }, true);
     }
 
     private void applyImageEffect(String keyValue) {

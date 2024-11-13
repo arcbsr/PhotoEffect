@@ -54,6 +54,13 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    sourceSets {
+        main {
+            res {
+                srcDirs 'src\\main\\res', 'src\\main\\res\\raw'
+            }
+        }
+    }
 }
 
 dependencies {
@@ -76,9 +83,11 @@ dependencies {
     implementation project(path: ':networklibs')
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'com.tbuonomo:dotsindicator:5.0'
-
+    implementation 'com.burhanrashid52:photoeditor:3.0.2'
     implementation 'com.github.Andrew0000:ImagePickerPlus:1.0.3'
-
+    def lottieVersion = "3.4.0"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+    implementation 'androidx.palette:palette:1.0.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
     implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.4'
     implementation 'org.tensorflow:tensorflow-lite:2.6.0'

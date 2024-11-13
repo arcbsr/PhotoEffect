@@ -68,22 +68,19 @@ public class BackgroundRemoveFML implements ImageEffect {
         final ByteBuffer mask = segmentationResult.getBuffer();
         mask.rewind();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int y = 0; y < height; y++) {
-                    for (int x = 0; x < width; x++) {
-                        float maskValue = mask.getFloat();
-                        if (maskValue > 0.5f) {
-                            outputBitmap.setPixel(x, y, originalBitmap.getPixel(x, y));
-                        } else {
-                            outputBitmap.setPixel(x, y, Color.TRANSPARENT);
-                        }
+        new Thread(() -> {
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    float maskValue = mask.getFloat();
+                    if (maskValue > 0.5f) {
+                        outputBitmap.setPixel(x, y, originalBitmap.getPixel(x, y));
+                    } else {
+                        outputBitmap.setPixel(x, y, Color.TRANSPARENT);
                     }
                 }
-                ImageLoader.getInstance().loadBitmap(System.currentTimeMillis() + "", outputBitmap);
-                callback.onSuccess(outputBitmap, System.currentTimeMillis() + "");
             }
+            ImageLoader.getInstance().loadBitmap(System.currentTimeMillis() + "", outputBitmap);
+            callback.onSuccess(outputBitmap, System.currentTimeMillis() + "");
         }).start();
     }
 }

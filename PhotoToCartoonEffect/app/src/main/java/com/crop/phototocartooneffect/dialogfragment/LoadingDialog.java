@@ -2,8 +2,11 @@ package com.crop.phototocartooneffect.dialogfragment;
 
 import android.animation.ValueAnimator;
 import android.app.Dialog;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,12 +18,23 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.palette.graphics.Palette;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.LottieProperty;
+import com.airbnb.lottie.model.KeyPath;
+import com.airbnb.lottie.value.LottieValueCallback;
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.adapters.ItemAdapter;
 import com.crop.phototocartooneffect.models.MenuItem;
 import com.crop.phototocartooneffect.utils.AnimationUtils;
+import com.crop.phototocartooneffect.utils.PaletteExtractor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoadingDialog extends DialogFragment {
 
@@ -64,40 +78,75 @@ public class LoadingDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_loading_dialog, container, false);
+        final View view = inflater.inflate(R.layout.layout_loading_dialog, container, false);
         isProcessing = false;
-        setCancelable(false);
-        ((ImageView) view.findViewById(R.id.item_thumb)).setScaleType(ImageView.ScaleType.FIT_CENTER);
-        ((ImageView) view.findViewById(R.id.item_thumb)).setImageBitmap(bitmap);
-        ((ImageView) view.findViewById(R.id.loading_image_background)).setImageBitmap(bitmap);
 
-        view.findViewById(R.id.loading_view_close).setOnClickListener(view1 -> {
-//            if (isProcessing) {
-//                Toast.makeText(getContext(), "Image is processing. Please wait...", Toast.LENGTH_SHORT).show();
-//            } else
-            dismiss();
-        });
-
-        view.findViewById(R.id.loading_view_button).setOnClickListener(v -> {
-            isProcessing = true;
-            ((Button) view.findViewById(R.id.loading_view_button)).setText("Analysis");
-            view.findViewById(R.id.loading_view_button).setEnabled(false);
-//                view.findViewById(R.id.loading_view_close).setVisibility(View.GONE);
-            valueAnimator = AnimationUtils.startRevealAnimation(view.findViewById(R.id.item_thumb).getWidth(),
-                    view.findViewById(R.id.shiningLine), view.findViewById(R.id.item_thumb_overlay)
-            );
-
-            Button loadingButton = view.findViewById(R.id.loading_view_button);
-            Animation blinkAnimation = new AlphaAnimation(1.0f, 0.0f);
-            blinkAnimation.setDuration(500);
-            blinkAnimation.setRepeatCount(Animation.INFINITE);
-            blinkAnimation.setRepeatMode(Animation.REVERSE);
-            loadingButton.startAnimation(blinkAnimation);
-            listener.onItemClick(item);
-//                view.findViewById(R.id.loading_view_root2).setVisibility(View.GONE);
-//                view.findViewById(R.id.loading_view_root).setVisibility(View.VISIBLE);
+        new PaletteExtractor(bitmap, new PaletteExtractor.OnPaletteGeneratedListener() {
+            @Override
+            public void onPaletteGenerated(PaletteExtractor paletteExtractor) {
+                setCancelable(false);
+                init(view, paletteExtractor);
+            }
         });
         return view;
+    }
+
+    LottieAnimationView lottieAnimationView;
+
+    private void init(View view, PaletteExtractor paletteExtractor) {
+
+
+        ((ImageView) view.findViewById(R.id.item_thumb)).setScaleType(ImageView.ScaleType.FIT_CENTER);
+        ((ImageView) view.findViewById(R.id.item_thumb)).setImageBitmap(bitmap);
+//        ((ImageView) view.findViewById(R.id.loading_image_background)).setImageBitmap(bitmap);
+        view.findViewById(R.id.loading_image_background).setBackground(new ColorDrawable(paletteExtractor.getMutedColor(getContext())));
+        view.findViewById(R.id.loading_image_background).setAlpha(1);
+        lottieAnimationView = view.findViewById(R.id.animationView);
+        view.findViewById(R.id.loading_view_close).setOnClickListener(view1 -> {
+            if (isProcessing) {
+//                Toast.makeText(getContext(), "Image is processing. Please wait...", Toast.LENGTH_SHORT).show();
+            } else {
+                lottieAnimationView.cancelAnimation();
+                lottieAnimationView.clearAnimation();
+                dismiss();
+            }
+        });
+
+        // Set your desired color
+        PorterDuffColorFilter colorFilter = new PorterDuffColorFilter(paletteExtractor.getBackgroundColor(getContext()), PorterDuff.Mode.SRC_ATOP);
+        lottieAnimationView.addValueCallback(
+                new KeyPath("**"),
+                LottieProperty.COLOR_FILTER,
+                new LottieValueCallback<>(colorFilter)
+        );
+
+
+
+
+
+        final AppCompatButton btnSave = view.findViewById(R.id.loading_view_button);
+        btnSave.setBackgroundTintList(ColorStateList.valueOf(paletteExtractor.getVibrantSwatch().getRgb()));
+
+        btnSave.setTextColor(paletteExtractor.getVibrantSwatch().getBodyTextColor());
+        btnSave.setOnClickListener(v -> {
+
+            isProcessing = true;
+            btnSave.setText("Analysis");
+            btnSave.setEnabled(false);
+            btnSave.setVisibility(View.INVISIBLE);
+//            valueAnimator = AnimationUtils.startRevealAnimation(view.findViewById(R.id.item_thumb).getWidth(),
+//                    view.findViewById(R.id.shiningLine), view.findViewById(R.id.item_thumb_overlay)
+//            );
+//
+//            Button loadingButton = view.findViewById(R.id.loading_view_button);
+//            Animation blinkAnimation = new AlphaAnimation(1.0f, 0.0f);
+//            blinkAnimation.setDuration(500);
+//            blinkAnimation.setRepeatCount(Animation.INFINITE);
+//            blinkAnimation.setRepeatMode(Animation.REVERSE);
+//            loadingButton.startAnimation(blinkAnimation);
+            lottieAnimationView.playAnimation();
+            listener.onItemClick(item);
+        });
     }
 
     ValueAnimator valueAnimator;
@@ -112,6 +161,10 @@ public class LoadingDialog extends DialogFragment {
         if (valueAnimator != null) {
             valueAnimator.cancel();
             valueAnimator = null;
+        }
+        if (lottieAnimationView != null) {
+            lottieAnimationView.cancelAnimation();
+            lottieAnimationView.clearAnimation();
         }
         dismiss();
 

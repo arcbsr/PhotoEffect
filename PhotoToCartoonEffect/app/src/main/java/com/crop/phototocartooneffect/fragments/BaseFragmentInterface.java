@@ -1,11 +1,12 @@
 package com.crop.phototocartooneffect.fragments;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.crop.phototocartooneffect.R;
 
 public abstract class BaseFragmentInterface extends Fragment {
-    void applyAppBAR() {
+    public void applyAppBAR(Toolbar toolbar) {
 
     }
 }

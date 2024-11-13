@@ -152,8 +152,17 @@ public class ImageLoader {
     }
 
     public void loadBitmap(Context context, Uri uri, int position, OnImageLoadedListener listener) {
+        loadBitmap(context, uri, position, listener, false);
+
+    }
+
+    public void loadBitmap(Context context, Uri uri, int position, OnImageLoadedListener listener, boolean newImage) {
+
         String key2 = "original";
 //                System.currentTimeMillis() + "_" + position;
+        if (newImage) {
+            bitmapCache.clearCache();
+        }
         Bitmap cachedBitmap = bitmapCache.getBitmapFromCache(key2);
 
         if (cachedBitmap != null) {

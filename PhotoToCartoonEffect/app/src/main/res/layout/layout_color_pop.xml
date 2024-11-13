@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/Background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_gradient"
     android:gravity="top"
     android:orientation="vertical">
 
@@ -11,7 +11,6 @@
         android:id="@+id/mainLayOut"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black_transparent"
         android:gravity="top"
         android:orientation="vertical">
 
@@ -26,6 +25,7 @@
                 android:layout_height="?android:attr/actionBarSize"
                 android:layout_centerHorizontal="true"
                 android:orientation="horizontal">
+
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/done_Btn"
                     android:layout_width="50dp"
@@ -35,6 +35,7 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_done"
                     app:tint="@color/white" />
+
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/resetBtn"
                     android:layout_width="50dp"
@@ -104,7 +105,7 @@
                 android:id="@+id/preview"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:background="#d2000000"
+                android:background="@color/white"
                 android:visibility="gone" />
 
             <ImageView
@@ -244,7 +245,7 @@
                 android:layout_height="50dp"
                 android:layout_centerInParent="true"
                 android:orientation="horizontal"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/pickColor"
@@ -276,7 +277,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="visible">
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/newBtn_ai"
@@ -287,6 +289,7 @@
                         android:padding="0dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/placeholder"
+                        android:visibility="gone"
                         app:tint="@color/transparent" />
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -306,7 +309,6 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/placeholder"
                         app:tint="@color/white" />
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -317,6 +319,7 @@
                         android:background="@null"
                         android:scaleType="fitCenter"
                         android:src="@drawable/placeholder"
+                        android:visibility="gone"
                         app:tint="@color/transparent" />
 
                     <!--<ImageView
@@ -337,7 +340,6 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/placeholder"
                         app:tint="@color/white" />
                 </LinearLayout>
 
@@ -352,19 +354,24 @@
                         android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:padding="0dp" />
+                        android:padding="0dp"
+                        android:visibility="gone" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight="1"
-                        android:background="@null" />
+                        app:tint="#00D8DA"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_draw"
+                        android:tint="@color/icons" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight="1"
-                        android:background="@null" />
+                        app:tint="#00D8DA"
+                        android:src="@drawable/ic_erase" />
 
                     <ImageView
                         android:id="@+id/locking"
@@ -373,7 +380,8 @@
                         android:layout_weight="1"
                         android:paddingRight="10dp"
                         android:scaleType="fitEnd"
-                        android:src="@drawable/placeholder" />
+                        android:src="@drawable/placeholder"
+                        android:visibility="gone" />
 
                     <!--<ImageView
                         android:id="@+id/offsetBtn"
@@ -391,7 +399,7 @@
                         android:layout_height="46dp"
                         android:layout_gravity="right"
                         android:layout_weight="1"
-                        android:background="@null" />
+                        android:src="@drawable/hand" />
                 </LinearLayout>
             </RelativeLayout>
 
@@ -410,7 +418,8 @@
                     android:onClick="onClick"
                     android:paddingBottom="5dp"
                     android:text="auto"
-                    android:textStyle="normal" />
+                    android:textStyle="normal"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/txt_color"
@@ -421,7 +430,7 @@
                     android:gravity="center"
                     android:onClick="onClick"
                     android:paddingBottom="5dp"
-                    android:text="color"
+                    android:text="Draw"
                     android:textStyle="normal" />
 
 
@@ -433,7 +442,7 @@
                     android:gravity="center"
                     android:onClick="onClick"
                     android:paddingBottom="5dp"
-                    android:text="gray"
+                    android:text="Erase"
                     android:textStyle="normal" />
 
 
@@ -449,7 +458,8 @@
                     android:paddingRight="5dp"
                     android:paddingBottom="5dp"
                     android:text="recolor"
-                    android:textStyle="normal" />
+                    android:textStyle="normal"
+                    android:visibility="gone" />
 
 
                 <!-- <TextView
@@ -472,7 +482,7 @@
                     android:gravity="center"
                     android:onClick="onClick"
                     android:paddingBottom="5dp"
-                    android:text="move"
+                    android:text="Move"
                     android:textStyle="normal" />
             </LinearLayout>
 
