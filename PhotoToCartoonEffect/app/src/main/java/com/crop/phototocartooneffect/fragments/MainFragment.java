@@ -54,6 +54,11 @@ public class MainFragment extends Fragment {
     }
 
     private void init(View view) {
+        if (AppSettings.IS_TESTING_MODE) {
+            view.findViewById(R.id.demo_view).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.root_view).setVisibility(View.GONE);
+
+        }
         // TODO: Initialize your views here
         view.findViewById(R.id.header_tryButton).setOnClickListener(v -> {
             listener.onItemClick(AppSettings.DEFAULT_ITEM);
@@ -62,6 +67,7 @@ public class MainFragment extends Fragment {
 
             ShowAllBottomFragment.newInstance(listener).show(getActivity().getSupportFragmentManager(), "ShowAllBottomFragment");
         });
+
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_top);
         //        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         // Set up a GridLayoutManager with 2 rows (span count) and horizontal orientation

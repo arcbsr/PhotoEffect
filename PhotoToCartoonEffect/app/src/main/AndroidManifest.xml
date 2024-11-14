@@ -40,9 +40,9 @@
             android:name=".activities.ImageAiActivity"
             android:exported="false" />
         <activity
-            android:theme="@style/AppTheme"
             android:name=".popeffect.color_splash_tool.ColorSplashActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.MainActivity"
             android:exported="true"

@@ -1,35 +1,182 @@
 package com.crop.phototocartooneffect.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.crop.phototocartooneffect.BuildConfig;
 import com.crop.phototocartooneffect.R;
+import com.crop.phototocartooneffect.firabsehelper.AnalyticsHelper;
 import com.crop.phototocartooneffect.utils.RLog;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final int SELECT_PICTURE = 1;
-    private static final int REQUEST_PERMISSIONS = 2;
+    private FirebaseAuth mAuth;
 
     final PermissionAccess permissionAccess = new PermissionAccess();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    private boolean IS_AUTH_CHECKING_DONE = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RLog.e("Rafiur>>>onCreate");
-        findViewById(R.id.btnGrantPermission).setOnClickListener(v -> permissionAccess.requestStoragePermission(MainActivity.this));
+        IS_AUTH_CHECKING_DONE = false;
+        authFirebase();
 
+    }
+
+    private void authFirebase() {
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+        // Authenticate user anonymously
+        if (mAuth.getCurrentUser() == null) {
+            mAuth.signInAnonymously().addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    FirebaseUser user = mAuth.getCurrentUser();
+//                    initializeUserCoins(user);
+                    checkAppVersion(user);
+                    RLog.e("Authentication Added successfully.");
+                } else {
+                    askToDownloadNewVersion(-1);
+                    RLog.e("MainActivity", "Authentication failed", task.getException().getMessage());
+                }
+            });
+        } else {
+            // User already signed in anonymously
+            FirebaseUser user = mAuth.getCurrentUser();
+//            initializeUserCoins(user);
+            checkAppVersion(user);
+        }
+    }
+
+    private void checkAppVersion(FirebaseUser user) {
+        if (user != null) {
+            String userId = user.getUid();
+
+            db.collection("appsettings").document("settings").get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    long version = documentSnapshot.getLong("version");
+                    RLog.e("MainActivity", "Version: " + version);
+                    askToDownloadNewVersion(version);
+                }
+            }).addOnFailureListener(e -> {
+                // Handle failure
+                askToDownloadNewVersion(-1);
+            });
+        }
+    }
+
+    private void askToDownloadNewVersion(long version) {
+        int currentVersion = BuildConfig.VERSION_CODE;
+        AnalyticsHelper.getInstance(MainActivity.this).
+                logEvent("startapp", "v-"+version + ":" + currentVersion);
+        if (version > currentVersion) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Update Available").setMessage("A new version of the app is available. Would you like to update?").setPositiveButton("Update", (dialog, which) -> {
+                // Open Play Store or your app's download page
+                final String appPackageName = getPackageName();
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                } finally {
+                    dialog.dismiss();
+                    finish();
+                }
+            }).setNegativeButton("Later", (dialog, which) -> {
+                dialog.dismiss();
+                initAPP();
+            }).setCancelable(false).show();
+        } else {
+            initAPP();
+        }
+    }
+
+    private void initializeUserCoins(FirebaseUser user) {
+        if (user != null) {
+            String userId = user.getUid();
+
+            db.collection("users").document(userId).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null && !task.getResult().exists()) {
+                    // New user, set initial coin balance
+                    db.collection("users").document(userId).set(new HashMap<String, Object>() {{
+                        put("coins", 100);  // Initial coin balance for new users
+                    }});
+                }
+                if (!task.isSuccessful()) {
+                    RLog.e("MainActivity", "Error getting document", task.getException().getMessage());
+                }
+            });
+        }
+    }
+
+    private void updateUserCoins(FirebaseUser user, int coinsToAdd) {
+        if (user != null) {
+            String userId = user.getUid();
+
+            db.collection("users").document(userId).update("coins", FieldValue.increment(coinsToAdd)).addOnSuccessListener(aVoid -> {
+                // Coins updated successfully
+            }).addOnFailureListener(e -> {
+                // Handle failure
+            });
+        }
+    }
+
+    private void getUserCoinBalance(FirebaseUser user) {
+        if (user != null) {
+            String userId = user.getUid();
+
+            db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    long coins = documentSnapshot.getLong("coins");
+                    // Update your UI with the user's coin balance
+                    // Example: TextView.setText(String.valueOf(coins));
+                }
+            }).addOnFailureListener(e -> {
+                // Handle failure
+            });
+        }
+    }
+
+    private SharedPreferences preferences;
+
+    private void saveCoinsLocally(long coins) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong("coin_balance", coins);
+        editor.apply();
+    }
+
+    private long getLocalCoinBalance() {
+        return preferences.getLong("coin_balance", 0);
+    }
+
+    private void initAPP() {
+        IS_AUTH_CHECKING_DONE = true;
+        findViewById(R.id.btnGrantPermission).setOnClickListener(v -> permissionAccess.requestStoragePermission(MainActivity.this));
+        checkPermission();
     }
 
     private void checkPermission() {
         permissionAccess.checkRequestStoragePermission(this, new PermissionAccess.PermissionCallback() {
             @Override
             public void onPermissionGranted() {
+                AnalyticsHelper.getInstance(MainActivity.this).
+                        logEvent("startapp", "permission_granted");
                 startActivity(new Intent(MainActivity.this, ImageAiActivity.class));
                 finish();
             }
@@ -37,6 +184,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPermissionDenied() {
+                findViewById(R.id.permission_view).setVisibility(View.VISIBLE);
+                findViewById(R.id.loading_view).setVisibility(View.GONE);
             }
         });
     }
@@ -44,6 +193,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        checkPermission();
+        if (IS_AUTH_CHECKING_DONE) {
+            checkPermission();
+        }
     }
 }

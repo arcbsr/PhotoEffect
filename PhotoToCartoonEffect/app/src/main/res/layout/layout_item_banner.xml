@@ -9,17 +9,16 @@
         android:id="@+id/header_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bnr_size"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         app:cardCornerRadius="10dp"
-        app:cardElevation="15dp"
-        app:cardMaxElevation="15dp"
+        app:cardElevation="5dp"
+        app:cardMaxElevation="5dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="false">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/card_background"
             android:orientation="vertical">
 
 
@@ -35,10 +34,10 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/thumb2" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/gradient_overlay" />
+<!--                <View-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:background="@drawable/gradient_overlay" />-->
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="match_parent"
@@ -67,12 +66,10 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
                     android:background="@drawable/button_selector"
-                    android:backgroundTint="@color/violate"
+                    android:backgroundTint="@color/gradient_start_purple"
                     android:padding="5dp"
                     android:text="Try Now"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
+                    android:textAllCaps="false" />
 
 
             </RelativeLayout>

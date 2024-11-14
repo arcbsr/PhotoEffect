@@ -7,4 +7,6 @@ import com.crop.phototocartooneffect.models.MenuItem;
 public class AppSettings {
     public static final MenuItem DEFAULT_ITEM = new MenuItem(R.drawable.pro_icon_24, "Remove Background", "", R.drawable.thumb, ImageAiActivity.ImageCreationType.FIREBASE_ML_SEGMENTATION);
     public static final int ANIMATION_DURATION = 4000;
+
+    public static final boolean IS_TESTING_MODE = false;
 }

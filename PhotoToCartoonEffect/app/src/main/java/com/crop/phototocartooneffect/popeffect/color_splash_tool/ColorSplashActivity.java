@@ -164,7 +164,7 @@ public class ColorSplashActivity extends AppCompatActivity implements OnClickLis
         }
         onPhotoTakenApp();*/
         initOnPhotoLoad();
-        this.grayBtn.performClick();
+//        this.grayBtn.performClick();
     }
 
     public void onPhotoTakenApp() {

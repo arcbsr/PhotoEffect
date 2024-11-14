@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/root_view"
         android:layout_margin="5dp"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -134,6 +135,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <RelativeLayout
+         android:id="@+id/demo_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"

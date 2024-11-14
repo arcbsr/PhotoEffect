@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:background="@color/card_prnt_shadow"
     android:padding="10dp"
     tools:context=".dialogfragment.MenuFragmentDialog">
 
@@ -13,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
-        app:cardBackgroundColor="@color/card_prnt"
         app:cardCornerRadius="6dp"
         app:cardElevation="5dp"
         app:cardMaxElevation="5dp"
@@ -21,6 +19,7 @@
         app:cardUseCompatPadding="false">
 
         <RelativeLayout
+            android:background="@drawable/background_gradient"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -52,7 +51,6 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:alpha=".2"
                 android:layout_below="@id/closeIcon"
                 android:background="@color/semi_white" />
 
@@ -94,10 +92,11 @@
                     android:text="Privacy Policy"
                     android:textColor="@color/title" />
 
-                <View
+                <View android:layout_marginRight="16dp"
+                     android:layout_marginLeft="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#383838" />
+                    android:background="@color/semi_white" />
 
                 <TextView
                     android:id="@+id/subscriptionsTextView"

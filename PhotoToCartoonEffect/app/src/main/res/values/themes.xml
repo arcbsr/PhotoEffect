@@ -11,9 +11,9 @@
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/gradient_end</item>
-        <item name="colorPrimaryDark">@color/gradient_end</item>
-        <item name="colorAccent">@color/card_prnt</item>
+        <item name="colorPrimary">@color/gradient_end__purple</item>
+        <item name="colorPrimaryDark">@color/gradient_start_purple</item>
+        <item name="colorAccent">@color/gradient_start_purple</item>
         <item name="android:windowBackground">@color/black</item>
         <item name="android:textColorPrimary">@color/title</item>
         <item name="android:textColorSecondary">@color/details</item>

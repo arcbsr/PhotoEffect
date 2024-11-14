@@ -43,6 +43,7 @@ import com.crop.phototocartooneffect.renderengins.apis.imgtoimage.ImageToImageSe
 import com.crop.phototocartooneffect.renderengins.apis.imgupload.ImageRemoveBgService;
 import com.crop.phototocartooneffect.renderengins.apis.monster.MonsterApiClient;
 import com.crop.phototocartooneffect.renderengins.effects.BackgroundRemoveFML;
+import com.crop.phototocartooneffect.utils.AppSettings;
 import com.crop.phototocartooneffect.utils.RLog;
 
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         new Handler(Looper.getMainLooper()).post(() -> {
             onFinished();
             if (result != null) {
-                BaseFragmentInterface fragment = ImageAiFragment.newInstance("original", key);
+                BaseFragmentInterface fragment = ImageAiFragment.newInstance("original",  key);
                 fragment.applyAppBAR(toolbar);
                 showImageInFragment(fragment);
 //                Intent intent = new Intent(ImageAiActivity.this, ColorSplashActivity.class);
@@ -157,7 +158,10 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         setContentView(R.layout.activity_image_ai);
         toolbar = findViewById(R.id.appBarLayout);
         setSupportActionBar(toolbar);
+        if (AppSettings.IS_TESTING_MODE) {
+            findViewById(R.id.subscribeButton).setVisibility(View.INVISIBLE);
 
+        }
         findViewById(R.id.newButton).setOnClickListener(v -> {
             openImagePicker(pickSource);
         });

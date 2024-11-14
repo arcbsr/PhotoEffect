@@ -65,7 +65,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         return new ViewHolder(view);
     }
 
-    private int columnCount = 2;
+    private int columnCount = 3;
     private int padding = 0;
 
     public void setPadding(int padding) {

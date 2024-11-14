@@ -1,61 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/card_prnt">
+    android:background="@drawable/splash">
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/permission_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:visibility="gone">
 
-        <!-- Icon -->
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginBottom="16dp"
-            android:src="@drawable/baseline_storage_24" />
-
-        <!-- Title Text -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/btnGrantPermission"
             android:gravity="center"
-            android:text="@string/storage_permission_title"
-            android:textColor="@color/title"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
-        <!-- Description Text -->
-        <TextView
-            android:padding="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="@string/storage_permission_description"
-            android:textAlignment="center"
-            android:textColor="@color/details"
-            android:textSize="16sp" />
+            <!-- Icon -->
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/baseline_storage_24" />
+
+            <!-- Title Text -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:text="@string/storage_permission_title"
+                android:textColor="@color/title"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Description Text -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="@string/storage_permission_description"
+                android:textAlignment="center"
+                android:textColor="@color/details"
+                android:textSize="14sp" />
+
+        </LinearLayout>
 
         <!-- Grant Permission Button -->
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnGrantPermission"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="8dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
             android:background="@drawable/button_selector"
-            android:backgroundTint="@color/white_900"
+            android:backgroundTint="@color/orange"
             android:elevation="4dp"
-            android:padding="20dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
             android:text="@string/grant_permission"
-            android:textStyle="bold"
+            android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textStyle="bold" />
+    </RelativeLayout>
 
-    </LinearLayout>
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animationView"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_centerInParent="true"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/loading_spin"
+            app:tint="@color/yellow" />
+
+    </RelativeLayout>
+</RelativeLayout>

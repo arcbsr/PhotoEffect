@@ -147,7 +147,7 @@ public class LoadingDialog extends DialogFragment {
 //            blinkAnimation.setRepeatMode(Animation.REVERSE);
             blinkAnimation = AnimationUtils.smoothBlinkAnimation(view.findViewById(R.id.item_thumb));
             lottieAnimationView.playAnimation();
-//            listener.onItemClick(item);
+            listener.onItemClick(item);
         });
     }
 

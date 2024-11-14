@@ -79,7 +79,7 @@ public class ImageAiFragment extends BaseFragmentInterface {
         view.setBackgroundColor(paletteExtractor.getBackgroundColor(getContext()));
 
         final PhotoEditorView mPhotoEditorView = view.findViewById(R.id.photoEditorView);
-        mPhotoEditorView.getSource().setImageBitmap(createBitmap);
+        mPhotoEditorView.getSource().setImageBitmap(originalbitmap);
 //        CustomEffect customEffect = new CustomEffect.Builder(EffectFactory.EFFECT_BRIGHTNESS).setParameter("brightness", 0.5f).build();
         final PhotoEditor mPhotoEditor = new PhotoEditor.Builder(getContext(), mPhotoEditorView).build();
 //        mPhotoEditor.addImage(createBitmap);

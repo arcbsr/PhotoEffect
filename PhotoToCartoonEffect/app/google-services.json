@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "97073045476",
+    "project_id": "imageai-2c97e",
+    "storage_bucket": "imageai-2c97e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:97073045476:android:c7950da1dec3788b7f71f1",
+        "android_client_info": {
+          "package_name": "com.crop.phototocartooneffect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWR4sxydj0mesJbjdDt1XXjzsax0NjBdc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
