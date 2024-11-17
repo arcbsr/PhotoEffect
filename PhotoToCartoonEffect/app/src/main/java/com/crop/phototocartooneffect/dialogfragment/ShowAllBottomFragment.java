@@ -12,18 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.adapters.ItemAdapter;
-import com.crop.phototocartooneffect.fragments.MainFragment;
-import com.crop.phototocartooneffect.models.MenuItem;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-public class ShowAllBottomFragment extends BottomSheetDialogFragment {
+public class ShowAllBottomFragment extends BaseBottomFragment {
     private ItemAdapter.OnItemClickListener listener;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.BottomSheetDialogTheme);
-    }
 
     public void setListener(ItemAdapter.OnItemClickListener listener) {
         this.listener = listener;
@@ -73,9 +64,4 @@ public class ShowAllBottomFragment extends BottomSheetDialogFragment {
         recyclerView.setAdapter(adapter);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        // Add any additional view setup here
-    }
 }

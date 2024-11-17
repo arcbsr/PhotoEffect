@@ -19,5 +19,9 @@
     <string name="app_file">PHOTO_</string>
     <string name="directory_final">Avioeffect</string>
     <string name="share_using">Share using</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="msg_required">Empty message!!</string>
+    <string name="we_may_contact">* We will contact using this email</string>
+    <string name="terms_condition"><![CDATA[Terms & Conditions]]></string>
 
 </resources>

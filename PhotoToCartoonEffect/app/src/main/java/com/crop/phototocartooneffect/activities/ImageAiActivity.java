@@ -31,6 +31,7 @@ import com.crop.phototocartooneffect.dialogfragment.ErrorDialog;
 import com.crop.phototocartooneffect.dialogfragment.LoadingDialog;
 import com.crop.phototocartooneffect.dialogfragment.MenuFragmentDialog;
 import com.crop.phototocartooneffect.dialogfragment.MoreBottomFragment;
+import com.crop.phototocartooneffect.dialogfragment.SubscriptionFragment;
 import com.crop.phototocartooneffect.fragments.BaseFragmentInterface;
 import com.crop.phototocartooneffect.fragments.ImageAiFragment;
 import com.crop.phototocartooneffect.fragments.MainFragment;
@@ -67,7 +68,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         new Handler(Looper.getMainLooper()).post(() -> {
             onFinished();
             if (result != null) {
-                BaseFragmentInterface fragment = ImageAiFragment.newInstance("original",  key);
+                BaseFragmentInterface fragment = ImageAiFragment.newInstance("original", key);
                 fragment.applyAppBAR(toolbar);
                 showImageInFragment(fragment);
 //                Intent intent = new Intent(ImageAiActivity.this, ColorSplashActivity.class);
@@ -123,6 +124,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                 transformation,        // Set transformation options
                 false                  // allowMultipleSelection
         );
+
         PermissionAccess permissionAccess = new PermissionAccess();
         permissionAccess.requestCameraPermission(this, new PermissionAccess.PermissionCallback() {
             @Override
@@ -136,18 +138,6 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
 
             }
         });
-//        permissionAccess.checkRequestCameraPermission(this, new PermissionAccess.PermissionCallback() {
-//            @Override
-//            public void onPermissionGranted() {
-//                Intent intent = ImagePickerPlus.INSTANCE.createIntent(ImageAiActivity.this, pickRequest);
-//                pickMediaLauncher.launch(intent);
-//            }
-//
-//            @Override
-//            public void onPermissionDenied() {
-//
-//            }
-//        });
     }
 
     private Toolbar toolbar;
@@ -162,6 +152,10 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
             findViewById(R.id.subscribeButton).setVisibility(View.INVISIBLE);
 
         }
+        findViewById(R.id.subscribeButton).setOnClickListener(view -> {
+            SubscriptionFragment fragment = new SubscriptionFragment();
+            fragment.show(getSupportFragmentManager(), "SubscriptionFragment");
+        });
         findViewById(R.id.newButton).setOnClickListener(v -> {
             openImagePicker(pickSource);
         });

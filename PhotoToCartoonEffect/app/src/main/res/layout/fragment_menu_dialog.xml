@@ -12,17 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
+        android:clickable="true"
         app:cardCornerRadius="6dp"
         app:cardElevation="5dp"
-        android:clickable="true"
         app:cardMaxElevation="5dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="false">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/background_gradient">
+            android:layout_height="match_parent">
 
 
             <include
@@ -37,7 +36,7 @@
                 android:minHeight="400dp"
                 android:orientation="vertical">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/contactUsTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -52,7 +51,7 @@
                     android:text="Contact Us"
                     android:textColor="@color/title" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/privacyPolicyTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -67,6 +66,21 @@
                     android:text="Privacy Policy"
                     android:textColor="@color/title" />
 
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/termsTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/terms"
+                    android:drawableRight="@drawable/right_arrow"
+                    android:drawablePadding="10dp"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:text="@string/terms_condition"
+                    android:textColor="@color/title" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -74,7 +88,22 @@
                     android:layout_marginRight="16dp"
                     android:background="@color/semi_white" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/rateUsTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/rate_us"
+                    android:drawableRight="@drawable/right_arrow"
+                    android:drawablePadding="10dp"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:text="Rate Us"
+                    android:textColor="@color/title" />
+
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/subscriptionsTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

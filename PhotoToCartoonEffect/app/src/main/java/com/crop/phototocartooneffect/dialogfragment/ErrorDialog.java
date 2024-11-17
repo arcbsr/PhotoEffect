@@ -14,7 +14,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.crop.phototocartooneffect.R;
 
-public class ErrorDialog extends DialogFragment {
+public class ErrorDialog extends BaseDialogFragment {
     private static final String ARG_MESSAGE = "message";
 
     public static ErrorDialog newInstance(String message) {
@@ -24,6 +24,7 @@ public class ErrorDialog extends DialogFragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -35,6 +36,7 @@ public class ErrorDialog extends DialogFragment {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_error_dialog, container, false);
