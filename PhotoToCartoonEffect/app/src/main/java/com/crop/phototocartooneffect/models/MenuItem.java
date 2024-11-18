@@ -15,6 +15,10 @@ public class MenuItem {
     public boolean isBanner;
     public boolean isPro;
 
+    public void setImageCreationType(ImageAiActivity.ImageCreationType imageCreationType) {
+        this.imageCreationType = imageCreationType;
+    }
+
     private ImageAiActivity.ImageCreationType imageCreationType;
 
     public String prompt;

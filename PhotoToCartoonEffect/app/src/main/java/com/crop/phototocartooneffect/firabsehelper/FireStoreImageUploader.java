@@ -1,8 +1,10 @@
 package com.crop.phototocartooneffect.firabsehelper;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
+import com.crop.phototocartooneffect.activities.ImageAiActivity;
 import com.crop.phototocartooneffect.utils.AppSettings;
 import com.crop.phototocartooneffect.utils.RLog;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -30,6 +32,15 @@ public class FireStoreImageUploader {
         public String getValue() {
             return value;
         }
+
+        public static AITYPEFIREBASEDB fromString(String value) {
+            for (AITYPEFIREBASEDB type : AITYPEFIREBASEDB.values()) {
+                if (type.getValue().equalsIgnoreCase(value)) {
+                    return type;
+                }
+            }
+            return AITYPEFIREBASEDB.UNKNOWN; // Default case if no match is found
+        }
     }
 
     private static final String STORAGE_NAME = "aiimages";
@@ -53,7 +64,39 @@ public class FireStoreImageUploader {
         return instance;
     }
 
-    public void uploadImage(Uri imageUri, String userId, String prompt, AITYPEFIREBASEDB aiType) {
+//    public void uploadImage(Bitmap bitmap, String userId, String prompt, AITYPEFIREBASEDB aiType) {
+//        if (!AppSettings.IS_ADMIN_MODE) {
+//            return;
+//        }
+//        if (imageUri == null) {
+//            RLog.e(TAG, "Image URI is null");
+//            return;
+//        }
+//
+//        // Create a reference in Firebase Storage
+//        StorageReference storageRef = storage.getReference();
+//        StorageReference imageRef = storageRef.child("images/" + userId + "/" + System.currentTimeMillis() + ".jpg");
+//
+//        // Upload the image
+//        UploadTask uploadTask = imageRef.putFile(imageUri);
+//
+//        // Handle upload success and failure
+//        uploadTask.addOnSuccessListener(taskSnapshot -> {
+//            // Retrieve the download URL
+//            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+//                String downloadUrl = uri.toString();
+//
+//                // Save the URL in Firestore (optional)
+//                saveImageUrlToFirestorm(userId, downloadUrl, prompt, aiType);
+//
+//                RLog.e(TAG, "Image uploaded successfully");
+//            });
+//        }).addOnFailureListener(e -> {
+//            RLog.e(TAG, "Image upload failed: " + e.getMessage());
+//        });
+//    }
+
+    public void uploadImage(Uri imageUri, String userId, String prompt, AITYPEFIREBASEDB aiType, ImageAiActivity.ImageCreationType imageCreationType) {
         if (!AppSettings.IS_ADMIN_MODE) {
             return;
         }
@@ -76,7 +119,7 @@ public class FireStoreImageUploader {
                 String downloadUrl = uri.toString();
 
                 // Save the URL in Firestore (optional)
-                saveImageUrlToFirestorm(userId, downloadUrl, prompt, aiType);
+                saveImageUrlToFirestorm(userId, downloadUrl, prompt, aiType, imageCreationType);
 
                 RLog.e(TAG, "Image uploaded successfully");
             });
@@ -85,12 +128,13 @@ public class FireStoreImageUploader {
         });
     }
 
-    private void saveImageUrlToFirestorm(String userId, String downloadUrl, String prompt, AITYPEFIREBASEDB aiType) {
+    private void saveImageUrlToFirestorm(String userId, String downloadUrl, String prompt, AITYPEFIREBASEDB aiType, ImageAiActivity.ImageCreationType imageCreationType) {
         Map<String, Object> data = new HashMap<>();
         data.put("userId", userId);
         data.put("imageUrl", downloadUrl);
         data.put("prompt", prompt);
         data.put("menutype", aiType.getValue());
+        data.put("creationtype", imageCreationType.getValue());
 
         db.collection(STORAGE_NAME).add(data).addOnSuccessListener(documentReference -> {
             RLog.e(TAG, "Image URL saved to Firestore");

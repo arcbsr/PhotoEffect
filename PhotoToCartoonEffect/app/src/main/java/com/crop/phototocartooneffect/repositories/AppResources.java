@@ -43,17 +43,19 @@ public class AppResources {
                             image.get("imageUrl") != null ? image.get("imageUrl").toString() : "",         // Default value for imageUrl
                             image.get("description") != null ? image.get("description").toString() : "No description available", // Default value for description
                             image.get("prompt") != null ? image.get("prompt").toString() : "",             // Default value for prompt
-                            ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG, // Assuming this is a constant
+                            image.get("creationtype") != null ? ImageAiActivity.ImageCreationType.fromString(image.get("creationtype").toString())
+                                    : ImageAiActivity.ImageCreationType.FIREBASE_ML_SEGMENTATION, // Assuming this is a constant
                             true // Assuming this is always true
                     );
                     final String menutype = image.get("menutype") != null ? image.get("menutype").toString() : "";
-                    FireStoreImageUploader.AITYPEFIREBASEDB aiType = FireStoreImageUploader.AITYPEFIREBASEDB.UNKNOWN;
-                    if (menutype.equalsIgnoreCase(FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI.toString())) {
-                        aiType = FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI;
-                    } else if (menutype.equalsIgnoreCase(FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI2.toString())) {
-                        aiType = FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI2;
-                    }
-                    setItem(menuItem, aiType);
+//                    FireStoreImageUploader.AITYPEFIREBASEDB aiType = FireStoreImageUploader.AITYPEFIREBASEDB.UNKNOWN;
+//
+//                    if (menutype.equalsIgnoreCase(FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI.toString())) {
+//                        aiType = FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI;
+//                    } else if (menutype.equalsIgnoreCase(FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI2.toString())) {
+//                        aiType = FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI2;
+//                    }
+                    setItem(menuItem, FireStoreImageUploader.AITYPEFIREBASEDB.fromString(menutype));
                 }
                 listener.onFeaturedItemsUpdated();
             }

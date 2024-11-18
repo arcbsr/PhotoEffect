@@ -103,11 +103,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
     }
 
     public enum ImageCreationType {
-        FIREBASE_ML_SEGMENTATION("Firebase ML Segmentation"),
-        IMAGE_EFFECT_IMG2IMG("Image Effect Img2Img"),
-        IMAGE_EFFECT_FASHION("Image Effect Fashion"),
-        MLB_BACKGROUND_REMOVE("MLB Background Remove"),
-        MONSTER_AI("Monster AI");
+        FIREBASE_ML_SEGMENTATION("Firebase_ML_Segmentation"), IMAGE_EFFECT_IMG2IMG("MLB_Img2Img"), IMAGE_EFFECT_FASHION("MLB_fashion"), MLB_BACKGROUND_REMOVE("MLB_Background_Remove"), MONSTER_AI("Monster_AI");
 
         private final String value;
 
@@ -117,6 +113,15 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
 
         public String getValue() {
             return value;
+        }
+
+        public static ImageCreationType fromString(String value) {
+            for (ImageCreationType type : ImageCreationType.values()) {
+                if (type.getValue().equalsIgnoreCase(value)) {
+                    return type;
+                }
+            }
+            return ImageCreationType.FIREBASE_ML_SEGMENTATION; // Default case if no match is found
         }
     }
 
@@ -197,18 +202,11 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                             ImageLoader.getInstance().loadBitmap(ImageAiActivity.this, result.getData().getData(), -1, (bitmap, keyValue, position) -> {
                                 selectedRenderItem = new MenuItem(0, "Monster", "Monster", 0, ImageCreationType.MONSTER_AI, "");
                                 loadImage(result.getData().getData(), 0);
-//                                            ImageEffect imageEffect = new MonsterApiClient(
-//                                                    ""
-//                                                    , ImageAiActivity.this,
-//                                                    "Create a fantasy avatar inspired by a mystical forest monster. The avatar should feature vibrant green skin with luminescent markings, large expressive eyes that change color based on mood, and textured, leaf-like ears. Add a flowing mane resembling vines and flowers, and give the avatar an enchanting aura with sparkling light effects surrounding it. The background should be a magical forest scene, with soft, glowing lights and whimsical plants. The overall style should be whimsical and colorful, appealing to a fantasy-loving audience."
-//                                            );
-//                                            imageEffect.applyEffect(bitmap, ImageAiActivity.this);
                             }, true);
                         }
                     });
                 } else {
                     loadImage(result.getData().getData(), 0);
-
                 }
             }
         });
@@ -228,16 +226,16 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
 
     private void loadImage(Uri uri, int position) {
 
-        if (uploadAsAdmin) {
-            AdminFragmentDialog dialog = AdminFragmentDialog.newInstance();
-            dialog.show(getSupportFragmentManager(), "AdminFragmentDialog");
-//            FireStoreImageUploader.getInstance(this).uploadImage(uri, "featured", "Transform the image into a cartoon object, maintaining the original colors and textures. " + "The result should resemble a recognizable snack item (e.g., potato chip, cookie, or candy)" + " while preserving key features of the original image.", FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI2);
-            return;
-        }
-
 
         ImageLoader.getInstance().loadBitmap(this, uri, position, (bitmap, keyValue, pos) -> {
             bitmaps.add(new VideoFrames(keyValue, pos));
+            if (uploadAsAdmin) {
+                AdminFragmentDialog dialog = AdminFragmentDialog.newInstance(selectedRenderItem, uri, bitmap);
+                dialog.show(getSupportFragmentManager(), "AdminFragmentDialog");
+                uploadAsAdmin = false;
+//            FireStoreImageUploader.getInstance(this).uploadImage(uri, "featured", "Transform the image into a cartoon object, maintaining the original colors and textures. " + "The result should resemble a recognizable snack item (e.g., potato chip, cookie, or candy)" + " while preserving key features of the original image.", FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI2);
+                return;
+            }
             applyImageEffect(keyValue);
         }, true);
     }
@@ -252,16 +250,16 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         }
     }
 
-    private void createImageEffect(MenuItem selectedRenderItem, String bitmapKeyValue, Context context, ImageEffect.ImageEffectCallback callback) {
+    public static void createImageEffect(MenuItem selectedRenderItem, String bitmapKeyValue, Context context, ImageEffect.ImageEffectCallback callback) {
         ImageEffect imageEffect;
         String API_KEY = BuildConfig.MLAB_API_KEY;
         String MONSTER_TOKEN = BuildConfig.MONS_TOKEN_KEY;
         switch (selectedRenderItem.getImageCreationType()) {
             case IMAGE_EFFECT_IMG2IMG:
-                imageEffect = new ImageToImageService("Transform the image into a cartoon object, maintaining the original colors and textures. The result should resemble a recognizable snack item (e.g., potato chip, cookie, or candy) while preserving key features of the original image.", API_KEY, context);
+                imageEffect = new ImageToImageService(selectedRenderItem.prompt, API_KEY, context);
                 break;
             case IMAGE_EFFECT_FASHION:
-                imageEffect = new FashionEffectService(":A realistic photo of a model wearing a beautiful t-shirt", "", "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/livewire-tmp/5BDmwvtizESFRO24uGDW1iu1u5TXhB-metaM2JmZmFkY2U5NDNkOGU3MDJhZDE0YTk2OTY2NjQ0NjYuanBn-.jpg", "upper_body", API_KEY, context);
+                imageEffect = new FashionEffectService(selectedRenderItem.prompt, "", "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/livewire-tmp/5BDmwvtizESFRO24uGDW1iu1u5TXhB-metaM2JmZmFkY2U5NDNkOGU3MDJhZDE0YTk2OTY2NjQ0NjYuanBn-.jpg", "upper_body", API_KEY, context);
                 break;
             case FIREBASE_ML_SEGMENTATION:
                 imageEffect = new BackgroundRemoveFML();
@@ -270,7 +268,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                 imageEffect = new ImageRemoveBgService(API_KEY, context);
                 break;
             case MONSTER_AI:
-                imageEffect = new MonsterApiClient(MONSTER_TOKEN, context, "Side photo of a demon , shadow, in the kitchen , sitting at the table , fade artwork by van gogh. high res");
+                imageEffect = new MonsterApiClient(MONSTER_TOKEN, context, selectedRenderItem.prompt);
                 break;
             default:
                 imageEffect = new BackgroundRemoveFML();
@@ -278,7 +276,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         if (imageEffect.isBitmapHolder()) {
             Bitmap bitmap = ImageLoader.getInstance().getBitmap(bitmapKeyValue);
             if (bitmap == null) {
-                ErrorDialog.newInstance("Image loading error").show(getSupportFragmentManager(), "ErrorDialog");
+                callback.onError(new Exception("Image loading error"));
                 return;
             }
             imageEffect.applyEffect(ImageLoader.getInstance().getBitmap(bitmapKeyValue), callback);
