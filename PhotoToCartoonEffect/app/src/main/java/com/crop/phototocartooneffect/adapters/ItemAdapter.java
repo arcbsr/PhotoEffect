@@ -6,27 +6,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.crop.phototocartooneffect.R;
-import com.crop.phototocartooneffect.activities.ImageAiActivity;
 import com.crop.phototocartooneffect.models.MenuItem;
-import com.crop.phototocartooneffect.utils.AnimationUtils;
+import com.crop.phototocartooneffect.repositories.AppResources;
 import com.crop.phototocartooneffect.utils.AppSettings;
 import com.crop.phototocartooneffect.utils.RLog;
-import com.crop.phototocartooneffect.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
-    private List<MenuItem> menuItems = new ArrayList<>();
+    private List<MenuItem> menuItems = new ArrayList();
     private Context context;
     private OnItemClickListener listener;
 
@@ -37,25 +34,26 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     public ItemAdapter(Context context, OnItemClickListener listener) {
         this.context = context;
         this.listener = listener;
-        // Initialize menu items
-        menuItems.add(AppSettings.DEFAULT_ITEM);
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Remove Background", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.FIREBASE_ML_SEGMENTATION));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
     }
 
-    public void setData() {
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Remove Background", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.FIREBASE_ML_SEGMENTATION));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
-        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
+    public void setData(List<MenuItem> menuItems) {
+        if (menuItems != null) {
+            this.menuItems = menuItems;
+        } else {
+            RLog.d("ItemAdapter", "menuItems is null");
+//            this.menuItems.add(AppSettings.DEFAULT_ITEM);
+//            this.menuItems.add(AppSettings.DEFAULT_ITEM);
+//            this.menuItems.add(AppSettings.DEFAULT_ITEM);
+        }
+        notifyDataSetChanged();
+
+//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
+//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
+//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
+//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Remove Background", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.FIREBASE_ML_SEGMENTATION));
+//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
+//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
+//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
     }
 
     @NonNull
@@ -124,6 +122,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
         public void bind(final MenuItem item) {
             thumbImageView.setImageResource(item.getThumbResId());
+            Glide.with(context).load(item.imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER_ERROR).into(thumbImageView);
+
             overlayImageView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION && listener != null) {

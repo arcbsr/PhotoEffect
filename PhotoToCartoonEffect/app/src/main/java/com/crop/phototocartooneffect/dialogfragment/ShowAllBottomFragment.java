@@ -12,9 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.adapters.ItemAdapter;
+import com.crop.phototocartooneffect.models.MenuItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShowAllBottomFragment extends BaseBottomFragment {
     private ItemAdapter.OnItemClickListener listener;
+
+    private List<MenuItem> menuItems = new ArrayList<>();
 
     public void setListener(ItemAdapter.OnItemClickListener listener) {
         this.listener = listener;
@@ -60,7 +66,7 @@ public class ShowAllBottomFragment extends BaseBottomFragment {
         }); // Replace YourAdapter with your actual adapter
         adapter.setColumnCount(2);
         adapter.setPadding(40);
-        adapter.setData();
+        adapter.setData(menuItems);
         recyclerView.setAdapter(adapter);
     }
 

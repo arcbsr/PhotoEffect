@@ -26,9 +26,7 @@
                 android:layout_height="@dimen/banner_btn_height"
                 android:layout_gravity="end"
                 android:layout_margin="12dp"
-                android:visibility="visible"
                 android:background="@drawable/button_selector"
-                app:backgroundTint="@color/orange"
                 android:clickable="true"
                 android:drawableRight="@drawable/pro_icon_24"
                 android:drawableTint="@color/white"
@@ -38,7 +36,28 @@
                 android:text="PRO"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:backgroundTint="@color/orange" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/addnew_item"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/banner_btn_height"
+                android:layout_gravity="end"
+                android:layout_margin="12dp"
+                android:background="@drawable/button_selector"
+                android:clickable="true"
+                android:drawableRight="@drawable/ic_add"
+                android:drawableTint="@color/white"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Add New"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -81,5 +100,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout"/>
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

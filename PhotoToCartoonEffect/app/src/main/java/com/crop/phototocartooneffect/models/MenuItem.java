@@ -13,9 +13,12 @@ public class MenuItem {
     private String description;
     private int thumbResId;
     public boolean isBanner;
+    public boolean isPro;
+
     private ImageAiActivity.ImageCreationType imageCreationType;
 
     public String prompt;
+    public String imageUrl;
 
     public MenuItem(int iconResId, String title, String description, int thumbResId, ImageAiActivity.ImageCreationType imageCreationType, String prompt) {
         this.iconResId = iconResId;
@@ -24,6 +27,15 @@ public class MenuItem {
         this.thumbResId = thumbResId;
         this.imageCreationType = imageCreationType;
         this.prompt = prompt;
+    }
+
+    public MenuItem(String title, String imageUrl, String description, String prompt, ImageAiActivity.ImageCreationType imageCreationType, boolean isPro) {
+        this.isPro = isPro;
+        this.title = title;
+        this.description = description;
+        this.imageCreationType = imageCreationType;
+        this.prompt = prompt;
+        this.imageUrl = imageUrl;
     }
 
     public MenuItem(int iconResId, String title, String description, int thumbResId, ImageAiActivity.ImageCreationType imageCreationType) {

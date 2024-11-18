@@ -1,43 +1,39 @@
 package com.crop.phototocartooneffect.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.MediaStore;
 import android.renderscript.RenderScript;
 import android.view.View;
 import android.widget.ImageView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.crop.phototocartooneffect.BuildConfig;
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.adapters.ItemAdapter;
-import com.crop.phototocartooneffect.adapters.ItemAdapterFull;
+import com.crop.phototocartooneffect.dialogfragment.AdminFragmentDialog;
 import com.crop.phototocartooneffect.dialogfragment.ErrorDialog;
 import com.crop.phototocartooneffect.dialogfragment.LoadingDialog;
 import com.crop.phototocartooneffect.dialogfragment.MenuFragmentDialog;
-import com.crop.phototocartooneffect.dialogfragment.MoreBottomFragment;
 import com.crop.phototocartooneffect.dialogfragment.SubscriptionFragment;
+import com.crop.phototocartooneffect.firabsehelper.FireStoreImageUploader;
 import com.crop.phototocartooneffect.fragments.BaseFragmentInterface;
 import com.crop.phototocartooneffect.fragments.ImageAiFragment;
 import com.crop.phototocartooneffect.fragments.MainFragment;
 import com.crop.phototocartooneffect.imageloader.ImageLoader;
 import com.crop.phototocartooneffect.models.MenuItem;
-import com.crop.phototocartooneffect.popeffect.color_splash_tool.ColorSplashActivity;
 import com.crop.phototocartooneffect.renderengins.ImageEffect;
 import com.crop.phototocartooneffect.renderengins.apis.fashion.FashionEffectService;
 import com.crop.phototocartooneffect.renderengins.apis.imgtoimage.ImageToImageService;
@@ -141,6 +137,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
     }
 
     private Toolbar toolbar;
+    private boolean uploadAsAdmin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +147,16 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         setSupportActionBar(toolbar);
         if (AppSettings.IS_TESTING_MODE) {
             findViewById(R.id.subscribeButton).setVisibility(View.INVISIBLE);
-
+        }
+        if (AppSettings.IS_ADMIN_MODE) {
+            findViewById(R.id.addnew_item).setVisibility(View.VISIBLE);
+            findViewById(R.id.addnew_item).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    uploadAsAdmin = true;
+                    openImagePicker(pickSource);
+                }
+            });
         }
         findViewById(R.id.subscribeButton).setOnClickListener(view -> {
             SubscriptionFragment fragment = new SubscriptionFragment();
@@ -208,6 +214,14 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
 
     private void loadImage(Uri uri, int position) {
 
+        if (uploadAsAdmin) {
+            AdminFragmentDialog dialog = AdminFragmentDialog.newInstance();
+            dialog.show(getSupportFragmentManager(), "AdminFragmentDialog");
+//            FireStoreImageUploader.getInstance(this).uploadImage(uri, "featured", "Transform the image into a cartoon object, maintaining the original colors and textures. " + "The result should resemble a recognizable snack item (e.g., potato chip, cookie, or candy)" + " while preserving key features of the original image.", FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI2);
+            return;
+        }
+
+
         ImageLoader.getInstance().loadBitmap(this, uri, position, (bitmap, keyValue, pos) -> {
             bitmaps.add(new VideoFrames(keyValue, pos));
             applyImageEffect(keyValue);
@@ -218,8 +232,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         if (selectedRenderItem == null) {
             return;
         }
-        loadingDialog = LoadingDialog.newInstance(selectedRenderItem, ImageLoader.getInstance().getBitmap(keyValue),
-                item -> createImageEffect(selectedRenderItem, keyValue, ImageAiActivity.this, ImageAiActivity.this));
+        loadingDialog = LoadingDialog.newInstance(selectedRenderItem, ImageLoader.getInstance().getBitmap(keyValue), item -> createImageEffect(selectedRenderItem, keyValue, ImageAiActivity.this, ImageAiActivity.this));
         if (loadingDialog != null) {
             loadingDialog.show(getSupportFragmentManager(), "LoadingDialog");
         }

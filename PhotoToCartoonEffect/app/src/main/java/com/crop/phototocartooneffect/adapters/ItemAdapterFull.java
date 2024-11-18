@@ -11,9 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.activities.ImageAiActivity;
+import com.crop.phototocartooneffect.firabsehelper.FireStoreImageUploader;
 import com.crop.phototocartooneffect.models.MenuItem;
+import com.crop.phototocartooneffect.repositories.AppResources;
 import com.crop.phototocartooneffect.utils.AppSettings;
 import com.crop.phototocartooneffect.utils.RLog;
 import com.crop.phototocartooneffect.utils.ScreenUtils;
@@ -33,7 +36,7 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
 
     private Context context;
     private ItemAdapter.OnItemClickListener listener;
-
+    List<MenuItem> subMenuBannerItems;
 
     public ItemAdapterFull(Context context, ItemAdapter.OnItemClickListener listener) {
         this.context = context;
@@ -43,15 +46,17 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
     }
 
     public void setData() {
-        List<MenuItem> subMenuItems = new ArrayList<>();
-        subMenuItems.add(new MenuItem(R.drawable.placeholder, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
-        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb3, ImageAiActivity.ImageCreationType.MONSTER_AI));
-        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb4, ImageAiActivity.ImageCreationType.MONSTER_AI));
-        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb5, ImageAiActivity.ImageCreationType.MONSTER_AI));
-        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb6, ImageAiActivity.ImageCreationType.MONSTER_AI));
-        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
-        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb3, ImageAiActivity.ImageCreationType.MONSTER_AI));
-        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb5, ImageAiActivity.ImageCreationType.MONSTER_AI));
+        List<MenuItem> subMenuItems = AppResources.getInstance().getItems(FireStoreImageUploader.AITYPEFIREBASEDB.USERCREATIONS);
+        subMenuBannerItems = AppResources.getInstance().getItems(FireStoreImageUploader.AITYPEFIREBASEDB.USERCREATIONS_BANNER);
+        RLog.d("subMenuItems", subMenuBannerItems.size() + "");
+//        subMenuItems.add(new MenuItem(R.drawable.placeholder, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
+//        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb3, ImageAiActivity.ImageCreationType.MONSTER_AI));
+//        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb4, ImageAiActivity.ImageCreationType.MONSTER_AI));
+//        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb5, ImageAiActivity.ImageCreationType.MONSTER_AI));
+//        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb6, ImageAiActivity.ImageCreationType.MONSTER_AI));
+//        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
+//        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb3, ImageAiActivity.ImageCreationType.MONSTER_AI));
+//        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb5, ImageAiActivity.ImageCreationType.MONSTER_AI));
 //        Collections.shuffle(subMenuItems);
         currentInsertionIndex = 0;
         for (MenuItem menuItem : subMenuItems) {
@@ -67,11 +72,13 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
             menuItems.add(new MainMenu());
         }
         if (menuItems.get(currentInsertionIndex).subMenuItems.size() == 4) {
-            menuItems.get(currentInsertionIndex).bannerItem = AppSettings.DEFAULT_ITEM;
             currentInsertionIndex++;
             menuItems.add(new MainMenu());
         }
         menuItems.get(currentInsertionIndex).subMenuItems.add(menuItem);
+        if (subMenuBannerItems.size() > currentInsertionIndex) {
+            menuItems.get(currentInsertionIndex).bannerItem = subMenuBannerItems.get(currentInsertionIndex);
+        }
     }
 
     @NonNull
@@ -119,51 +126,50 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
         public void bind(final MainMenu mainItems) {
             List<MenuItem> items = mainItems.subMenuItems;
 
-            thumbImageView.setImageResource(items.get(0).getThumbResId());
-
-            thumbImageView2.setImageResource(items.get(1).getThumbResId());
-
             if (items.size() > 0) {
 
                 itemView.findViewById(R.id.include_view11).setVisibility(View.VISIBLE);
-                thumbImageView.setImageResource(items.get(0).getThumbResId());
+//                thumbImageView.setImageResource(items.get(0).getThumbResId());
+                Glide.with(context).load(items.get(0).imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER_ERROR).into(thumbImageView);
             } else {
                 itemView.findViewById(R.id.include_view11).setVisibility(View.GONE);
             }
             if (items.size() > 1) {
-
                 itemView.findViewById(R.id.include_view12).setVisibility(View.VISIBLE);
-                thumbImageView2.setImageResource(items.get(1).getThumbResId());
+//                thumbImageView2.setImageResource(items.get(1).getThumbResId());
+                Glide.with(context).load(items.get(1).imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER_ERROR).into(thumbImageView2);
             } else {
                 itemView.findViewById(R.id.include_view12).setVisibility(View.GONE);
             }
             if (items.size() > 2) {
                 itemView.findViewById(R.id.include_view21).setVisibility(View.VISIBLE);
+//                thumbImageView3.setImageResource(items.get(2).getThumbResId());
 
-                thumbImageView3.setImageResource(items.get(2).getThumbResId());
+                Glide.with(context).load(items.get(2).imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER_ERROR).into(thumbImageView3);
             } else {
                 itemView.findViewById(R.id.include_view21).setVisibility(View.GONE);
             }
             if (items.size() > 3) {
                 itemView.findViewById(R.id.include_view22).setVisibility(View.VISIBLE);
-                thumbImageView4.setImageResource(items.get(3).getThumbResId());
+//                thumbImageView4.setImageResource(items.get(3).getThumbResId());
+
+                Glide.with(context).load(items.get(3).imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER_ERROR).into(thumbImageView4);
             } else {
                 itemView.findViewById(R.id.include_view22).setVisibility(View.GONE);
             }
             if (mainItems.bannerItem != null) {
                 itemView.findViewById(R.id.main_banner).setVisibility(View.VISIBLE);
-                thumbImageView5.setImageResource(mainItems.bannerItem.getThumbResId());
+//                thumbImageView5.setImageResource(mainItems.bannerItem.getThumbResId());
+
+                Glide.with(context).load(mainItems.bannerItem.imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER_ERROR).into(thumbImageView5);
             } else {
                 itemView.findViewById(R.id.main_banner).setVisibility(View.GONE);
             }
-            thumbOverlayImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION && listener != null) {
-                        listener.onItemClick(items.get(0));
-                        RLog.e("MenuAdapter", "Clicked on item at position: " + position);
-                    }
+            thumbOverlayImageView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && listener != null) {
+                    listener.onItemClick(items.get(0));
+                    RLog.e("MenuAdapter", "Clicked on item at position: " + position);
                 }
             });
         }

@@ -13,6 +13,8 @@ import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.adapters.ItemAdapter;
 import com.crop.phototocartooneffect.adapters.ItemAdapterFull;
 import com.crop.phototocartooneffect.dialogfragment.ShowAllBottomFragment;
+import com.crop.phototocartooneffect.firabsehelper.FireStoreImageUploader;
+import com.crop.phototocartooneffect.repositories.AppResources;
 import com.crop.phototocartooneffect.utils.AppSettings;
 
 public class MainFragment extends Fragment {
@@ -69,16 +71,16 @@ public class MainFragment extends Fragment {
         });
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_top);
-        //        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        // Set up a GridLayoutManager with 2 rows (span count) and horizontal orientation
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.HORIZONTAL, false));
-
         ItemAdapter adapter = new ItemAdapter(getContext(), listener); // Replace YourAdapter with your actual adapter
+        adapter.setData(AppResources.getInstance().getItems(FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI));
         recyclerView.setAdapter(adapter);
 
         RecyclerView recyclerView2 = view.findViewById(R.id.recyclerView_2);
+        ItemAdapter adapter2 = new ItemAdapter(getContext(), listener); // Replace YourAdapter with your actual adapter
+        adapter2.setData(AppResources.getInstance().getItems(FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI2));
         recyclerView2.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.HORIZONTAL, false));
-        recyclerView2.setAdapter(adapter);
+        recyclerView2.setAdapter(adapter2);
 
         RecyclerView recyclerView3 = view.findViewById(R.id.recyclerView_3);
         recyclerView3.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.VERTICAL, false));

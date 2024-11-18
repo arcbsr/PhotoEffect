@@ -14,6 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.crop.phototocartooneffect.BuildConfig;
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.firabsehelper.AnalyticsHelper;
+import com.crop.phototocartooneffect.firabsehelper.FireStoreImageUploader;
+import com.crop.phototocartooneffect.models.MenuItem;
+import com.crop.phototocartooneffect.repositories.AppResources;
 import com.crop.phototocartooneffect.utils.RLog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,6 +24,8 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -83,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     private void askToDownloadNewVersion(long version) {
         int currentVersion = BuildConfig.VERSION_CODE;
         AnalyticsHelper.getInstance(MainActivity.this).
-                logEvent("startapp", "v-"+version + ":" + currentVersion);
+                logEvent("startapp", "v-" + version + ":" + currentVersion);
         if (version > currentVersion) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Update Available").setMessage("A new version of the app is available. Would you like to update?").setPositiveButton("Update", (dialog, which) -> {
@@ -106,69 +111,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void initializeUserCoins(FirebaseUser user) {
-        if (user != null) {
-            String userId = user.getUid();
-
-            db.collection("users").document(userId).get().addOnCompleteListener(task -> {
-                if (task.isSuccessful() && task.getResult() != null && !task.getResult().exists()) {
-                    // New user, set initial coin balance
-                    db.collection("users").document(userId).set(new HashMap<String, Object>() {{
-                        put("coins", 100);  // Initial coin balance for new users
-                    }});
-                }
-                if (!task.isSuccessful()) {
-                    RLog.e("MainActivity", "Error getting document", task.getException().getMessage());
-                }
-            });
-        }
-    }
-
-    private void updateUserCoins(FirebaseUser user, int coinsToAdd) {
-        if (user != null) {
-            String userId = user.getUid();
-
-            db.collection("users").document(userId).update("coins", FieldValue.increment(coinsToAdd)).addOnSuccessListener(aVoid -> {
-                // Coins updated successfully
-            }).addOnFailureListener(e -> {
-                // Handle failure
-            });
-        }
-    }
-
-    private void getUserCoinBalance(FirebaseUser user) {
-        if (user != null) {
-            String userId = user.getUid();
-
-            db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists()) {
-                    long coins = documentSnapshot.getLong("coins");
-                    // Update your UI with the user's coin balance
-                    // Example: TextView.setText(String.valueOf(coins));
-                }
-            }).addOnFailureListener(e -> {
-                // Handle failure
-            });
-        }
-    }
 
     private SharedPreferences preferences;
 
-    private void saveCoinsLocally(long coins) {
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong("coin_balance", coins);
-        editor.apply();
-    }
-
-    private long getLocalCoinBalance() {
-        return preferences.getLong("coin_balance", 0);
-    }
 
     private void initAPP() {
-        IS_AUTH_CHECKING_DONE = true;
-        findViewById(R.id.btnGrantPermission).setOnClickListener(v -> permissionAccess.requestStoragePermission(MainActivity.this));
-        checkPermission();
+        AppResources.getInstance().reFreshAppItems(this, new AppResources.OnAppResourcesUpdatedListener() {
+            @Override
+            public void onFeaturedItemsUpdated() {
+                IS_AUTH_CHECKING_DONE = true;
+                findViewById(R.id.btnGrantPermission).setOnClickListener(v -> permissionAccess.requestStoragePermission(MainActivity.this));
+                checkPermission();
+            }
+        });
     }
 
     private void checkPermission() {
