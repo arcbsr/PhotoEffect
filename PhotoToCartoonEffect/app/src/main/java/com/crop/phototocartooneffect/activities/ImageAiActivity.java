@@ -103,7 +103,21 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
     }
 
     public enum ImageCreationType {
-        FIREBASE_ML_SEGMENTATION, IMAGE_EFFECT_IMG2IMG, IMAGE_EFFECT_FASHION, MLB_BACKGROUND_REMOVE, MONSTER_AI
+        FIREBASE_ML_SEGMENTATION("Firebase ML Segmentation"),
+        IMAGE_EFFECT_IMG2IMG("Image Effect Img2Img"),
+        IMAGE_EFFECT_FASHION("Image Effect Fashion"),
+        MLB_BACKGROUND_REMOVE("MLB Background Remove"),
+        MONSTER_AI("Monster AI");
+
+        private final String value;
+
+        ImageCreationType(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 
     private MenuItem selectedRenderItem;

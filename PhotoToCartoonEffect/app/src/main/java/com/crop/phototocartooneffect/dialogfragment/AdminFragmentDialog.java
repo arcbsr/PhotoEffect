@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.crop.phototocartooneffect.R;
+import com.crop.phototocartooneffect.activities.ImageAiActivity;
 import com.crop.phototocartooneffect.firabsehelper.FireStoreImageUploader;
 
 public class AdminFragmentDialog extends BaseBottomFragment {
@@ -43,13 +44,15 @@ public class AdminFragmentDialog extends BaseBottomFragment {
             dismiss();
         });
         Spinner spinner = view.findViewById(R.id.typeSpinner);
-        ArrayAdapter<FireStoreImageUploader.AITYPEFIREBASEDB> adapter = new ArrayAdapter<>(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                FireStoreImageUploader.AITYPEFIREBASEDB.values()
-        );
+        ArrayAdapter<FireStoreImageUploader.AITYPEFIREBASEDB> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, FireStoreImageUploader.AITYPEFIREBASEDB.values());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+
+        Spinner spinner2 = view.findViewById(R.id.modelTypeSpinner);
+        ArrayAdapter<ImageAiActivity.ImageCreationType> adapter2 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, ImageAiActivity.ImageCreationType.values());
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner2.setAdapter(adapter2);
 
     }
 }
