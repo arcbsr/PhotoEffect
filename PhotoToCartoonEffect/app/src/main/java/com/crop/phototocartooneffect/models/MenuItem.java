@@ -3,10 +3,12 @@ package com.crop.phototocartooneffect.models;
 import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 
-import com.crop.phototocartooneffect.activities.ImageAiActivity;
+import com.crop.phototocartooneffect.enums.EditingCategories;
 
 public class MenuItem {
     public ValueAnimator animator;
+//    public String cloth = "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/livewire-tmp/5BDmwvtizESFRO24uGDW1iu1u5TXhB-metaM2JmZmFkY2U5NDNkOGU3MDJhZDE0YTk2OTY2NjQ0NjYuanBn-.jpg";
+    public EditingCategories.AITypeFirebaseClothTypeEDB clothType = EditingCategories.AITypeFirebaseClothTypeEDB.DRESSES;
     private int iconResId;
     private String title;
     public Bitmap bitmap;
@@ -15,16 +17,16 @@ public class MenuItem {
     public boolean isBanner;
     public boolean isPro;
 
-    public void setImageCreationType(ImageAiActivity.ImageCreationType imageCreationType) {
+    public void setImageCreationType(EditingCategories.ImageCreationType imageCreationType) {
         this.imageCreationType = imageCreationType;
     }
 
-    private ImageAiActivity.ImageCreationType imageCreationType;
+    private EditingCategories.ImageCreationType imageCreationType;
 
     public String prompt;
     public String imageUrl;
 
-    public MenuItem(int iconResId, String title, String description, int thumbResId, ImageAiActivity.ImageCreationType imageCreationType, String prompt) {
+    public MenuItem(int iconResId, String title, String description, int thumbResId, EditingCategories.ImageCreationType imageCreationType, String prompt) {
         this.iconResId = iconResId;
         this.title = title;
         this.description = description;
@@ -33,7 +35,7 @@ public class MenuItem {
         this.prompt = prompt;
     }
 
-    public MenuItem(String title, String imageUrl, String description, String prompt, ImageAiActivity.ImageCreationType imageCreationType, boolean isPro) {
+    public MenuItem(String title, String imageUrl, String description, String prompt, EditingCategories.ImageCreationType imageCreationType, boolean isPro) {
         this.isPro = isPro;
         this.title = title;
         this.description = description;
@@ -42,7 +44,7 @@ public class MenuItem {
         this.imageUrl = imageUrl;
     }
 
-    public MenuItem(int iconResId, String title, String description, int thumbResId, ImageAiActivity.ImageCreationType imageCreationType) {
+    public MenuItem(int iconResId, String title, String description, int thumbResId, EditingCategories.ImageCreationType imageCreationType) {
         this.iconResId = iconResId;
         this.title = title;
         this.description = description;
@@ -66,7 +68,7 @@ public class MenuItem {
         return thumbResId;
     }
 
-    public ImageAiActivity.ImageCreationType getImageCreationType() {
+    public EditingCategories.ImageCreationType getImageCreationType() {
         return imageCreationType;
     }
 }

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.models.MenuItem;
-import com.crop.phototocartooneffect.repositories.AppResources;
 import com.crop.phototocartooneffect.utils.AppSettings;
 import com.crop.phototocartooneffect.utils.RLog;
 
@@ -41,19 +40,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             this.menuItems = menuItems;
         } else {
             RLog.d("ItemAdapter", "menuItems is null");
-//            this.menuItems.add(AppSettings.DEFAULT_ITEM);
-//            this.menuItems.add(AppSettings.DEFAULT_ITEM);
-//            this.menuItems.add(AppSettings.DEFAULT_ITEM);
         }
         notifyDataSetChanged();
-
-//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
-//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
-//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
-//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Remove Background", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.FIREBASE_ML_SEGMENTATION));
-//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_IMG2IMG));
-//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.MLB_BACKGROUND_REMOVE));
-//        menuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.placeholder, ImageAiActivity.ImageCreationType.IMAGE_EFFECT_FASHION));
     }
 
     @NonNull
@@ -128,13 +116,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION && listener != null) {
                     listener.onItemClick(item);
-//                    if (item.animator != null) {
-//                        item.animator.end();
-//                        item.animator = null;
-//                    } else {
-//                        item.animator = AnimationUtils.startRevealAnimation(v.getWidth(), lineView, overlayImageView);
-//                        item.animator.start();
-//                    }
                     RLog.e("MenuAdapter", "Clicked on item at position: " + position);
                 }
             });

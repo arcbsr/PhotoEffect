@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.adapters.ItemAdapter;
+import com.crop.phototocartooneffect.enums.EditingCategories;
 import com.crop.phototocartooneffect.models.MenuItem;
+import com.crop.phototocartooneffect.repositories.AppResources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ public class ShowAllBottomFragment extends BaseBottomFragment {
     private ItemAdapter.OnItemClickListener listener;
 
     private List<MenuItem> menuItems = new ArrayList<>();
-
+    EditingCategories.AITypeFirebaseEDB aiTypeFirebaseEDB;
     public void setListener(ItemAdapter.OnItemClickListener listener) {
         this.listener = listener;
     }
@@ -30,9 +32,10 @@ public class ShowAllBottomFragment extends BaseBottomFragment {
         // Required empty public constructor
     }
 
-    public static ShowAllBottomFragment newInstance(ItemAdapter.OnItemClickListener listener) {
+    public static ShowAllBottomFragment newInstance(ItemAdapter.OnItemClickListener listener, EditingCategories.AITypeFirebaseEDB aiTypeFirebaseEDB) {
         ShowAllBottomFragment fragment = new ShowAllBottomFragment();
         fragment.setListener(listener);
+        fragment.aiTypeFirebaseEDB = aiTypeFirebaseEDB;
         Bundle args = new Bundle();
         // You can add arguments here if needed
         // args.putString(ARG_PARAM1, param1);
@@ -66,7 +69,7 @@ public class ShowAllBottomFragment extends BaseBottomFragment {
         }); // Replace YourAdapter with your actual adapter
         adapter.setColumnCount(2);
         adapter.setPadding(40);
-        adapter.setData(menuItems);
+        adapter.setData(AppResources.getInstance().getItems(aiTypeFirebaseEDB));
         recyclerView.setAdapter(adapter);
     }
 

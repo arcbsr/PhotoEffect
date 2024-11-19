@@ -1,10 +1,8 @@
 package com.crop.phototocartooneffect.popeffect.color_splash_tool;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
@@ -26,14 +24,12 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader.TileMode;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -50,8 +46,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.crop.phototocartooneffect.BuildConfig;
 import com.crop.phototocartooneffect.R;
+import com.crop.phototocartooneffect.fragments.ImageAiFragment;
 import com.crop.phototocartooneffect.popeffect.support.Constants;
-import com.crop.phototocartooneffect.popeffect.support.FilterUtils;
 import com.crop.phototocartooneffect.popeffect.support.ImageUtils;
 import com.crop.phototocartooneffect.popeffect.support.StoreManager;
 import com.crop.phototocartooneffect.utils.RLog;
@@ -100,6 +96,12 @@ public class ColorSplashActivity extends AppCompatActivity implements OnClickLis
             finish();
             return;
         }
+        findViewById(R.id.closeIcon).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         findViewById(R.id.locking).setVisibility(View.GONE);
         this.imageSavePath = StoreManager.getstorageRootPath(this) + "/vitemp";
         this.tempDrawPath = StoreManager.getstorageRootPath(this) + "/vitemp";
@@ -167,32 +169,6 @@ public class ColorSplashActivity extends AppCompatActivity implements OnClickLis
 //        this.grayBtn.performClick();
     }
 
-    public void onPhotoTakenApp() {
-        imageViewContainer.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    colorBitmap = Constants.getBitmapFromUri(ColorSplashActivity.this, Uri.fromFile(new File(mSelectedImagePath)), (float) imageViewContainer.getMeasuredWidth(), (float) imageViewContainer.getMeasuredHeight());
-                    grayBitmap = toGrayScale(colorBitmap);
-                    clearTempBitmap();
-                    tiv.initDrawing();
-                    tiv.saveScale = 1.0f;
-                    tiv.fitScreen();
-                    tiv.updatePreviewPaint();
-                    tiv.updatePaintBrush();
-                    grayBtn.setBackgroundColor(-1);
-                    zoomBtn.setBackgroundColor(-1);
-                    colorBtn.setBackgroundColor(getResources().getColor(R.color.selected));
-                    recolorBtn.setBackgroundColor(-1);
-                    vector.clear();
-                    //initOnPhotoLoad();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
     public void initOnPhotoLoad() {
         File file = new File(this.imageSavePath);
         if (!file.exists()) {
@@ -207,13 +183,6 @@ public class ColorSplashActivity extends AppCompatActivity implements OnClickLis
                 handler.postDelayed(runnableCode, 2000);
             }
         };
-//        colorAdapter = new ColorAdapter(this, new BrushColorListener() {
-//            @Override
-//            public void onColorChanged(String str) {
-//                int i = Color.parseColor(str);
-//                changeColor(i);
-//            }
-//        });
 
         recycler_view_recolr = findViewById(R.id.recyclerViewColor);
         this.recycler_view_recolr.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
@@ -264,11 +233,6 @@ public class ColorSplashActivity extends AppCompatActivity implements OnClickLis
     public Bitmap toEmptyBitmap(Bitmap bitmap) {
         Bitmap createBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(createBitmap);
-//        Paint paint = new Paint();
-//        ColorMatrix colorMatrix = new ColorMatrix();
-//        colorMatrix.setSaturation(0.0f);
-//        paint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
-//        canvas.drawBitmap(bitmap, 0.0f, 0.0f, paint);
         canvas.drawColor(Color.BLACK);
         return createBitmap;
     }
@@ -285,17 +249,6 @@ public class ColorSplashActivity extends AppCompatActivity implements OnClickLis
     }
 
     public void resfreshButtons(TextView tv) {
-        /*setImageViewTint(recolorBtn, R.color.white);
-        setImageViewTint(colorBtn, R.color.white);
-        setImageViewTint(zoomBtn, R.color.white);
-        setImageViewTint(grayBtn, R.color.white);
-        setImageViewTint(offsetBtn, R.color.white);*/
-        //((TextView)findViewById(R.id.txt_ai)).setTextColor(ContextCompat.getColor(this, R.color.btn_basic));
-        /*((TextView)findViewById(R.id.txt_color)).setTextColor(ContextCompat.getColor(this, R.color.btn_basic));
-        ((TextView)findViewById(R.id.txt_gray)).setTextColor(ContextCompat.getColor(this, R.color.btn_basic));
-        ((TextView)findViewById(R.id.txt_recolor)).setTextColor(ContextCompat.getColor(this, R.color.btn_basic));
-        ((TextView)findViewById(R.id.txt_offst)).setTextColor(ContextCompat.getColor(this, R.color.btn_basic));
-        ((TextView)findViewById(R.id.txt_pantool)).setTextColor(ContextCompat.getColor(this, R.color.btn_basic));*/
         ((TextView) findViewById(R.id.txt_color)).setBackgroundResource(0);
         ((TextView) findViewById(R.id.txt_gray)).setBackgroundResource(0);
         ((TextView) findViewById(R.id.txt_recolor)).setBackgroundResource(0);
@@ -311,7 +264,6 @@ public class ColorSplashActivity extends AppCompatActivity implements OnClickLis
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
-
         if (viewId == R.id.done_Btn) {
             saveImage();
             return;
@@ -389,126 +341,20 @@ public class ColorSplashActivity extends AppCompatActivity implements OnClickLis
 
     }
 
-//    @Override
-//    public void onClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.txt_color:
-//            case R.id.colorBtn:
-//                break;
-//            case R.id.fitBtn:
-//                TouchImageView touchImageView = tiv;
-//                touchImageView.saveScale = 1.0f;
-//                touchImageView.radius = ((float) (radiusBar.getProgress() + radiusbarPlus)) / tiv.saveScale;
-//                brushView.setShapeRadiusRatio(((float) (radiusBar.getProgress() + radiusbarPlus)) / tiv.saveScale);
-//                tiv.fitScreen();
-//                tiv.updatePreviewPaint();
-//                return;
-//
-//            case R.id.txt_gray:
-//            case R.id.grayBtn:
-//                tiv.mode = 0;
-//                resfreshButtons(findViewById(R.id.txt_gray));
-//                //((TextView)findViewById(R.id.txt_gray)).setTextColor(ContextCompat.getColor(this, R.color.colorOrange));
-//                //setImageViewTint(grayBtn, R.color.colorOrange);
-//                tiv.splashBitmap = toGrayScale(colorBitmap);
-//                tiv.updateRefMetrix();
-//                tiv.changeShaderBitmap();
-//                tiv.coloring = -2;
-//                return;
-//            case R.id.txt_ai:
-//            case R.id.newBtn_ai:
-//
-//                return;
-//
-//            case R.id.offsetOk:
-//                //TODO:: Later will be done
-//                return;
-//
-//            case R.id.txt_recolor:
-//            case R.id.recolorBtn:
-////                if (!ResouceHandler.getInstance(getContext()).isPremiumUser() && !isRewardAchieved) {
-////                    RewardVideoActs.showRewardVideo((BaseActivity) getContext(), action -> {
-////                        switch (action) {
-////                            case cancel:
-////                                return;
-////                            case showed:
-////                                isRewardAchieved = true;
-////                                findViewById(R.id.locking).setVisibility(View.GONE);
-////                                return;
-////                            case subscribe:
-////                                ActivityCaller.SubsCriptionActivity(getActivity());
-////                                return;
-////                        }
-////                    });
-////                    return;
-////                }
-//                tiv.mode = 0;
-//                resfreshButtons(findViewById(R.id.txt_recolor));
-//                findViewById(R.id.recyclerViewHolder).setVisibility(View.VISIBLE);
-//                changeColor(preRecolor);
-//                return;
-//            case R.id.pickColor:
-////                ColorPicker.showPicker(getContext(), new ColorPickerClickListener() {
-////                    @Override
-////                    public void onClick(DialogInterface d, int lastSelectedColor, Integer[] allColors) {
-////                        changeColor(lastSelectedColor);
-////                    }
-////                }, Color.RED);
-//                return;
-//            case R.id.resetBtn:
-//                resetImage();
-//                return;
-////            case R.id.tv_applay:
-////                saveImage();
-////                return;
-//            case R.id.undoBtn:
-//                int i = tiv.currentImageIndex - 1;
-//                String sb2 = tempDrawPath + "/canvasLog" + i + ".jpg";
-//                Log.w("Current Image ", sb2);
-//                if (new File(sb2).exists()) {
-//                    tiv.drawingBitmap = null;
-//                    Options options = new Options();
-//                    options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//                    options.inMutable = true;
-//                    tiv.drawingBitmap = BitmapFactory.decodeFile(sb2, options);
-//                    TouchImageView touchImageView2 = tiv;
-//                    touchImageView2.setImageBitmap(touchImageView2.drawingBitmap);
-//                    tiv.canvas.setBitmap(tiv.drawingBitmap);
-//                    String sb3 = tempDrawPath + "canvasLog" + tiv.currentImageIndex + ".jpg";
-//                    File file = new File(sb3);
-//                    if (file.exists()) {
-//                        file.delete();
-//                    }
-//                    TouchImageView touchImageView3 = tiv;
-//                    touchImageView3.currentImageIndex--;
-//                    Vector vector2 = vector;
-//                    vector2.remove(vector2.size() - 1);
-//                }
-//                return;
-//
-//            case R.id.txt_pantool:
-//            case R.id.zoomBtn:
-//                tiv.mode = 1;
-//                resfreshButtons(findViewById(R.id.txt_pantool));
-//                this.offsetLayout.setVisibility(View.VISIBLE);
-//                this.bottomBar.setVisibility(View.GONE);
-//                tiv.mode = 1;
-//                return;
-//            default:
-//                return;
-//        }
-//        tiv.mode = 0;
-//        resfreshButtons(findViewById(R.id.txt_color));
-//        // setImageViewTint(colorBtn, R.color.colorOrange);
-//        TouchImageView touchImageView4 = tiv;
-//        touchImageView4.splashBitmap = colorBitmap;
-//        touchImageView4.updateRefMetrix();
-//        tiv.changeShaderBitmap();
-//        tiv.coloring = -1;
-//    }
+    private static ImageAiFragment.OnBitmapReadyListener listener;
+
+    public static void setBitmapReadyListener(ImageAiFragment.OnBitmapReadyListener listener) {
+        ColorSplashActivity.listener = listener;
+    }
+
 
     public void saveImage() {
         if (tiv.drawingBitmap != null) {
+            if (listener != null) {
+                listener.onBitmapReady(tiv.drawingBitmap);
+                finish();
+                return;
+            }
             String fileName = "image_" + System.currentTimeMillis() + ".png";
             File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             File file = new File(downloadDir, fileName);
@@ -697,57 +543,6 @@ public class ColorSplashActivity extends AppCompatActivity implements OnClickLis
         }
     }
 
-    private void selectImage() {
-        showPicImageDialog();
-    }
-
-    public void showPicImageDialog() {
-        /*final Dialog pixDialog = new Dialog(this);
-        pixDialog.setContentView(R.layout.dialog_select_photo);
-        pixDialog.setCancelable(false);
-        Window window = pixDialog.getWindow();
-        window.setLayout(((SupportedClass.getWidth(ColorSplashActivity.this) / 100) * 90), LinearLayout.LayoutParams.WRAP_CONTENT);
-        pixDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        LinearLayout camera_item = pixDialog.findViewById(R.id.camera_item);
-        LinearLayout gallery_item = pixDialog.findViewById(R.id.gallery_item);
-        ImageView btnDismiss =  pixDialog.findViewById(R.id.cancel);
-        gallery_item.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intent.setType("image/*");
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.txt_select_picture)), REQUEST_CODE_GALLERY);
-                if (pixDialog.isShowing() && !isFinishing()) {
-                    pixDialog.dismiss();
-                }
-            }
-        });
-        camera_item.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                Uri photoURI = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".provider", createImageFile());
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                if (intent.resolveActivity(getApplicationContext().getPackageManager()) != null) {
-                    startActivityForResult(intent, REQUEST_CODE_CAMERA);
-                }
-                if (pixDialog.isShowing() && !isFinishing()) {
-                    pixDialog.dismiss();
-                }
-            }
-        });
-        btnDismiss.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pixDialog.dismiss();
-            }
-        });
-
-        pixDialog.show();*/
-    }
-
     private File createImageFile() {
         File storageDir = new File(Environment.getExternalStorageDirectory(), "Android/data/" + BuildConfig.APPLICATION_ID + "/CamPic/");
         storageDir.mkdirs();
@@ -762,34 +557,6 @@ public class ColorSplashActivity extends AppCompatActivity implements OnClickLis
             e.printStackTrace();
         }
         return image;
-    }
-
-    private void showBackDialog() {
-        /*final Dialog dialog = new Dialog(this);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.dialog_leave);
-        Window window = dialog.getWindow();
-        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        TextView button = (TextView) dialog.findViewById(R.id.btn_yes);
-        TextView button2 = (TextView) dialog.findViewById(R.id.btn_no);
-        button.setOnClickListener(new OnClickListener() {
-            public void onClick(View view) {
-                finish();
-                dialog.dismiss();
-            }
-        });
-        button2.setOnClickListener(new OnClickListener() {
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        dialog.setOnDismissListener(new OnDismissListener() {
-            public void onDismiss(DialogInterface dialogInterface) {
-            }
-        });
-        dialog.show();*/
     }
 
     public void onStartTrackingTouch(SeekBar seekBar) {
@@ -832,6 +599,7 @@ public class ColorSplashActivity extends AppCompatActivity implements OnClickLis
             colorBitmap.recycle();
             colorBitmap = null;
         }
+
         super.onDestroy();
     }
 
@@ -867,72 +635,6 @@ public class ColorSplashActivity extends AppCompatActivity implements OnClickLis
             recolorBtn.setBackgroundColor(-1);
             ColorSplashActivity.vector.clear();
         }
-//            requestWindowFeature(1);
-//            View inflate = LayoutInflater.from(this.ctx).inflate(R.layout.dialog_reset, null);
-//            setCanceledOnTouchOutside(false);
-//            setCancelable(false);
-//            super.setContentView(inflate);
-//            TextView button = (TextView) inflate.findViewById(R.id.cancel);
-//            TextView button2 = (TextView) inflate.findViewById(R.id.save);
-//
-//            button.setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View view) {
-//                    ResetDialog.this.dismiss();
-//                }
-//            });
-//            button2.setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View view) {
-//                    ResetDialog.this.dismiss();
-//                    ColorSplashActivity.grayBitmap = toGrayScale(colorBitmap);
-//                    clearTempBitmap();
-//                    ColorSplashActivity.tiv.initDrawing();
-//                    ColorSplashActivity.tiv.saveScale = 1.0f;
-//                    ColorSplashActivity.tiv.fitScreen();
-//                    ColorSplashActivity.tiv.updatePreviewPaint();
-//                    ColorSplashActivity.tiv.updatePaintBrush();
-//                    grayBtn.setBackgroundColor(-1);
-//                    zoomBtn.setBackgroundColor(-1);
-//                    colorBtn.setBackgroundColor(getResources().getColor(R.color.selected));
-//                    recolorBtn.setBackgroundColor(-1);
-//                    ColorSplashActivity.vector.clear();
-//                }
-//            });
-//            super.show();
-//        }
     }
-
-    private class SaveThread extends AsyncTask<Bitmap, Integer, Void> {
-        private SaveThread() {
-        }
-
-
-        public void onPreExecute() {
-            super.onPreExecute();
-            saveLoader.setMessage("Saving in HD quality");
-            saveLoader.setIndeterminate(true);
-            saveLoader.setCancelable(false);
-            saveLoader.show();
-        }
-
-
-        public Void doInBackground(Bitmap... bitmapArr) {
-            saveImage(bitmapArr[0]);
-            return null;
-        }
-
-
-        public void onProgressUpdate(Integer... numArr) {
-            super.onProgressUpdate(numArr);
-        }
-
-
-        public void onPostExecute(Void voidR) {
-            super.onPostExecute(voidR);
-            if (saveLoader.isShowing()) {
-                saveLoader.dismiss();
-            }
-        }
-    }
-
 
 }

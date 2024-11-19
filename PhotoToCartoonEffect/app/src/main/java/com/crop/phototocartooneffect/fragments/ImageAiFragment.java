@@ -1,12 +1,12 @@
 // ImageAiFragment.java
 package com.crop.phototocartooneffect.fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.media.effect.EffectFactory;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.FileUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,33 +17,27 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
 import com.crop.phototocartooneffect.R;
-import com.crop.phototocartooneffect.activities.MaskingView;
 import com.crop.phototocartooneffect.imageloader.ImageLoader;
-import com.crop.phototocartooneffect.popeffect.support.FilterUtils;
+import com.crop.phototocartooneffect.popeffect.color_splash_tool.ColorSplashActivity;
 import com.crop.phototocartooneffect.utils.PaletteExtractor;
 import com.crop.phototocartooneffect.utils.RLog;
-import com.jsibbold.zoomage.ZoomageView;
 
 import java.io.File;
 
-import ja.burhanrashid52.photoeditor.CustomEffect;
-import ja.burhanrashid52.photoeditor.OnSaveBitmap;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
-import ja.burhanrashid52.photoeditor.PhotoFilter;
 import ja.burhanrashid52.photoeditor.SaveSettings;
 
 public class ImageAiFragment extends BaseFragmentInterface {
+    public interface OnBitmapReadyListener {
+        void onBitmapReady(Bitmap bitmap);
+    }
 
-    //    MaskingView maskingView;
     String originalBitmapKey, createBitmapKey;
 
     public static ImageAiFragment newInstance(String originalBitmapKey, String createBitmapKey) {
         ImageAiFragment fragment = new ImageAiFragment(originalBitmapKey, createBitmapKey);
         Bundle args = new Bundle();
-        // You can add arguments here if needed
-        // args.putString(ARG_PARAM1, param1);
-        // args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,8 +47,6 @@ public class ImageAiFragment extends BaseFragmentInterface {
         this.originalBitmapKey = originalBitmapKey;
         this.createBitmapKey = createBitmapKey;
     }
-
-    private boolean isInit = false;
 
     @Nullable
     @Override
@@ -66,26 +58,45 @@ public class ImageAiFragment extends BaseFragmentInterface {
                 init(view, ImageLoader.getInstance().getBitmap(originalBitmapKey), ImageLoader.getInstance().getBitmap(createBitmapKey), paletteExtractor);
             }
         });
-
-
-//        init(view, ImageLoader.getInstance().getBitmap(originalBitmapKey), ImageLoader.getInstance().getBitmap(createBitmapKey));
         return view;
     }
 
+    Bitmap editedBitmap;
+
     private void init(View view, Bitmap originalbitmap, Bitmap createBitmap, PaletteExtractor paletteExtractor) {
 
+        if (originalbitmap == null) {
+            Toast.makeText(getContext(), "Original bitmap is null", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (createBitmap == null) {
+            createBitmap = originalbitmap;
+        }
+        final PhotoEditorView mPhotoEditorView = view.findViewById(R.id.photoEditorView);
 
         // Change root background color
-        view.setBackgroundColor(paletteExtractor.getBackgroundColor(getContext()));
-
-        final PhotoEditorView mPhotoEditorView = view.findViewById(R.id.photoEditorView);
-        mPhotoEditorView.getSource().setImageBitmap(originalbitmap);
+//        view.setBackgroundColor(paletteExtractor.getBackgroundColor(getContext()));
+        mPhotoEditorView.getSource().setImageBitmap(createBitmap);
 //        CustomEffect customEffect = new CustomEffect.Builder(EffectFactory.EFFECT_BRIGHTNESS).setParameter("brightness", 0.5f).build();
-        final PhotoEditor mPhotoEditor = new PhotoEditor.Builder(getContext(), mPhotoEditorView).build();
+//        Typeface mEmojiTypeFace = Typeface.createFromAsset(getContext().getAssets(), "emojione-android.ttf");
+        final PhotoEditor mPhotoEditor = new PhotoEditor.Builder(getContext(), mPhotoEditorView)
+                .build();
 //        mPhotoEditor.addImage(createBitmap);
 //        mPhotoEditor.setFilterEffect(customEffect);
 
+        editedBitmap = createBitmap.copy(createBitmap.getConfig(), true);
+        view.findViewById(R.id.edit_current_bitmap).setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), ColorSplashActivity.class);
+//            ColorSplashActivity.colorBitmap = finalCreateBitmap;
+            ColorSplashActivity.colorBitmap = editedBitmap.copy(editedBitmap.getConfig(), true);
+            startActivity(intent);
 
+            ColorSplashActivity.setBitmapReadyListener(bitmap -> {
+                editedBitmap = bitmap.copy(bitmap.getConfig(), true);
+                mPhotoEditorView.getSource().setImageBitmap(editedBitmap);
+                ColorSplashActivity.setBitmapReadyListener(null);
+            });
+        });
 
         view.findViewById(R.id.btn_save).setOnClickListener(v -> {
             String fileName = "image_" + System.currentTimeMillis() + ".png";
@@ -98,12 +109,8 @@ public class ImageAiFragment extends BaseFragmentInterface {
             }
 
 
-
             view.setBackgroundColor(Color.TRANSPARENT);
-            SaveSettings saveSettings = new SaveSettings.Builder()
-                    .setCompressFormat(Bitmap.CompressFormat.PNG)
-                    .setClearViewsEnabled(true)
-                    .build();
+            SaveSettings saveSettings = new SaveSettings.Builder().setCompressFormat(Bitmap.CompressFormat.PNG).setClearViewsEnabled(true).build();
 
             mPhotoEditor.saveAsFile(file.getAbsolutePath(), saveSettings, new PhotoEditor.OnSaveListener() {
                 @Override

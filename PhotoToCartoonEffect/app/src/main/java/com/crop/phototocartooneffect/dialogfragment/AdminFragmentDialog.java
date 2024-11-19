@@ -1,6 +1,5 @@
 package com.crop.phototocartooneffect.dialogfragment;
 
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,9 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.crop.phototocartooneffect.R;
-import com.crop.phototocartooneffect.activities.ImageAiActivity;
 import com.crop.phototocartooneffect.firabsehelper.FireStoreImageUploader;
-import com.crop.phototocartooneffect.imageloader.ImageLoader;
+import com.crop.phototocartooneffect.enums.EditingCategories;
 import com.crop.phototocartooneffect.models.MenuItem;
 import com.crop.phototocartooneffect.utils.AppSettings;
 import com.crop.phototocartooneffect.utils.RLog;
@@ -50,7 +48,7 @@ public class AdminFragmentDialog extends BaseBottomFragment {
         return view;
     }
 
-    FireStoreImageUploader.AITYPEFIREBASEDB aiTypeFirebaseDB = FireStoreImageUploader.AITYPEFIREBASEDB.UNKNOWN;
+    EditingCategories.AITypeFirebaseEDB aiTypeFirebaseDB = EditingCategories.AITypeFirebaseEDB.UNKNOWN;
 
     private void init(View view) {
         if (selectedRenderItem == null) {
@@ -61,13 +59,13 @@ public class AdminFragmentDialog extends BaseBottomFragment {
         });
         ((ImageView) view.findViewById(R.id.previewImageView)).setImageBitmap(bitmap);
         Spinner spinner = view.findViewById(R.id.typeSpinner);
-        ArrayAdapter<FireStoreImageUploader.AITYPEFIREBASEDB> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, FireStoreImageUploader.AITYPEFIREBASEDB.values());
+        ArrayAdapter<EditingCategories.AITypeFirebaseEDB> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, EditingCategories.AITypeFirebaseEDB.values());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                aiTypeFirebaseDB = FireStoreImageUploader.AITYPEFIREBASEDB.values()[i];
+                aiTypeFirebaseDB = EditingCategories.AITypeFirebaseEDB.values()[i];
             }
 
             @Override
@@ -76,14 +74,37 @@ public class AdminFragmentDialog extends BaseBottomFragment {
             }
         });
 
+
+        final Spinner spinnerFashion = view.findViewById(R.id.modelTypeDress);
+        spinnerFashion.setVisibility(View.GONE);
         Spinner spinner2 = view.findViewById(R.id.modelTypeSpinner);
-        ArrayAdapter<ImageAiActivity.ImageCreationType> adapter2 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, ImageAiActivity.ImageCreationType.values());
+        ArrayAdapter<EditingCategories.ImageCreationType> adapter2 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, EditingCategories.ImageCreationType.values());
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner2.setAdapter(adapter2);
         spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedRenderItem.setImageCreationType(ImageAiActivity.ImageCreationType.values()[i]);
+                selectedRenderItem.setImageCreationType(EditingCategories.ImageCreationType.values()[i]);
+                if (EditingCategories.ImageCreationType.values()[i] == EditingCategories.ImageCreationType.IMAGE_EFFECT_FASHION) {
+                    spinnerFashion.setVisibility(View.VISIBLE);
+                } else {
+                    spinnerFashion.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        ArrayAdapter<EditingCategories.AITypeFirebaseClothTypeEDB> adapterFashion = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item,
+                EditingCategories.AITypeFirebaseClothTypeEDB.values());
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerFashion.setAdapter(adapterFashion);
+        spinnerFashion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedRenderItem.clothType = EditingCategories.AITypeFirebaseClothTypeEDB.values()[i];
             }
 
             @Override
@@ -106,11 +127,25 @@ public class AdminFragmentDialog extends BaseBottomFragment {
 //                FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI2);
                 String aiType = aiTypeFirebaseDB.getValue();
                 String creationtype = selectedRenderItem.getImageCreationType().getValue();
-                FireStoreImageUploader.getInstance(getContext()).uploadImage(selectedBitmapUri, "featured",
-                        prompt,aiTypeFirebaseDB , selectedRenderItem.getImageCreationType());
-                RLog.e("aiType", aiType);
-                RLog.e("creationtype", creationtype);
-                RLog.e("prompt", prompt);
+                FireStoreImageUploader.getInstance(getContext()).uploadImageToDB(bitmap, "featured",
+                        prompt, aiTypeFirebaseDB, selectedRenderItem.getImageCreationType(),
+                        spinnerFashion.getVisibility() == View.VISIBLE ?
+                                selectedRenderItem.clothType : EditingCategories.AITypeFirebaseClothTypeEDB.NONE,
+                        new FireStoreImageUploader.ImageDownloadCallback() {
+                            @Override
+                            public void onSuccess(String url) {
+                                RLog.e("FireStoreImageUploader", "Successfully uploaded image to Firestore: " + url);
+                                RLog.e("aiType", aiType);
+                                RLog.e("creationtype", creationtype);
+                                RLog.e("prompt", prompt);
+                            }
+
+                            @Override
+                            public void onFailure(String errorMessage) {
+
+                                RLog.e("FireStoreImageUploader", errorMessage);
+                            }
+                        });
             }
         });
     }

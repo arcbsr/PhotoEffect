@@ -16,14 +16,30 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <Button
-            android:id="@+id/btn_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="16dp"
-            android:text="Save" />
+        <RelativeLayout
+            android:paddingRight="20dp"
+             android:paddingLeft="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize">
+
+            <Button
+                android:layout_centerVertical="true"
+                android:id="@+id/btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="Save" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/edit_current_bitmap"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/border_only_btn"
+                android:src="@drawable/ic_setting" />
+
+        </RelativeLayout>
 
 
     </RelativeLayout>

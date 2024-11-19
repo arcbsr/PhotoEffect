@@ -1,7 +1,6 @@
 package com.crop.phototocartooneffect.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -28,7 +27,7 @@ import com.crop.phototocartooneffect.dialogfragment.ErrorDialog;
 import com.crop.phototocartooneffect.dialogfragment.LoadingDialog;
 import com.crop.phototocartooneffect.dialogfragment.MenuFragmentDialog;
 import com.crop.phototocartooneffect.dialogfragment.SubscriptionFragment;
-import com.crop.phototocartooneffect.firabsehelper.FireStoreImageUploader;
+import com.crop.phototocartooneffect.enums.EditingCategories;
 import com.crop.phototocartooneffect.fragments.BaseFragmentInterface;
 import com.crop.phototocartooneffect.fragments.ImageAiFragment;
 import com.crop.phototocartooneffect.fragments.MainFragment;
@@ -100,29 +99,6 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
     public void onItemClick(MenuItem item) {
         selectedRenderItem = item;
         openImagePicker(pickSource);
-    }
-
-    public enum ImageCreationType {
-        FIREBASE_ML_SEGMENTATION("Firebase_ML_Segmentation"), IMAGE_EFFECT_IMG2IMG("MLB_Img2Img"), IMAGE_EFFECT_FASHION("MLB_fashion"), MLB_BACKGROUND_REMOVE("MLB_Background_Remove"), MONSTER_AI("Monster_AI");
-
-        private final String value;
-
-        ImageCreationType(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public static ImageCreationType fromString(String value) {
-            for (ImageCreationType type : ImageCreationType.values()) {
-                if (type.getValue().equalsIgnoreCase(value)) {
-                    return type;
-                }
-            }
-            return ImageCreationType.FIREBASE_ML_SEGMENTATION; // Default case if no match is found
-        }
     }
 
     private MenuItem selectedRenderItem;
@@ -200,7 +176,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                         @Override
                         public void onClick(View v) {
                             ImageLoader.getInstance().loadBitmap(ImageAiActivity.this, result.getData().getData(), -1, (bitmap, keyValue, position) -> {
-                                selectedRenderItem = new MenuItem(0, "Monster", "Monster", 0, ImageCreationType.MONSTER_AI, "");
+                                selectedRenderItem = new MenuItem(0, "Monster", "Monster", 0, EditingCategories.ImageCreationType.MONSTER_AI, "");
                                 loadImage(result.getData().getData(), 0);
                             }, true);
                         }
@@ -259,7 +235,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                 imageEffect = new ImageToImageService(selectedRenderItem.prompt, API_KEY, context);
                 break;
             case IMAGE_EFFECT_FASHION:
-                imageEffect = new FashionEffectService(selectedRenderItem.prompt, "", "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/livewire-tmp/5BDmwvtizESFRO24uGDW1iu1u5TXhB-metaM2JmZmFkY2U5NDNkOGU3MDJhZDE0YTk2OTY2NjQ0NjYuanBn-.jpg", "upper_body", API_KEY, context);
+                imageEffect = new FashionEffectService(selectedRenderItem.prompt, "", selectedRenderItem.imageUrl, selectedRenderItem.clothType.getValue(), API_KEY, context);
                 break;
             case FIREBASE_ML_SEGMENTATION:
                 imageEffect = new BackgroundRemoveFML();

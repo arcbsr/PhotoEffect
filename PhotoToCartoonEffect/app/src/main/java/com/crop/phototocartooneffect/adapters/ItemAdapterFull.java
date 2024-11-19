@@ -8,21 +8,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.crop.phototocartooneffect.R;
-import com.crop.phototocartooneffect.activities.ImageAiActivity;
-import com.crop.phototocartooneffect.firabsehelper.FireStoreImageUploader;
+import com.crop.phototocartooneffect.enums.EditingCategories;
 import com.crop.phototocartooneffect.models.MenuItem;
 import com.crop.phototocartooneffect.repositories.AppResources;
 import com.crop.phototocartooneffect.utils.AppSettings;
 import com.crop.phototocartooneffect.utils.RLog;
-import com.crop.phototocartooneffect.utils.ScreenUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHolder> {
@@ -46,18 +42,9 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
     }
 
     public void setData() {
-        List<MenuItem> subMenuItems = AppResources.getInstance().getItems(FireStoreImageUploader.AITYPEFIREBASEDB.USERCREATIONS);
-        subMenuBannerItems = AppResources.getInstance().getItems(FireStoreImageUploader.AITYPEFIREBASEDB.USERCREATIONS_BANNER);
+        List<MenuItem> subMenuItems = AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.USERCREATIONS);
+        subMenuBannerItems = AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.USERCREATIONS_BANNER);
         RLog.d("subMenuItems", subMenuBannerItems.size() + "");
-//        subMenuItems.add(new MenuItem(R.drawable.placeholder, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
-//        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb3, ImageAiActivity.ImageCreationType.MONSTER_AI));
-//        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb4, ImageAiActivity.ImageCreationType.MONSTER_AI));
-//        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb5, ImageAiActivity.ImageCreationType.MONSTER_AI));
-//        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Remove Background", context.getString(R.string.demo_description), R.drawable.thumb6, ImageAiActivity.ImageCreationType.MONSTER_AI));
-//        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create Own Image", context.getString(R.string.demo_description), R.drawable.thumb, ImageAiActivity.ImageCreationType.MONSTER_AI));
-//        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Pro Editor", context.getString(R.string.demo_description), R.drawable.thumb3, ImageAiActivity.ImageCreationType.MONSTER_AI));
-//        subMenuItems.add(new MenuItem(R.drawable.pro_icon_24, "Create your Fashion", context.getString(R.string.demo_description), R.drawable.thumb5, ImageAiActivity.ImageCreationType.MONSTER_AI));
-//        Collections.shuffle(subMenuItems);
         currentInsertionIndex = 0;
         for (MenuItem menuItem : subMenuItems) {
             addItems(menuItem);
@@ -101,7 +88,19 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
         layoutParams.height = (int) (itemWidth * (4.0 / 3.0));
         holder.itemView.setLayoutParams(layoutParams);
         MainMenu items = menuItems.get(position);
+
+//        createItemSize(holder.itemView.findViewById(R.id.include_view11));
         holder.bind(items);
+    }
+
+    private void createItemSize(View view) {
+        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels; // Adjust for padding
+        int itemWidth = screenWidth; // Adjust for padding
+        ViewGroup.LayoutParams layoutParams2 = view.getLayoutParams();
+        layoutParams2.width = itemWidth / 2;
+        layoutParams2.height = (int) ((itemWidth / 2) * (4.0 / 3.0));
+        view.setLayoutParams(layoutParams2);
+
     }
 
     @Override
@@ -159,9 +158,10 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
             }
             if (mainItems.bannerItem != null) {
                 itemView.findViewById(R.id.main_banner).setVisibility(View.VISIBLE);
-//                thumbImageView5.setImageResource(mainItems.bannerItem.getThumbResId());
+                Glide.with(context).load(mainItems.bannerItem.imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER_BANNER).
+                        error(AppSettings.IMAGE_PLACE_HOLDER_ERROR_BANNER).into(thumbImageView5);
 
-                Glide.with(context).load(mainItems.bannerItem.imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER_ERROR).into(thumbImageView5);
+//                thumbImageView5.setImageResource(mainItems.bannerItem.getThumbResId());
             } else {
                 itemView.findViewById(R.id.main_banner).setVisibility(View.GONE);
             }

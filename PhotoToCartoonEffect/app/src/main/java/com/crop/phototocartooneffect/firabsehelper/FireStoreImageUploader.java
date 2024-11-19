@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
-import com.crop.phototocartooneffect.activities.ImageAiActivity;
+import com.crop.phototocartooneffect.enums.EditingCategories;
 import com.crop.phototocartooneffect.utils.AppSettings;
 import com.crop.phototocartooneffect.utils.RLog;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -13,35 +13,13 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class FireStoreImageUploader {
-
-    public enum AITYPEFIREBASEDB {
-        FEATUREAI("featureai"), FEATUREAI2("featureai2"), USERCREATIONS("user_creations"), USERCREATIONS_BANNER("user_creations_banner"), UNKNOWN("unknown");
-
-        private final String value;
-
-        AITYPEFIREBASEDB(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public static AITYPEFIREBASEDB fromString(String value) {
-            for (AITYPEFIREBASEDB type : AITYPEFIREBASEDB.values()) {
-                if (type.getValue().equalsIgnoreCase(value)) {
-                    return type;
-                }
-            }
-            return AITYPEFIREBASEDB.UNKNOWN; // Default case if no match is found
-        }
-    }
 
     private static final String STORAGE_NAME = "aiimages";
     private static final String TAG = "ImageUploader";
@@ -96,7 +74,48 @@ public class FireStoreImageUploader {
 //        });
 //    }
 
-    public void uploadImage(Uri imageUri, String userId, String prompt, AITYPEFIREBASEDB aiType, ImageAiActivity.ImageCreationType imageCreationType) {
+
+    public void uploadImageToDB(Uri imageUri, String userId, String prompt, EditingCategories.AITypeFirebaseEDB aiType, EditingCategories.ImageCreationType imageCreationType,
+                                EditingCategories.AITypeFirebaseClothTypeEDB aiTypeFirebaseClothTypeEDB,
+                                ImageDownloadCallback downloadCallback) {
+
+        uploadImage(imageUri, aiType.getValue(), new ImageDownloadCallback() {
+            @Override
+            public void onSuccess(String url) {
+                saveImageUrlToFirestorm(userId, url, prompt, aiType, imageCreationType, downloadCallback, aiTypeFirebaseClothTypeEDB.getValue());
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+
+            }
+        });
+
+        RLog.e(TAG, "Image uploaded successfully");
+
+    }
+
+    public void uploadImageToDB(Bitmap bitmap, String userId, String prompt, EditingCategories.AITypeFirebaseEDB aiType,
+                                EditingCategories.ImageCreationType imageCreationType, EditingCategories.AITypeFirebaseClothTypeEDB aiTypeFirebaseClothTypeEDB,
+                                ImageDownloadCallback downloadCallback) {
+
+        uploadImage(bitmap, aiType.getValue(), new ImageDownloadCallback() {
+            @Override
+            public void onSuccess(String url) {
+                saveImageUrlToFirestorm(userId, url, prompt, aiType, imageCreationType, downloadCallback, aiTypeFirebaseClothTypeEDB.getValue());
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+
+            }
+        });
+
+        RLog.e(TAG, "Image uploaded successfully");
+
+    }
+
+    public void uploadImage(Uri imageUri, String fileName, ImageDownloadCallback imageDownloadCallback) {
         if (!AppSettings.IS_ADMIN_MODE) {
             return;
         }
@@ -107,7 +126,7 @@ public class FireStoreImageUploader {
 
         // Create a reference in Firebase Storage
         StorageReference storageRef = storage.getReference();
-        StorageReference imageRef = storageRef.child("images/" + userId + "/" + System.currentTimeMillis() + ".jpg");
+        StorageReference imageRef = storageRef.child("images/" + fileName + "/" + System.currentTimeMillis() + ".jpg");
 
         // Upload the image
         UploadTask uploadTask = imageRef.putFile(imageUri);
@@ -119,27 +138,67 @@ public class FireStoreImageUploader {
                 String downloadUrl = uri.toString();
 
                 // Save the URL in Firestore (optional)
-                saveImageUrlToFirestorm(userId, downloadUrl, prompt, aiType, imageCreationType);
 
                 RLog.e(TAG, "Image uploaded successfully");
+                imageDownloadCallback.onSuccess(downloadUrl);
             });
         }).addOnFailureListener(e -> {
             RLog.e(TAG, "Image upload failed: " + e.getMessage());
+            imageDownloadCallback.onFailure(e.getMessage());
         });
     }
 
-    private void saveImageUrlToFirestorm(String userId, String downloadUrl, String prompt, AITYPEFIREBASEDB aiType, ImageAiActivity.ImageCreationType imageCreationType) {
+    public void uploadImage(Bitmap bitmap, String fileName, ImageDownloadCallback imageDownloadCallback) {
+        // Reference to Firebase Storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+        // Create a reference to the file (you can choose any path or file name)
+        StorageReference imageRef = storageRef.child("images/" + fileName + "/" + System.currentTimeMillis() + ".jpg");
+
+        // Convert Bitmap to ByteArray
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); // Compress the bitmap
+        byte[] data = baos.toByteArray();
+
+        // Upload ByteArray to Firebase Storage
+        UploadTask uploadTask = imageRef.putBytes(data);
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            // Image uploaded successfully
+            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                // Get and use the download URL
+                String downloadUrl = uri.toString();
+                RLog.d("Firebase", "Image uploaded successfully. URL: " + downloadUrl);
+                imageDownloadCallback.onSuccess(downloadUrl);
+            });
+        }).addOnFailureListener(e -> {
+            // Handle failure
+            RLog.e("Firebase", "Image upload failed: " + e.getMessage());
+            imageDownloadCallback.onFailure(e.getMessage());
+        });
+    }
+
+    private void saveImageUrlToFirestorm(String userId, String downloadUrl, String prompt, EditingCategories.AITypeFirebaseEDB aiType, EditingCategories.ImageCreationType imageCreationType, ImageDownloadCallback downloadCallback) {
+        saveImageUrlToFirestorm(userId, downloadUrl, prompt, aiType, imageCreationType, downloadCallback, "");
+    }
+
+    private void saveImageUrlToFirestorm(String userId, String downloadUrl, String prompt, EditingCategories.AITypeFirebaseEDB aiType, EditingCategories.ImageCreationType imageCreationType, ImageDownloadCallback downloadCallback,
+                                         String clothType) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> data = new HashMap<>();
         data.put("userId", userId);
         data.put("imageUrl", downloadUrl);
         data.put("prompt", prompt);
+        data.put("clothtype", clothType);
         data.put("menutype", aiType.getValue());
         data.put("creationtype", imageCreationType.getValue());
 
         db.collection(STORAGE_NAME).add(data).addOnSuccessListener(documentReference -> {
             RLog.e(TAG, "Image URL saved to Firestore");
+            downloadCallback.onSuccess(downloadUrl);
         }).addOnFailureListener(e -> {
             RLog.e(TAG, "Failed to save URL: " + e.getMessage());
+            downloadCallback.onFailure(e.getMessage());
         });
     }
 
@@ -169,4 +228,17 @@ public class FireStoreImageUploader {
         });
     }
 
+    public void deleteImage(String imageUrl) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl(imageUrl);
+        storageRef.delete().addOnSuccessListener(unused -> {
+            RLog.e(TAG, "Image deleted successfully");
+        });
+    }
+
+    public interface ImageDownloadCallback {
+        void onSuccess(String url);
+
+        void onFailure(String errorMessage);
+    }
 }

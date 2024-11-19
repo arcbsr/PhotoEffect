@@ -2,8 +2,8 @@ package com.crop.phototocartooneffect.repositories;
 
 import android.content.Context;
 
-import com.crop.phototocartooneffect.activities.ImageAiActivity;
 import com.crop.phototocartooneffect.firabsehelper.FireStoreImageUploader;
+import com.crop.phototocartooneffect.enums.EditingCategories;
 import com.crop.phototocartooneffect.models.MenuItem;
 import com.crop.phototocartooneffect.utils.AppSettings;
 
@@ -43,10 +43,12 @@ public class AppResources {
                             image.get("imageUrl") != null ? image.get("imageUrl").toString() : "",         // Default value for imageUrl
                             image.get("description") != null ? image.get("description").toString() : "No description available", // Default value for description
                             image.get("prompt") != null ? image.get("prompt").toString() : "",             // Default value for prompt
-                            image.get("creationtype") != null ? ImageAiActivity.ImageCreationType.fromString(image.get("creationtype").toString())
-                                    : ImageAiActivity.ImageCreationType.FIREBASE_ML_SEGMENTATION, // Assuming this is a constant
+                            image.get("creationtype") != null ? EditingCategories.ImageCreationType.fromString(image.get("creationtype").toString())
+                                    : EditingCategories.ImageCreationType.FIREBASE_ML_SEGMENTATION, // Assuming this is a constant
                             true // Assuming this is always true
                     );
+                    menuItem.clothType = image.get("clothtype") != null ? EditingCategories.AITypeFirebaseClothTypeEDB.fromString(image.get("clothtype").toString())
+                            : EditingCategories.AITypeFirebaseClothTypeEDB.NONE;
                     final String menutype = image.get("menutype") != null ? image.get("menutype").toString() : "";
 //                    FireStoreImageUploader.AITYPEFIREBASEDB aiType = FireStoreImageUploader.AITYPEFIREBASEDB.UNKNOWN;
 //
@@ -55,7 +57,7 @@ public class AppResources {
 //                    } else if (menutype.equalsIgnoreCase(FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI2.toString())) {
 //                        aiType = FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI2;
 //                    }
-                    setItem(menuItem, FireStoreImageUploader.AITYPEFIREBASEDB.fromString(menutype));
+                    setItem(menuItem, EditingCategories.AITypeFirebaseEDB.fromString(menutype));
                 }
                 listener.onFeaturedItemsUpdated();
             }
@@ -68,18 +70,18 @@ public class AppResources {
     }
 
 
-    public List<MenuItem> getItems(FireStoreImageUploader.AITYPEFIREBASEDB aiType) {
+    public List<MenuItem> getItems(EditingCategories.AITypeFirebaseEDB aiType) {
         if (!allItems.containsKey(aiType.getValue())) {
             allItems.put(aiType.getValue(), new ArrayList<>());
         }
         if (allItems.get(aiType.getValue()).size() == 0) {
             ArrayList<MenuItem> items = new ArrayList<>();
-            if (aiType == FireStoreImageUploader.AITYPEFIREBASEDB.USERCREATIONS) {
+            if (aiType == EditingCategories.AITypeFirebaseEDB.USERCREATIONS) {
                 items.add(AppSettings.DEFAULT_ITEM);
                 items.add(AppSettings.DEFAULT_ITEM);
                 items.add(AppSettings.DEFAULT_ITEM);
                 items.add(AppSettings.DEFAULT_ITEM);
-            } else if (aiType == FireStoreImageUploader.AITYPEFIREBASEDB.USERCREATIONS_BANNER) {
+            } else if (aiType == EditingCategories.AITypeFirebaseEDB.USERCREATIONS_BANNER) {
                 items.add(AppSettings.DEFAULT_ITEM);
             } else {
                 items.add(AppSettings.DEFAULT_ITEM);
@@ -90,7 +92,7 @@ public class AppResources {
         }
     }
 
-    public void setItem(MenuItem dataItem, FireStoreImageUploader.AITYPEFIREBASEDB aiType) {
+    public void setItem(MenuItem dataItem, EditingCategories.AITypeFirebaseEDB aiType) {
         if (!allItems.containsKey(aiType.getValue())) {
             allItems.put(aiType.getValue(), new ArrayList<>());
         }

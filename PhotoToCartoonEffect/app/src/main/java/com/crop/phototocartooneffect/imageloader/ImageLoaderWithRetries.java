@@ -13,7 +13,7 @@ import com.crop.phototocartooneffect.utils.RLog;
 import androidx.annotation.Nullable;
 
 public class ImageLoaderWithRetries {
-    private static final int MAX_RETRIES = 5;
+    private static final int MAX_RETRIES = 15;
     private static final int RETRY_INTERVAL_MS = 5000;
 
     private final Context context;
@@ -52,28 +52,5 @@ public class ImageLoaderWithRetries {
                 }
             }
         });
-//        Glide.with(context)
-//                .asBitmap()
-//                .load(imageUrl)
-//                .apply(new RequestOptions().override(Target.SIZE_ORIGINAL))
-//                .listener(new RequestListener<Bitmap>() {
-//                    @Override
-//                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-//                        RLog.e("ImageLoaderWithRetries", "Image load failed: " + retryCount);
-//                        if (retryCount < MAX_RETRIES) {
-//                            retryCount++;
-//                            handler.postDelayed(() -> loadImageWithRetry(imageUrl, callBack), RETRY_INTERVAL_MS);
-//                        } else {
-//                            callBack.onErrorLoaded(imageUrl, -1);
-//                        }
-//                        return true; // Indicates we handled the error
-//                    }
-//
-//                    @Override
-//                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-//                        callBack.onImageLoaded(resource, imageUrl, 0);
-//                        return false; // Indicates Glide should handle the bitmap
-//                    }
-//                });
     }
 }

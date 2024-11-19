@@ -13,7 +13,7 @@ import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.adapters.ItemAdapter;
 import com.crop.phototocartooneffect.adapters.ItemAdapterFull;
 import com.crop.phototocartooneffect.dialogfragment.ShowAllBottomFragment;
-import com.crop.phototocartooneffect.firabsehelper.FireStoreImageUploader;
+import com.crop.phototocartooneffect.enums.EditingCategories;
 import com.crop.phototocartooneffect.repositories.AppResources;
 import com.crop.phototocartooneffect.utils.AppSettings;
 
@@ -67,18 +67,23 @@ public class MainFragment extends Fragment {
         });
         view.findViewById(R.id.show_all_text).setOnClickListener(v -> {
 
-            ShowAllBottomFragment.newInstance(listener).show(getActivity().getSupportFragmentManager(), "ShowAllBottomFragment");
+            ShowAllBottomFragment.newInstance(listener,
+                    EditingCategories.AITypeFirebaseEDB.FEATUREAI).show(getActivity().getSupportFragmentManager(), "ShowAllBottomFragment");
         });
+        view.findViewById(R.id.show_all_text2).setOnClickListener(v -> {
 
+            ShowAllBottomFragment.newInstance(listener,
+                    EditingCategories.AITypeFirebaseEDB.FEATUREAI2).show(getActivity().getSupportFragmentManager(), "ShowAllBottomFragment");
+        });
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_top);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.HORIZONTAL, false));
         ItemAdapter adapter = new ItemAdapter(getContext(), listener); // Replace YourAdapter with your actual adapter
-        adapter.setData(AppResources.getInstance().getItems(FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI));
+        adapter.setData(AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.FEATUREAI));
         recyclerView.setAdapter(adapter);
 
         RecyclerView recyclerView2 = view.findViewById(R.id.recyclerView_2);
         ItemAdapter adapter2 = new ItemAdapter(getContext(), listener); // Replace YourAdapter with your actual adapter
-        adapter2.setData(AppResources.getInstance().getItems(FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI2));
+        adapter2.setData(AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.FEATUREAI2));
         recyclerView2.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.HORIZONTAL, false));
         recyclerView2.setAdapter(adapter2);
 
