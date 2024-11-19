@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
+        android:name= ".photoediting.PhotoApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
@@ -38,6 +39,9 @@
 
         <activity
             android:name=".activities.ImageAiActivity"
+            android:exported="false" />
+        <activity
+            android:name=".photoediting.EditImageActivity"
             android:exported="false" />
         <activity
             android:name=".popeffect.color_splash_tool.ColorSplashActivity"

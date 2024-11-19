@@ -4,7 +4,6 @@ package com.crop.phototocartooneffect.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -16,9 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
+import com.crop.phototocartooneffect.photoediting.EditImageActivity;
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.imageloader.ImageLoader;
-import com.crop.phototocartooneffect.popeffect.color_splash_tool.ColorSplashActivity;
 import com.crop.phototocartooneffect.utils.PaletteExtractor;
 import com.crop.phototocartooneffect.utils.RLog;
 
@@ -86,17 +85,22 @@ public class ImageAiFragment extends BaseFragmentInterface {
 
         editedBitmap = createBitmap.copy(createBitmap.getConfig(), true);
         view.findViewById(R.id.edit_current_bitmap).setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), ColorSplashActivity.class);
-//            ColorSplashActivity.colorBitmap = finalCreateBitmap;
-            ColorSplashActivity.colorBitmap = editedBitmap.copy(editedBitmap.getConfig(), true);
+            Intent intent = new Intent(getContext(), EditImageActivity.class);
             startActivity(intent);
-
-            ColorSplashActivity.setBitmapReadyListener(bitmap -> {
-                editedBitmap = bitmap.copy(bitmap.getConfig(), true);
-                mPhotoEditorView.getSource().setImageBitmap(editedBitmap);
-                ColorSplashActivity.setBitmapReadyListener(null);
-            });
         });
+
+//        view.findViewById(R.id.edit_current_bitmap).setOnClickListener(v -> {
+//            Intent intent = new Intent(getContext(), ColorSplashActivity.class);
+////            ColorSplashActivity.colorBitmap = finalCreateBitmap;
+//            ColorSplashActivity.colorBitmap = editedBitmap.copy(editedBitmap.getConfig(), true);
+//            startActivity(intent);
+//
+//            ColorSplashActivity.setBitmapReadyListener(bitmap -> {
+//                editedBitmap = bitmap.copy(bitmap.getConfig(), true);
+//                mPhotoEditorView.getSource().setImageBitmap(editedBitmap);
+//                ColorSplashActivity.setBitmapReadyListener(null);
+//            });
+//        });
 
         view.findViewById(R.id.btn_save).setOnClickListener(v -> {
             String fileName = "image_" + System.currentTimeMillis() + ".png";
