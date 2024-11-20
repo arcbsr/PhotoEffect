@@ -25,7 +25,7 @@ public class EditingCategories {
     }
 
     public enum AITypeFirebaseClothTypeEDB {
-        UPPER("upper_body"), BOTTOM("lower_body"), DRESSES("dresses"), NONE("none");
+        NONE("none"), UPPER("upper_body"), BOTTOM("lower_body");
 
         private final String value;
 
@@ -43,7 +43,7 @@ public class EditingCategories {
                     return type;
                 }
             }
-            return AITypeFirebaseClothTypeEDB.DRESSES; // Default case if no match is found
+            return AITypeFirebaseClothTypeEDB.NONE; // Default case if no match is found
         }
     }
 

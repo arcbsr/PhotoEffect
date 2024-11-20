@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/card_prnt">
 
     <RadioGroup
         android:id="@+id/shapeRadioGroup"
@@ -21,48 +21,61 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="@string/label_brush" />
+            android:text="@string/label_brush"
+            android:textColor="@color/details"
+            app:buttonTint="@color/icons" />
 
         <RadioButton
             android:id="@+id/lineRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/label_line" />
+            android:text="@string/label_line"
+            android:textColor="@color/details"
+            app:buttonTint="@color/icons" />
 
         <RadioButton
             android:id="@+id/arrowRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/label_arrow" />
+            android:text="@string/label_arrow"
+            android:textColor="@color/details"
+            app:buttonTint="@color/icons" />
 
         <RadioButton
             android:id="@+id/ovalRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/label_oval" />
+            android:text="@string/label_oval"
+            android:textColor="@color/details"
+            app:buttonTint="@color/icons" />
 
         <RadioButton
             android:id="@+id/rectRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/label_rectangle" />
+            android:text="@string/label_rectangle"
+            android:textColor="@color/details"
+            app:buttonTint="@color/icons" />
 
     </RadioGroup>
 
     <SeekBar
         android:id="@+id/shapeSize"
+        style="@style/MySeekBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:progress="25"
+        android:thumb="@drawable/progress_thumb_small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtShapeSize" />
 
     <SeekBar
         android:id="@+id/shapeOpacity"
+        style="@style/MySeekBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -70,6 +83,7 @@
         android:layout_marginEnd="8dp"
         android:max="255"
         android:progress="255"
+        android:thumb="@drawable/progress_thumb_small"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtOpacity" />
@@ -83,6 +97,7 @@
         android:layout_marginEnd="8dp"
         android:text="Brush"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/title"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/shapeRadioGroup" />
@@ -96,6 +111,7 @@
         android:layout_marginEnd="8dp"
         android:text="Opacity"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtShapeSize" />
@@ -109,6 +125,7 @@
         android:layout_marginEnd="8dp"
         android:text="Shape"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/title"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

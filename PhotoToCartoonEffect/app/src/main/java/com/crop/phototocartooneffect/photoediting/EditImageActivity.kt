@@ -14,8 +14,10 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AnticipateOvershootInterpolator
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresPermission
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
@@ -28,15 +30,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
+import com.burhanrashid52.photoediting.tools.EditingToolsAdapter
+import com.burhanrashid52.photoediting.tools.EditingToolsAdapter.OnItemSelected
+import com.burhanrashid52.photoediting.tools.ToolType
+import com.crop.phototocartooneffect.R
+import com.crop.phototocartooneffect.imageloader.ImageLoader
 import com.crop.phototocartooneffect.photoediting.EmojiBSFragment.EmojiListener
 import com.crop.phototocartooneffect.photoediting.StickerBSFragment.StickerListener
 import com.crop.phototocartooneffect.photoediting.base.BaseActivity
 import com.crop.phototocartooneffect.photoediting.filters.FilterListener
 import com.crop.phototocartooneffect.photoediting.filters.FilterViewAdapter
-import com.burhanrashid52.photoediting.tools.EditingToolsAdapter
-import com.burhanrashid52.photoediting.tools.EditingToolsAdapter.OnItemSelected
-import com.burhanrashid52.photoediting.tools.ToolType
-import com.crop.phototocartooneffect.R
+import com.crop.phototocartooneffect.utils.RLog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener
 import ja.burhanrashid52.photoeditor.PhotoEditor
@@ -82,13 +86,22 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        makeFullScreen()
+//        makeFullScreen()
         setContentView(R.layout.activity_edit_image)
 
         initViews()
 
-        handleIntentImage(mPhotoEditorView.source)
-
+//        handleIntentImage(mPhotoEditorView.source)
+        val imageKey: String? = intent.getStringExtra("image_path")
+        RLog.d("image_path", imageKey)
+        val bitmap = ImageLoader.getInstance().getBitmap(imageKey)
+        //MediaStore.Images.Media.getBitmap(contentResolver, uri)
+        if (bitmap == null) {
+            Toast.makeText(this, "Error Loading, Please try again...", Toast.LENGTH_SHORT).show()
+            finish()
+            return;
+        }
+        mPhotoEditorView.source.setImageBitmap(bitmap)
         mWonderFont = Typeface.createFromAsset(assets, "beyond_wonderland.ttf")
 
         mPropertiesBSFragment = PropertiesBSFragment()
@@ -123,8 +136,8 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
         mPhotoEditor.setOnPhotoEditorListener(this)
 
         //Set Image Dynamically
-        mPhotoEditorView.source.setImageResource(R.drawable.paris_tower)
-
+//        mPhotoEditorView.source.setImageResource(R.drawable.paris_tower)
+        mPhotoEditor.setFilterEffect(PhotoFilter.NONE)
         mSaveFileHelper = FileSaveHelper(this)
     }
 
@@ -182,6 +195,8 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
 
         val imgClose: ImageView = findViewById(R.id.imgClose)
         imgClose.setOnClickListener(this)
+        val imgCloseTop: Button = findViewById(R.id.closeIcon)
+        imgCloseTop.setOnClickListener(this)
 
         val imgShare: ImageView = findViewById(R.id.imgShare)
         imgShare.setOnClickListener(this)
@@ -246,8 +261,12 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
                 mImgRedo.isEnabled = mPhotoEditor.redo()
             }
 
-            R.id.imgSave -> saveImage()
+            R.id.imgSave -> {
+                saveImage()
+            }
+
             R.id.imgClose -> onBackPressed()
+            R.id.closeIcon -> onBackPressed()
             R.id.imgShare -> shareImage()
             R.id.imgCamera -> {
                 val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -283,9 +302,7 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
         val path: String = uri.path ?: throw IllegalArgumentException("URI Path Expected")
 
         return FileProvider.getUriForFile(
-            this,
-            FILE_PROVIDER_AUTHORITY,
-            File(path)
+            this, FILE_PROVIDER_AUTHORITY, File(path)
         )
     }
 
@@ -293,8 +310,7 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
     private fun saveImage() {
         val fileName = System.currentTimeMillis().toString() + ".png"
         val hasStoragePermission = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            this, Manifest.permission.WRITE_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
         if (hasStoragePermission || FileSaveHelper.isSdkHigherThan28()) {
             showLoading("Saving...")
@@ -302,17 +318,12 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
 
                 @RequiresPermission(allOf = [Manifest.permission.WRITE_EXTERNAL_STORAGE])
                 override fun onFileCreateResult(
-                    created: Boolean,
-                    filePath: String?,
-                    error: String?,
-                    uri: Uri?
+                    created: Boolean, filePath: String?, error: String?, uri: Uri?
                 ) {
                     lifecycleScope.launch {
                         if (created && filePath != null) {
-                            val saveSettings = SaveSettings.Builder()
-                                .setClearViewsEnabled(true)
-                                .setTransparencyEnabled(true)
-                                .build()
+                            val saveSettings = SaveSettings.Builder().setClearViewsEnabled(true)
+                                .setTransparencyEnabled(true).build()
 
                             val result = mPhotoEditor.saveAsFile(filePath, saveSettings)
 
@@ -322,6 +333,7 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
                                 showSnackbar("Image Saved Successfully")
                                 mSaveImageUri = uri
                                 mPhotoEditorView.source.setImageURI(mSaveImageUri)
+                                shareImage()
                             } else {
                                 hideLoading()
                                 showSnackbar("Failed to save Image")
@@ -416,6 +428,10 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
 
     override fun onToolSelected(toolType: ToolType) {
         when (toolType) {
+            ToolType.COLOR_POP -> {
+
+            }
+
             ToolType.SHAPE -> {
                 mPhotoEditor.setBrushDrawingMode(true)
                 mShapeBuilder = ShapeBuilder()
@@ -468,17 +484,14 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
         if (isVisible) {
             mConstraintSet.clear(rvFilterId, ConstraintSet.START)
             mConstraintSet.connect(
-                rvFilterId, ConstraintSet.START,
-                ConstraintSet.PARENT_ID, ConstraintSet.START
+                rvFilterId, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START
             )
             mConstraintSet.connect(
-                rvFilterId, ConstraintSet.END,
-                ConstraintSet.PARENT_ID, ConstraintSet.END
+                rvFilterId, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END
             )
         } else {
             mConstraintSet.connect(
-                rvFilterId, ConstraintSet.START,
-                ConstraintSet.PARENT_ID, ConstraintSet.END
+                rvFilterId, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.END
             )
             mConstraintSet.clear(rvFilterId, ConstraintSet.END)
         }

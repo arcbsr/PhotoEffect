@@ -109,7 +109,9 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView thumbImageView, thumbOverlayImageView, thumbImageView2, thumbImageView3, thumbImageView4, thumbImageView5;
+        private ImageView thumbImageView, thumbImageView2, thumbImageView3, thumbImageView4, thumbImageView5;
+        private ImageView thumbOverlayImageView, thumbOverlayImageView2, thumbOverlayImageView3, thumbOverlayImageView4, thumbOverlayImageView5;
+        private View proView, proView2, proView3, proView4, proView5;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -117,23 +119,42 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
             thumbImageView = itemView.findViewById(R.id.include_view11).findViewById(R.id.item_thumb);
             thumbOverlayImageView = itemView.findViewById(R.id.include_view11).findViewById(R.id.item_thumb_overlay);
             thumbImageView2 = itemView.findViewById(R.id.include_view12).findViewById(R.id.item_thumb);
+            thumbOverlayImageView2 = itemView.findViewById(R.id.include_view12).findViewById(R.id.item_thumb_overlay);
             thumbImageView3 = itemView.findViewById(R.id.include_view21).findViewById(R.id.item_thumb);
+            thumbOverlayImageView3 = itemView.findViewById(R.id.include_view21).findViewById(R.id.item_thumb_overlay);
             thumbImageView4 = itemView.findViewById(R.id.include_view22).findViewById(R.id.item_thumb);
+            thumbOverlayImageView4 = itemView.findViewById(R.id.include_view22).findViewById(R.id.item_thumb_overlay);
             thumbImageView5 = itemView.findViewById(R.id.main_banner).findViewById(R.id.header_item_thumb);
+
+            proView = itemView.findViewById(R.id.include_view11).findViewById(R.id.pro_icon_view);
+            proView2 = itemView.findViewById(R.id.include_view12).findViewById(R.id.pro_icon_view);
+            proView3 = itemView.findViewById(R.id.include_view21).findViewById(R.id.pro_icon_view);
+            proView4 = itemView.findViewById(R.id.include_view22).findViewById(R.id.pro_icon_view);
+            proView5 = itemView.findViewById(R.id.main_banner).findViewById(R.id.pro_icon_view);
         }
 
         public void bind(final MainMenu mainItems) {
             List<MenuItem> items = mainItems.subMenuItems;
-
+            proView.setVisibility(View.GONE);
+            proView2.setVisibility(View.GONE);
+            proView3.setVisibility(View.GONE);
+            proView4.setVisibility(View.GONE);
+            proView5.setVisibility(View.GONE);
             if (items.size() > 0) {
-
+                if (items.get(0).isPro) {
+                    proView.setVisibility(View.VISIBLE);
+                }
                 itemView.findViewById(R.id.include_view11).setVisibility(View.VISIBLE);
+
 //                thumbImageView.setImageResource(items.get(0).getThumbResId());
                 Glide.with(context).load(items.get(0).imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER_ERROR).into(thumbImageView);
             } else {
                 itemView.findViewById(R.id.include_view11).setVisibility(View.GONE);
             }
             if (items.size() > 1) {
+                if (items.get(1).isPro) {
+                    proView2.setVisibility(View.VISIBLE);
+                }
                 itemView.findViewById(R.id.include_view12).setVisibility(View.VISIBLE);
 //                thumbImageView2.setImageResource(items.get(1).getThumbResId());
                 Glide.with(context).load(items.get(1).imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER_ERROR).into(thumbImageView2);
@@ -141,6 +162,9 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
                 itemView.findViewById(R.id.include_view12).setVisibility(View.GONE);
             }
             if (items.size() > 2) {
+                if (items.get(2).isPro) {
+                    proView3.setVisibility(View.VISIBLE);
+                }
                 itemView.findViewById(R.id.include_view21).setVisibility(View.VISIBLE);
 //                thumbImageView3.setImageResource(items.get(2).getThumbResId());
 
@@ -149,6 +173,9 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
                 itemView.findViewById(R.id.include_view21).setVisibility(View.GONE);
             }
             if (items.size() > 3) {
+                if (items.get(3).isPro) {
+                    proView4.setVisibility(View.VISIBLE);
+                }
                 itemView.findViewById(R.id.include_view22).setVisibility(View.VISIBLE);
 //                thumbImageView4.setImageResource(items.get(3).getThumbResId());
 
@@ -157,6 +184,9 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
                 itemView.findViewById(R.id.include_view22).setVisibility(View.GONE);
             }
             if (mainItems.bannerItem != null) {
+                if (mainItems.bannerItem.isPro) {
+                    proView5.setVisibility(View.VISIBLE);
+                }
                 itemView.findViewById(R.id.main_banner).setVisibility(View.VISIBLE);
                 Glide.with(context).load(mainItems.bannerItem.imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER_BANNER).
                         error(AppSettings.IMAGE_PLACE_HOLDER_ERROR_BANNER).into(thumbImageView5);
@@ -169,6 +199,28 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION && listener != null) {
                     listener.onItemClick(items.get(0));
+                    RLog.e("MenuAdapter", "Clicked on item at position: " + position);
+                }
+            });
+
+            thumbOverlayImageView2.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && listener != null) {
+                    listener.onItemClick(items.get(1));
+                    RLog.e("MenuAdapter", "Clicked on item at position: " + position);
+                }
+            });
+            thumbOverlayImageView3.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && listener != null) {
+                    listener.onItemClick(items.get(2));
+                    RLog.e("MenuAdapter", "Clicked on item at position: " + position);
+                }
+            });
+            thumbOverlayImageView4.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && listener != null) {
+                    listener.onItemClick(items.get(3));
                     RLog.e("MenuAdapter", "Clicked on item at position: " + position);
                 }
             });

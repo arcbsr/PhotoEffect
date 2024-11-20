@@ -43,12 +43,12 @@ public class AppResources {
                             image.get("imageUrl") != null ? image.get("imageUrl").toString() : "",         // Default value for imageUrl
                             image.get("description") != null ? image.get("description").toString() : "No description available", // Default value for description
                             image.get("prompt") != null ? image.get("prompt").toString() : "",             // Default value for prompt
-                            image.get("creationtype") != null ? EditingCategories.ImageCreationType.fromString(image.get("creationtype").toString())
-                                    : EditingCategories.ImageCreationType.FIREBASE_ML_SEGMENTATION, // Assuming this is a constant
+                            image.get("creationtype") != null ? EditingCategories.ImageCreationType.fromString(image.get("creationtype").toString()) : EditingCategories.ImageCreationType.FIREBASE_ML_SEGMENTATION, // Assuming this is a constant
                             true // Assuming this is always true
                     );
-                    menuItem.clothType = image.get("clothtype") != null ? EditingCategories.AITypeFirebaseClothTypeEDB.fromString(image.get("clothtype").toString())
-                            : EditingCategories.AITypeFirebaseClothTypeEDB.NONE;
+                    menuItem.clothType = image.get("clothtype") != null ? EditingCategories.AITypeFirebaseClothTypeEDB.fromString(image.get("clothtype").toString()) : EditingCategories.AITypeFirebaseClothTypeEDB.NONE;
+                    menuItem.isPro = image.get("isPro") != null ? (boolean) image.get("isPro") : false;
+                    menuItem.documentId = image.get("documentId") != null ? image.get("documentId").toString() : "";
                     final String menutype = image.get("menutype") != null ? image.get("menutype").toString() : "";
 //                    FireStoreImageUploader.AITYPEFIREBASEDB aiType = FireStoreImageUploader.AITYPEFIREBASEDB.UNKNOWN;
 //

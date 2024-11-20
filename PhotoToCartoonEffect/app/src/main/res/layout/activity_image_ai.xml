@@ -20,6 +20,18 @@
             app:title=""
             app:titleTextColor="@color/gold">
 
+            <ImageButton
+                android:id="@+id/refreshButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="Refresh"
+                android:padding="12dp"
+                android:src="@drawable/ic_refresh_24"
+                app:tint="@color/semi_black_transparent" />
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/subscribeButton"
                 android:layout_width="wrap_content"
@@ -29,35 +41,45 @@
                 android:background="@drawable/button_selector"
                 android:clickable="true"
                 android:drawableRight="@drawable/pro_icon_24"
-                android:drawableTint="@color/white"
+                android:drawableTint="@color/gold"
                 android:gravity="center"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="PRO"
-                android:textColor="@color/white"
+                android:textColor="@color/gold"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:visibility="visible"
-                app:backgroundTint="@color/orange" />
+                app:backgroundTint="@color/semi_black_transparent" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/addnew_item"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/banner_btn_height"
+                android:layout_height="match_parent"
                 android:layout_gravity="end"
-                android:layout_margin="12dp"
-                android:background="@drawable/button_selector"
+                android:background="@null"
                 android:clickable="true"
-                android:drawableRight="@drawable/ic_add"
-                android:drawableTint="@color/white"
                 android:gravity="center"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="Add New"
+                android:text="Add+"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
-                android:visibility="gone" />
+                android:visibility="visible" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/delete_item"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:background="@null"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="Del-"
+                android:textColor="@color/red"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
 
         </androidx.appcompat.widget.Toolbar>
 

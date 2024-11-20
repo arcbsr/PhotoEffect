@@ -21,6 +21,17 @@ public class ImageLoader {
     private BitmapCache bitmapCache;
 
 
+    public void clearAllCache(Context context) {
+        if (bitmapCache != null) {
+            bitmapCache.clearCache();
+        }
+        Glide.get(context).clearMemory();
+        new Thread(() -> {
+            Glide.get(context).clearDiskCache();
+        }).start();
+    }
+
+
     private ImageLoader() {
         bitmapCache = new BitmapCache();
     }

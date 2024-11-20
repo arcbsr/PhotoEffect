@@ -32,14 +32,16 @@ public class MenuFragmentDialog extends BaseBottomFragment {
             if (!contactUsFragment.hasContactedToday(getContext())) {
                 contactUsFragment.show(getActivity().getSupportFragmentManager(), "ContactUs");
             } else {
-                Toast.makeText(getContext(), "You can only contact us once per day", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Try again next day...", Toast.LENGTH_SHORT).show();
             }
         });
         view.findViewById(R.id.termsTextView).setOnClickListener(v -> {
             // Handle share action
+            dismiss();
         });
         view.findViewById(R.id.rateUsTextView).setOnClickListener(v -> {
             // Handle rate action
+            dismiss();
         });
 //        view.findViewById(R.id.privacy).setOnClickListener(v -> {
 //            // Handle privacy action

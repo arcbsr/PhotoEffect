@@ -8,14 +8,15 @@ import com.crop.phototocartooneffect.enums.EditingCategories;
 public class MenuItem {
     public ValueAnimator animator;
 //    public String cloth = "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/livewire-tmp/5BDmwvtizESFRO24uGDW1iu1u5TXhB-metaM2JmZmFkY2U5NDNkOGU3MDJhZDE0YTk2OTY2NjQ0NjYuanBn-.jpg";
-    public EditingCategories.AITypeFirebaseClothTypeEDB clothType = EditingCategories.AITypeFirebaseClothTypeEDB.DRESSES;
+    public EditingCategories.AITypeFirebaseClothTypeEDB clothType = EditingCategories.AITypeFirebaseClothTypeEDB.NONE;
     private int iconResId;
     private String title;
     public Bitmap bitmap;
     private String description;
     private int thumbResId;
     public boolean isBanner;
-    public boolean isPro;
+    public boolean isPro = false;
+    public String documentId;
 
     public void setImageCreationType(EditingCategories.ImageCreationType imageCreationType) {
         this.imageCreationType = imageCreationType;

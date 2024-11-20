@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -96,8 +95,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView thumbImageView, shineImageView, overlayImageView;
-        private CardView cardView;
-        private View lineView;
+        private View cardView;
+        private View lineView, proView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -106,12 +105,16 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             shineImageView = itemView.findViewById(R.id.item_thumb_shine);
             cardView = itemView.findViewById(R.id.img2imgCardView);
             lineView = itemView.findViewById(R.id.shiningLine);
+            proView = itemView.findViewById(R.id.pro_icon_view);
         }
 
         public void bind(final MenuItem item) {
             thumbImageView.setImageResource(item.getThumbResId());
             Glide.with(context).load(item.imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER_ERROR).into(thumbImageView);
-
+            proView.setVisibility(View.GONE);
+            if (item.isPro) {
+                proView.setVisibility(View.VISIBLE);
+            }
             overlayImageView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION && listener != null) {

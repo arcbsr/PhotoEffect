@@ -116,13 +116,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initAPP() {
-        AppResources.getInstance().reFreshAppItems(this, new AppResources.OnAppResourcesUpdatedListener() {
-            @Override
-            public void onFeaturedItemsUpdated() {
-                IS_AUTH_CHECKING_DONE = true;
-                findViewById(R.id.btnGrantPermission).setOnClickListener(v -> permissionAccess.requestStoragePermission(MainActivity.this));
-                checkPermission();
-            }
+        AppResources.getInstance().reFreshAppItems(this, () -> {
+            IS_AUTH_CHECKING_DONE = true;
+            findViewById(R.id.btnGrantPermission).setOnClickListener(v -> permissionAccess.requestStoragePermission(MainActivity.this));
+            checkPermission();
         });
     }
 

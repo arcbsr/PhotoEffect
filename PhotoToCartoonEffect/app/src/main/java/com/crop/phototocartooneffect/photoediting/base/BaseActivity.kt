@@ -34,13 +34,13 @@ open class BaseActivity : AppCompatActivity() {
 
     open fun isPermissionGranted(isGranted: Boolean, permission: String?) {}
 
-    fun makeFullScreen() {
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
-    }
+//    fun makeFullScreen() {
+//        requestWindowFeature(Window.FEATURE_NO_TITLE)
+//        window.setFlags(
+//            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//            WindowManager.LayoutParams.FLAG_FULLSCREEN
+//        )
+//    }
 
     protected fun showLoading(message: String) {
         mProgressDialog = ProgressDialog(this)

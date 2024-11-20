@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/drawer_topbar" />
+        <!--        <include layout="@layout/drawer_topbar" />-->
 
         <ScrollView
             android:layout_width="match_parent"
@@ -18,13 +18,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_margin="16dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="32dp"
-                android:clipChildren="false"
-                android:clipToPadding="false"
                 android:elevation="4dp"
                 android:orientation="vertical"
                 android:padding="16dp">
@@ -34,6 +29,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="?attr/actionBarSize"
                     android:layout_marginBottom="16dp"
                     android:text="Admin Input"
                     android:textSize="24sp"
@@ -72,6 +68,49 @@
                         android:src="@drawable/placeholder" />
                 </LinearLayout>
 
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/border_only_btn">
+
+
+                    <EditText
+                        android:id="@+id/txt_image_Url"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/btn_image_url_clear"
+                        android:background="@null"
+                        android:ellipsize="end"
+                        android:hint="Enter image link..."
+                        android:maxLines="1"
+                        android:padding="13dp" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/btn_image_url_clear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:src="@drawable/ic_close"
+                        app:tint="@color/red" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/btn_image_url"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/ic_save"
+                        app:tint="@color/orange" />
+
+                </RelativeLayout>
+
                 <EditText
                     android:id="@+id/titleEditText"
                     android:layout_width="match_parent"
@@ -90,7 +129,7 @@
                     android:layout_marginBottom="16dp"
                     android:background="@drawable/border_only_btn"
                     android:gravity="top|start"
-                    android:hint="Enter prompt"
+                    android:hint="Enter prompt..."
                     android:inputType="textMultiLine"
                     android:minLines="6"
                     android:padding="14dp" />
@@ -105,6 +144,7 @@
                     android:drawableRight="@android:drawable/arrow_down_float"
                     android:padding="16dp"
                     android:spinnerMode="dropdown" />
+
                 <Spinner
                     android:id="@+id/modelTypeSpinner"
                     android:layout_width="match_parent"
@@ -126,16 +166,51 @@
                     android:drawableRight="@android:drawable/arrow_down_float"
                     android:padding="16dp"
                     android:spinnerMode="dropdown" />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/submitButton"
-                    android:layout_width="200dp"
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/button_selector"
-                    android:elevation="2dp"
-                    android:text="Submit"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+
+                    <CheckBox
+                        android:id="@+id/ispro"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:buttonTint="@color/white"
+                        android:checked="true"
+                        android:text="PRO" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/prepareButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:elevation="2dp"
+                        android:text="Prepare"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        app:backgroundTint="@color/green_color_picker" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/submitButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:elevation="2dp"
+                        android:text="Submit"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        app:backgroundTint="@color/red" />
+                </LinearLayout>
 
             </LinearLayout>
         </ScrollView>

@@ -1,8 +1,10 @@
 package com.crop.phototocartooneffect.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,10 +12,13 @@ import android.os.Looper;
 import android.renderscript.RenderScript;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -28,11 +33,11 @@ import com.crop.phototocartooneffect.dialogfragment.LoadingDialog;
 import com.crop.phototocartooneffect.dialogfragment.MenuFragmentDialog;
 import com.crop.phototocartooneffect.dialogfragment.SubscriptionFragment;
 import com.crop.phototocartooneffect.enums.EditingCategories;
-import com.crop.phototocartooneffect.fragments.BaseFragmentInterface;
-import com.crop.phototocartooneffect.fragments.ImageAiFragment;
+import com.crop.phototocartooneffect.firabsehelper.FireStoreImageUploader;
 import com.crop.phototocartooneffect.fragments.MainFragment;
 import com.crop.phototocartooneffect.imageloader.ImageLoader;
 import com.crop.phototocartooneffect.models.MenuItem;
+import com.crop.phototocartooneffect.photoediting.EditImageActivity;
 import com.crop.phototocartooneffect.renderengins.ImageEffect;
 import com.crop.phototocartooneffect.renderengins.apis.fashion.FashionEffectService;
 import com.crop.phototocartooneffect.renderengins.apis.imgtoimage.ImageToImageService;
@@ -63,12 +68,15 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         new Handler(Looper.getMainLooper()).post(() -> {
             onFinished();
             if (result != null) {
-                BaseFragmentInterface fragment = ImageAiFragment.newInstance("original", key);
-                fragment.applyAppBAR(toolbar);
-                showImageInFragment(fragment);
+//                BaseFragmentInterface fragment = ImageAiFragment.newInstance("original", key);
+//                fragment.applyAppBAR(toolbar);
+//                showImageInFragment(fragment);
 //                Intent intent = new Intent(ImageAiActivity.this, ColorSplashActivity.class);
 //                ColorSplashActivity.colorBitmap = ImageLoader.getInstance().getBitmap(key);
 //                startActivity(intent);
+                Intent intent = new Intent(ImageAiActivity.this, EditImageActivity.class);
+                intent.putExtra("image_path", key);
+                startActivity(intent);
             }
         });
 
@@ -97,7 +105,25 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
 
     @Override
     public void onItemClick(MenuItem item) {
+        if (isAdminDeleteMode) {
+            FireStoreImageUploader.getInstance(this).deleteDataFromFireStore(item.documentId, item.imageUrl, new FireStoreImageUploader.ImageDeleteCallback() {
+                @Override
+                public void onSuccess() {
+                    Toast.makeText(ImageAiActivity.this, "Image Deleted Successfully", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(String errorMessage) {
+                    Toast.makeText(ImageAiActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
+            return;
+        }
         selectedRenderItem = item;
+        if (item.isPro) {
+            findViewById(R.id.subscribeButton).performClick();
+            return;
+        }
         openImagePicker(pickSource);
     }
 
@@ -132,7 +158,42 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
     }
 
     private Toolbar toolbar;
-    private boolean uploadAsAdmin = false;
+    private boolean uploadAsAdmin = false, isAdminDeleteMode = false;
+
+    private void setForAdminMode() {
+
+        findViewById(R.id.addnew_item).setVisibility(View.GONE);
+        findViewById(R.id.delete_item).setVisibility(View.GONE);
+        ((TextView) findViewById(R.id.delete_item)).setTextColor(Color.WHITE);
+        isAdminDeleteMode = false;
+        uploadAsAdmin = false;
+        if (AppSettings.IS_ADMIN_MODE) {
+            findViewById(R.id.addnew_item).setVisibility(View.VISIBLE);
+            findViewById(R.id.delete_item).setVisibility(View.VISIBLE);
+            findViewById(R.id.delete_item).setOnClickListener(v -> {
+                if (isAdminDeleteMode) {
+                    isAdminDeleteMode = false;
+                    ((TextView) findViewById(R.id.delete_item)).setTextColor(Color.WHITE);
+                } else {
+                    isAdminDeleteMode = true;
+                    ((TextView) findViewById(R.id.delete_item)).setTextColor(Color.RED);
+                }
+            });
+            findViewById(R.id.addnew_item).setOnClickListener(v -> new AlertDialog.Builder(ImageAiActivity.this, R.style.CustomAlertDialogTheme).setTitle("Admin Mode").setMessage("How do you want to add new item?").setPositiveButton("URL", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    AdminFragmentDialog adminFragment = AdminFragmentDialog.newInstance(selectedRenderItem, null, null);
+//                            adminFragment.show(getSupportFragmentManager(), "AdminFragmentDialog");
+                    showImageInFragment(adminFragment);
+                }
+            }).setNegativeButton("Gallery", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    uploadAsAdmin = true;
+                    openImagePicker(pickSource);
+                }
+            }).show());
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,19 +204,15 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         if (AppSettings.IS_TESTING_MODE) {
             findViewById(R.id.subscribeButton).setVisibility(View.INVISIBLE);
         }
-        if (AppSettings.IS_ADMIN_MODE) {
-            findViewById(R.id.addnew_item).setVisibility(View.VISIBLE);
-            findViewById(R.id.addnew_item).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    uploadAsAdmin = true;
-                    openImagePicker(pickSource);
-                }
-            });
-        }
+        setForAdminMode();
         findViewById(R.id.subscribeButton).setOnClickListener(view -> {
             SubscriptionFragment fragment = new SubscriptionFragment();
             fragment.show(getSupportFragmentManager(), "SubscriptionFragment");
+        });
+        findViewById(R.id.refreshButton).setOnClickListener(v -> {
+            ImageLoader.getInstance().clearAllCache(ImageAiActivity.this);
+            startActivity(new Intent(ImageAiActivity.this, ImageAiActivity.class));
+            finish();
         });
         findViewById(R.id.newButton).setOnClickListener(v -> {
             openImagePicker(pickSource);
@@ -207,7 +264,8 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
             bitmaps.add(new VideoFrames(keyValue, pos));
             if (uploadAsAdmin) {
                 AdminFragmentDialog dialog = AdminFragmentDialog.newInstance(selectedRenderItem, uri, bitmap);
-                dialog.show(getSupportFragmentManager(), "AdminFragmentDialog");
+//                dialog.show(getSupportFragmentManager(), "AdminFragmentDialog");
+                showImageInFragment(dialog);
                 uploadAsAdmin = false;
 //            FireStoreImageUploader.getInstance(this).uploadImage(uri, "featured", "Transform the image into a cartoon object, maintaining the original colors and textures. " + "The result should resemble a recognizable snack item (e.g., potato chip, cookie, or candy)" + " while preserving key features of the original image.", FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI2);
                 return;

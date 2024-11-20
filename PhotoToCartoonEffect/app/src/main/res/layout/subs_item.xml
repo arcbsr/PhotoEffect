@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <!-- Main CardView -->
     <androidx.cardview.widget.CardView
@@ -16,12 +16,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
         <!-- Content inside the card -->
         <LinearLayout
-            android:background="@color/semi_white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/card_prnt"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -33,7 +32,7 @@
                 android:layout_gravity="center_horizontal"
                 android:text="Premium Subscription"
                 android:textColor="@color/head_title"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <!-- Price Section -->
@@ -45,7 +44,7 @@
                 android:layout_marginTop="8dp"
                 android:text="$9.99/month"
                 android:textColor="@color/gold"
-                android:textSize="28sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <!-- Description -->
@@ -64,16 +63,15 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/subscribeButton_action"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="70dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/button_selector"
-                android:paddingVertical="10dp"
-                android:text="Subscribe Now"
+                android:background="@drawable/button_selector_blk"
+                android:paddingBottom="5dp"
+                android:text="Subscribe"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                app:backgroundTint="@color/orange" />
+                android:textColor="@color/white"
+                android:textSize="14sp" />
 
         </LinearLayout>
 

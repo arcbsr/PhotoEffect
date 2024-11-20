@@ -20,8 +20,10 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
             android:background="@null"
-            android:text="close  x"
+            android:drawableRight="@drawable/ic_menu_close"
+            android:text="close"
             android:textColor="@color/title" />
 
 

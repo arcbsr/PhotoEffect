@@ -57,6 +57,7 @@ class EditingToolsAdapter(private val mOnItemSelected: OnItemSelected) :
     }
 
     init {
+        mToolList.add(ToolModel("Edit", R.drawable.ic_erase, ToolType.COLOR_POP))
         mToolList.add(ToolModel("Shape", R.drawable.ic_oval, ToolType.SHAPE))
         mToolList.add(ToolModel("Text", R.drawable.ic_text, ToolType.TEXT))
         mToolList.add(ToolModel("Eraser", R.drawable.ic_eraser, ToolType.ERASER))

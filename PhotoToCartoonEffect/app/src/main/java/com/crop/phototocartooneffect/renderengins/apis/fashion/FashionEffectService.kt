@@ -97,10 +97,12 @@ class FashionEffectService(
         RLog.e("FashionEffectResponse: finalImageLinks >>$isLoaded  : ", imageUrl)
         ImageLoaderWithRetries(context).loadImage(imageUrl, object : OnImageLoadedListener2 {
             override fun onImageLoaded(bitmap: Bitmap?, keyValue: String?, position: Int) {
+                FireStoreImageUploader.getInstance(context).deleteImage(image2ImageRequest.init_image)
                 callback.onSuccess(bitmap, keyValue)
             }
 
             override fun onErrorLoaded(url: String?, position: Int) {
+                FireStoreImageUploader.getInstance(context).deleteImage(image2ImageRequest.init_image)
                 callback.onError(Exception("Failed to load image"))
             }
         })

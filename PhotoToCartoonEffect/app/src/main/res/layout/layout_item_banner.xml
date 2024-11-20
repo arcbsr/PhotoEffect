@@ -34,10 +34,10 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/thumb2" />
 
-<!--                <View-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:background="@drawable/gradient_overlay" />-->
+                <!--                <View-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="match_parent"-->
+                <!--                    android:background="@drawable/gradient_overlay" />-->
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="match_parent"
@@ -73,6 +73,8 @@
 
 
             </RelativeLayout>
+
+            <include layout="@layout/layout_pro_bar" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </FrameLayout>
