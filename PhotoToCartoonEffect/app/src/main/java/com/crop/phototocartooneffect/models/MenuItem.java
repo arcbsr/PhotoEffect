@@ -13,6 +13,11 @@ public class MenuItem {
     private String title;
     public Bitmap bitmap;
     private String description;
+
+    public void setThumbResId(int thumbResId) {
+        this.thumbResId = thumbResId;
+    }
+
     private int thumbResId;
     public boolean isBanner;
     public boolean isPro = false;

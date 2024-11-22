@@ -1,15 +1,13 @@
-package com.crop.phototocartooneffect.renderengins.apis.fashion
+package com.crop.phototocartooneffect.renderengins.apis.imgupload
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
-import com.crop.modellbs.fashion.FashionEffectRequest
-import com.crop.modellbs.uploadimg.ImageUploadRequest
+import com.crop.modellbs.avatar.AvatarEffectRequest
 import com.crop.networklibs.apis.ApiClient
 import com.crop.networklibs.apis.EffectResponse
 import com.crop.networklibs.apis.ModelsLabApiService
 import com.crop.phototocartooneffect.firabsehelper.FireStoreImageUploader
-import com.crop.phototocartooneffect.imageloader.ImageLoader
 import com.crop.phototocartooneffect.imageloader.ImageLoaderWithRetries
 import com.crop.phototocartooneffect.renderengins.ImageEffect
 import com.crop.phototocartooneffect.renderengins.ImageEffect.ImageEffectCallback
@@ -23,37 +21,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 
-class FashionEffectService(
+class AvatarEffectService(
     prompt: String,
-    initImage: String,
-    cloth: String,
-    clothType: String,
-    key: String,
-    context: Context
+    key: String, context: Context
 ) : ImageEffect {
 
     //TODO: Implement the logic to apply the image-to-image effect
-    private var image2ImageRequest: FashionEffectRequest =
-        FashionEffectRequest(prompt, initImage, cloth, clothType, key)
+    private var image2ImageRequest: AvatarEffectRequest = AvatarEffectRequest(prompt, "", key)
+    private var apiKey = key
+    private var prompt = prompt
     private val apiService: ModelsLabApiService = ApiClient.modelsLabApiService
     private val context = context
-    private val apiKey = key
-    override fun applyEffectWithData(callback: ImageEffectCallback, context: Context) {
-        RLog.d("TextToImageRequest:", image2ImageRequest)
-        callback.onStartProcess()
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                //TODO: Implement the logic to apply the image-to-image effect
-                val response = apiService.applyFashionEffect(image2ImageRequest)
 
-                // Handle response
-                handleResponse(response, callback)
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    logAndCallbackError(e, callback)
-                }
-            }
-        }
+    override fun applyEffectWithData(callback: ImageEffectCallback, context: Context) {
+
     }
 
     private suspend fun handleResponse(
@@ -87,6 +68,7 @@ class FashionEffectService(
     private fun handleSuccess(
         effectResponse: EffectResponse, callback: ImageEffectCallback, isLoaded: Boolean
     ) {
+//        val imageUrl = isLoaded?effectResponse.outputImageLinks[0]:effectResponse.outputImageLinks[0]
         val imageUrl = if (isLoaded) {
             effectResponse.output[0]
         } else {
@@ -96,61 +78,24 @@ class FashionEffectService(
         RLog.e("FashionEffectResponse: finalImageLinks >>$isLoaded  : ", imageUrl)
         ImageLoaderWithRetries(context).loadImage(imageUrl, object : OnImageLoadedListener2 {
             override fun onImageLoaded(bitmap: Bitmap?, keyValue: String?, position: Int) {
-                FireStoreImageUploader.getInstance(context).deleteImage(image2ImageRequest.init_image)
+                FireStoreImageUploader.getInstance(context)
+                    .deleteImage(image2ImageRequest.init_image)
                 callback.onSuccess(bitmap, keyValue)
             }
 
             override fun onErrorLoaded(url: String?, position: Int) {
-                FireStoreImageUploader.getInstance(context).deleteImage(image2ImageRequest.init_image)
+                FireStoreImageUploader.getInstance(context)
+                    .deleteImage(image2ImageRequest.init_image)
                 callback.onError(Exception("Failed to load image"))
             }
         })
     }
 
-    private suspend fun logAndCallbackError(exception: Exception, callback: ImageEffectCallback) {
+    private fun logAndCallbackError(exception: Exception, callback: ImageEffectCallback) {
         RLog.e("Error applying effect: ", exception.message)
         callback.onError(exception)
     }
 
-    fun applyEffect_backup(bitmap: Bitmap, callback: ImageEffectCallback) {
-        if (bitmap == null) {
-            callback.onError(Exception("Bitmap is null"))
-            return
-        }
-        callback.onStartProcess()
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val imageBase64 = ImageLoader.getInstance().getBitmapAsBase64(bitmap)
-                val imageUploadRequest = ImageUploadRequest(imageBase64, apiKey)
-                Log.d("imageUploadRequest:", imageUploadRequest.toString())
-                val uploadResponse = apiService.applyImgUpload(imageUploadRequest)
-                RLog.d("uploadResponse:", uploadResponse.body())
-                if (uploadResponse.isSuccessful && uploadResponse.body() != null) {
-                    val uploadResponseBody = uploadResponse.body()!!
-                    val imageLink = uploadResponseBody.link
-                    if (imageLink.isNotEmpty()) {
-                        RLog.d("ImageLink:", imageLink)
-                        image2ImageRequest.init_image = imageLink
-                        Log.d("imageProcessRequest:", image2ImageRequest.toString())
-                        val response = apiService.applyFashionEffect(image2ImageRequest)
-                        Log.d("imageProcessResponse:", response.body().toString())
-                        // Handle response
-                        handleResponse(response, callback)
-                    } else {
-                        callback.onError(Exception("Image processing failed: ${uploadResponse.message()}"))
-                    }
-                } else {
-                    callback.onError(Exception("Image processing failed: ${uploadResponse.message()}"))
-                }
-                //TODO: Implement the logic to apply the image-to-image effect
-
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    logAndCallbackError(e, callback)
-                }
-            }
-        }
-    }
 
     override fun applyEffect(bitmap: Bitmap, callback: ImageEffectCallback) {
         if (bitmap == null) {
@@ -166,9 +111,9 @@ class FashionEffectService(
                         try {
                             if (imageLink.isNotEmpty()) {
                                 RLog.d("ImageLink:", imageLink)
-                                image2ImageRequest.init_image = imageLink
+                                image2ImageRequest = AvatarEffectRequest(prompt, imageLink, apiKey)
                                 Log.d("imageProcessRequest:", image2ImageRequest.toString())
-                                val response = apiService.applyFashionEffect(image2ImageRequest)
+                                val response = apiService.applyAvatarEffect(image2ImageRequest)
                                 Log.d("imageProcessResponse:", response.body().toString())
                                 // Handle response
                                 handleResponse(response, callback)

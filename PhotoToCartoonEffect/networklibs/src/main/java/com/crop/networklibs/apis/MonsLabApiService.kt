@@ -40,6 +40,7 @@ public interface MonsterApiService {
         @Part("prompt") prompt: RequestBody,
         @Part image: MultipartBody.Part
     ): Response<MonsEffectResponse>
+
     @Multipart
     @POST("generate/pix2pix")
     suspend fun generateImagepix2pix(
@@ -48,6 +49,16 @@ public interface MonsterApiService {
         @Part("prompt") prompt: RequestBody,
         @Part image: MultipartBody.Part
     ): Response<MonsEffectResponse>
+
+    @Multipart
+    @POST("generate/photo-maker")
+    suspend fun generateImagePhotoMaker(
+        @Header("accept") accept: String = "application/json",
+        @Header("authorization") authorization: String,
+        @Part("prompt") prompt: RequestBody,
+        @Part image: MultipartBody.Part
+    ): Response<MonsEffectResponse>
+
     @GET("status/{processId}")
     suspend fun getImageProcessingStatus(
         @Path("processId") processId: String,

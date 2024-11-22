@@ -110,7 +110,12 @@ public class RLog {
     }
 
     public static void e(String tag, Object... objects) {
-        printLog(E, tag, objects);
+        if (objects != null && objects.length > 0) {
+            printLog(E, tag, objects);
+        } else {
+            printLog(E, tag, tag);
+        }
+//        printLog(E, tag, objects);
     }
 
     public static void a() {
@@ -231,7 +236,7 @@ public class RLog {
         String msg = (objects == null) ? NULL_TIPS : getObjectsString(objects);
         String headString = "[ (" + className + ":" + lineNumber + ")#" + methodNameShort + " ] ";
 
-        return new String[]{"<=Flog=>"+tag, msg, headString};
+        return new String[]{"<=Flog=>" + tag, msg, headString};
     }
 
     private static String getObjectsString(Object... objects) {
@@ -253,8 +258,6 @@ public class RLog {
             return object == null ? NULL : object.toString();
         }
     }
-
-
 
 
 }

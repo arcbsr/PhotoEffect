@@ -11,8 +11,8 @@
         android:layout_height="@dimen/bnr_size"
         android:layout_margin="5dp"
         app:cardCornerRadius="10dp"
-        app:cardElevation="5dp"
-        app:cardMaxElevation="5dp"
+        app:cardElevation="2dp"
+        app:cardMaxElevation="2dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="false">
 
@@ -64,9 +64,10 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="30dp"
+                    android:textSize="10sp"
                     android:background="@drawable/button_selector"
-                    android:backgroundTint="@color/gradient_start_purple"
+                    android:backgroundTint="@color/card_prnt"
                     android:padding="5dp"
                     android:text="Try Now"
                     android:textAllCaps="false" />

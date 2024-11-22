@@ -4,6 +4,7 @@
     android:layout_height="?attr/actionBarSize">
 
     <RelativeLayout
+        android:background="@color/semi_white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -23,7 +24,7 @@
             android:layout_marginRight="10dp"
             android:background="@null"
             android:drawableRight="@drawable/ic_menu_close"
-            android:text="close"
+            android:text="   "
             android:textColor="@color/title" />
 
 

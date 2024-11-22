@@ -1,5 +1,6 @@
 package com.crop.networklibs.apis
 
+import com.crop.modellbs.avatar.AvatarEffectRequest
 import com.crop.modellbs.fashion.FashionEffectRequest
 import com.crop.modellbs.imgtoimg.Image2ImageRequest
 import com.crop.modellbs.removebg.ImageFetchRequest
@@ -29,6 +30,9 @@ data class UploadResponse(
 interface ModelsLabApiService {
     @POST("v6/image_editing/fashion")
     suspend fun applyFashionEffect(@Body request: FashionEffectRequest): Response<EffectResponse>
+
+    @POST("v6/image_editing/avatar_gen")
+    suspend fun applyAvatarEffect(@Body request: AvatarEffectRequest): Response<EffectResponse>
 
     @POST("v6/realtime/img2img")
     suspend fun applyimg2imgEffect(@Body request: Image2ImageRequest): Response<EffectResponse>

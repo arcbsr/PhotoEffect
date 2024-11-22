@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.crop.networklibs.apis.MonsApiClient
 import com.crop.networklibs.apis.MonsterApiService
+import com.crop.phototocartooneffect.enums.EditingCategories
 import com.crop.phototocartooneffect.imageloader.ImageLoader
 import com.crop.phototocartooneffect.renderengins.ImageEffect
 import com.crop.phototocartooneffect.renderengins.apis.OnImageLoadedListener2
@@ -17,13 +18,16 @@ import java.io.File
 import java.io.FileOutputStream
 
 class MonsterApiClient(
-    tokenText: String, private val context: Context, promptText: String
+    tokenText: String,
+    private val context: Context,
+    promptText: String,
+    imageCreationType: EditingCategories.ImageCreationType
 ) : ImageEffect {
 
     private val apiService: MonsterApiService = MonsApiClient.monsLabApiService
     private val token = "Bearer $tokenText"
     private val prompt = RequestBody.create("text/plain".toMediaTypeOrNull(), promptText)
-
+    private val imageCreationType = imageCreationType
     lateinit var job: Job
 
     companion object {
@@ -34,9 +38,11 @@ class MonsterApiClient(
     }
 
     override fun applyEffect(bitmap: Bitmap, callback: ImageEffect.ImageEffectCallback) {
+
         callback.onStartProcess()
         job = CoroutineScope(Dispatchers.IO).launch {
-            try {
+//            try {
+                RLog.e("FashionEffectResponse", "applyEffect: ")
                 val response = generateImage(bitmap)
                 val processId = response.body()?.process_id.orEmpty()
 
@@ -48,9 +54,10 @@ class MonsterApiClient(
                 delay(INITIAL_DELAY)
                 pollImageProcessingStatus(processId, callback)
 
-            } catch (e: Exception) {
-                reportError(e, callback)
-            }
+//            } catch (e: Exception) {
+//                reportError(e, callback)
+//                RLog.e("FashionEffectResponse", "Exception: ${e.message}")
+//            }
         }
     }
 
@@ -62,13 +69,32 @@ class MonsterApiClient(
     }
 
     private suspend fun generateImage(bitmap: Bitmap): Response<MonsterApiService.MonsEffectResponse> {
+        RLog.e("imageCreationType"," generateImage")
         val tempFile = createTempFile(bitmap)
+        RLog.e("imageCreationType"," generateImage done")
         val imagePart = MultipartBody.Part.createFormData(
             "init_image_url",
             tempFile.name,
             RequestBody.create(MEDIA_TYPE_IMAGE.toMediaTypeOrNull(), tempFile)
         )
-        return apiService.generateImage("application/json", token, prompt, imagePart)
+        RLog.e("imageCreationType:"," ${imageCreationType.name}")
+        return when (imageCreationType) {
+            EditingCategories.ImageCreationType.MONSTER_AI_IMG_TO_IMG -> {
+                apiService.generateImage("application/json", token, prompt, imagePart)
+            }
+
+            EditingCategories.ImageCreationType.MONSTER_AI_PIX_TO_PIX -> {
+                apiService.generateImagepix2pix("application/json", token, prompt, imagePart)
+            }
+
+            EditingCategories.ImageCreationType.MONSTER_AI_PHOTO_MAKER -> {
+                apiService.generateImagePhotoMaker("application/json", token, prompt, imagePart)
+            }
+
+            else -> {
+                apiService.generateImage("application/json", token, prompt, imagePart)
+            }
+        }
     }
 
     private suspend fun pollImageProcessingStatus(

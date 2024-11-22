@@ -17,6 +17,7 @@ import com.crop.phototocartooneffect.models.MenuItem;
 import com.crop.phototocartooneffect.repositories.AppResources;
 import com.crop.phototocartooneffect.utils.AppSettings;
 import com.crop.phototocartooneffect.utils.RLog;
+import com.crop.phototocartooneffect.utils.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +84,7 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
 
         // Set the width to fit columns and apply a varying height for staggered effect
         ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
-        layoutParams.width = itemWidth;
+        layoutParams.width = itemWidth - ScreenUtils.getDevicePixelWidth(20);
 //        layoutParams.height = 600; // Random or dynamic height to create staggered effect
         layoutParams.height = (int) (itemWidth * (4.0 / 3.0));
         holder.itemView.setLayoutParams(layoutParams);
@@ -147,7 +148,8 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
                 itemView.findViewById(R.id.include_view11).setVisibility(View.VISIBLE);
 
 //                thumbImageView.setImageResource(items.get(0).getThumbResId());
-                Glide.with(context).load(items.get(0).imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER_ERROR).into(thumbImageView);
+                Glide.with(context).load(items.get(0).imageUrl == null ? items.get(0).getThumbResId() : items.get(0).imageUrl
+                ).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER).into(thumbImageView);
             } else {
                 itemView.findViewById(R.id.include_view11).setVisibility(View.GONE);
             }
@@ -157,7 +159,7 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
                 }
                 itemView.findViewById(R.id.include_view12).setVisibility(View.VISIBLE);
 //                thumbImageView2.setImageResource(items.get(1).getThumbResId());
-                Glide.with(context).load(items.get(1).imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER_ERROR).into(thumbImageView2);
+                Glide.with(context).load(items.get(1).imageUrl == null ? items.get(1).getThumbResId() : items.get(1).imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER).into(thumbImageView2);
             } else {
                 itemView.findViewById(R.id.include_view12).setVisibility(View.GONE);
             }
@@ -168,7 +170,7 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
                 itemView.findViewById(R.id.include_view21).setVisibility(View.VISIBLE);
 //                thumbImageView3.setImageResource(items.get(2).getThumbResId());
 
-                Glide.with(context).load(items.get(2).imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER_ERROR).into(thumbImageView3);
+                Glide.with(context).load(items.get(2).imageUrl == null ? items.get(2).getThumbResId() : items.get(2).imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER).into(thumbImageView3);
             } else {
                 itemView.findViewById(R.id.include_view21).setVisibility(View.GONE);
             }
@@ -179,7 +181,7 @@ public class ItemAdapterFull extends RecyclerView.Adapter<ItemAdapterFull.ViewHo
                 itemView.findViewById(R.id.include_view22).setVisibility(View.VISIBLE);
 //                thumbImageView4.setImageResource(items.get(3).getThumbResId());
 
-                Glide.with(context).load(items.get(3).imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER_ERROR).into(thumbImageView4);
+                Glide.with(context).load(items.get(3).imageUrl == null ? items.get(3).getThumbResId() : items.get(3).imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER).into(thumbImageView4);
             } else {
                 itemView.findViewById(R.id.include_view22).setVisibility(View.GONE);
             }

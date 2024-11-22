@@ -1,160 +1,173 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/background_gradient">
 
+    <!-- NestedScrollView for content -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/root_view"
-        android:layout_margin="5dp"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="visible"
+        android:layout_margin="8dp"
+        android:elevation="4dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <RelativeLayout
+        <!-- Content layout -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="2dp">
 
+            <!-- Main Banner -->
             <include
                 android:id="@+id/main_banner"
                 layout="@layout/layout_item_banner" />
 
-            <RelativeLayout
+            <!-- Section 1 -->
+            <LinearLayout
+                android:id="@+id/title_view_root"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/main_banner"
-                android:visibility="visible">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="6dp"
+                android:padding="8dp"
+                android:background="@drawable/bg_card_rounded">
 
-                <RelativeLayout
-                    android:id="@+id/title_view_root"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/title_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/featured_ai"
-                        android:textColor="@color/title"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/show_all_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@id/title_text"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="16dp"
-                        android:clickable="true"
-                        android:drawableRight="@drawable/right_arrow"
-                        android:drawableTint="@color/title"
-                        android:gravity="center"
-                        android:text="See All"
-                        android:textColor="@color/title"
-                        android:textSize="16sp" />
-
-                </RelativeLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView_top"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/title_text"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/title_view_root"
-                    android:layout_marginTop="8dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                    android:layout_weight="1"
+                    android:text="@string/featured_ai"
+                    android:textColor="@color/title"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-                <RelativeLayout
-                    android:id="@+id/title_view_root2"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/show_all_text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/recyclerView_top">
+                    android:drawableRight="@drawable/right_arrow"
+                    android:drawablePadding="8dp"
+                    android:gravity="center"
+                    android:text="See All"
+                    android:textColor="@color/title"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/title_text2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/featured_ai"
-                        android:textColor="@color/title"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+            <!-- Section 2 -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_bottom_card_rounded"
+                android:clipToPadding="false"
+                android:paddingTop="1dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                    <TextView
-                        android:id="@+id/show_all_text2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@id/title_text2"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="16dp"
-                        android:clickable="true"
-                        android:drawableRight="@drawable/right_arrow"
-                        android:drawableTint="@color/title"
-                        android:gravity="center"
-                        android:text="See All"
-                        android:textColor="@color/title"
-                        android:textSize="16sp" />
+            <LinearLayout
+                android:id="@+id/title_view_root2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="6dp"
+                android:padding="8dp"
+                android:background="@drawable/bg_card_rounded">
 
-                </RelativeLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView_2"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/title_text2"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/title_view_root2"
-                    android:layout_marginTop="8dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                    android:layout_weight="1"
+                    android:text="@string/user_create"
+                    android:textColor="@color/title"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/show_all_text2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/right_arrow"
+                    android:drawablePadding="8dp"
+                    android:gravity="center"
+                    android:text="See All"
+                    android:textColor="@color/title"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="1dp"
+                android:background="@drawable/bg_bottom_card_rounded"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <!-- Section 2 -->
+            <LinearLayout
+                android:id="@+id/title_view_root3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="6dp"
+                android:padding="8dp"
+                android:background="@drawable/bg_card_rounded">
 
                 <TextView
                     android:id="@+id/title_text3"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/recyclerView_2"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_weight="1"
                     android:text="@string/user_create"
                     android:textColor="@color/title"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
+            </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView_3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/title_text3"
-                    android:layout_marginTop="8dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-            </RelativeLayout>
-        </RelativeLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:background="@drawable/bg_bottom_card_rounded"
+                android:id="@+id/recyclerView_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="1dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <!-- Demo View -->
     <RelativeLayout
-         android:id="@+id/demo_view"
+        android:id="@+id/demo_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/card_prnt"
+        android:elevation="8dp">
 
         <Button
             android:id="@+id/gallery_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
-            android:padding="20dp"
+            android:background="@drawable/button_selector"
+            android:padding="16dp"
             android:text="Open Gallery"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
-
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,6 +24,7 @@ public class ShowAllBottomFragment extends BaseBottomFragment {
 
     private List<MenuItem> menuItems = new ArrayList<>();
     EditingCategories.AITypeFirebaseEDB aiTypeFirebaseEDB;
+
     public void setListener(ItemAdapter.OnItemClickListener listener) {
         this.listener = listener;
     }
@@ -53,6 +54,10 @@ public class ShowAllBottomFragment extends BaseBottomFragment {
     }
 
     private void init(View view) {
+        if (AppResources.getInstance().getItems(aiTypeFirebaseEDB).size() == 0) {
+            dismiss();
+            return;
+        }
         view.findViewById(R.id.closeIcon).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

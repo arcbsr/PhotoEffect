@@ -22,6 +22,7 @@ import java.util.Map;
 public class FireStoreImageUploader {
 
     private static final String STORAGE_NAME = "aiimages";
+    private static final String PROMPTS_DB_NAME = "prompts";
     private static final String TAG = "ImageUploader";
     private FirebaseStorage storage;
     private FirebaseFirestore db;
@@ -225,7 +226,27 @@ public class FireStoreImageUploader {
             callback.onError("Error retrieving images: " + e.getMessage());
         });
     }
+    public void getAllPrompts(GetAllImagesCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        db.collection(PROMPTS_DB_NAME).get().addOnSuccessListener(queryDocumentSnapshots -> {
+            if (!queryDocumentSnapshots.isEmpty()) {
+                List<Map<String, Object>> imagesList = new ArrayList<>();
+                for (DocumentSnapshot document : queryDocumentSnapshots) {
+
+                    Map<String, Object> imageData = document.getData();
+                    imageData.put("documentId", document.getId());
+                    imagesList.add(imageData);
+                }
+                RLog.e(TAG, "Prompts retrieved successfully");
+                callback.onSuccess(imagesList);
+            } else {
+                callback.onError("No images found.");
+            }
+        }).addOnFailureListener(e -> {
+            callback.onError("Prompts retrieving images: " + e.getMessage());
+        });
+    }
     public void deleteDataFromFireStore(String documentId, String ImageUrl, ImageDeleteCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(STORAGE_NAME).document(documentId).delete().addOnSuccessListener(aVoid -> {

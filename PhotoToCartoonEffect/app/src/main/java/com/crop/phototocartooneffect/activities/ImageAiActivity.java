@@ -1,7 +1,6 @@
 package com.crop.phototocartooneffect.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -41,6 +40,7 @@ import com.crop.phototocartooneffect.photoediting.EditImageActivity;
 import com.crop.phototocartooneffect.renderengins.ImageEffect;
 import com.crop.phototocartooneffect.renderengins.apis.fashion.FashionEffectService;
 import com.crop.phototocartooneffect.renderengins.apis.imgtoimage.ImageToImageService;
+import com.crop.phototocartooneffect.renderengins.apis.imgupload.AvatarEffectService;
 import com.crop.phototocartooneffect.renderengins.apis.imgupload.ImageRemoveBgService;
 import com.crop.phototocartooneffect.renderengins.apis.monster.MonsterApiClient;
 import com.crop.phototocartooneffect.renderengins.effects.BackgroundRemoveFML;
@@ -105,18 +105,28 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
 
     @Override
     public void onItemClick(MenuItem item) {
+        if (item.documentId == null) {
+            Toast.makeText(this, "It's a demo data", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (isAdminDeleteMode) {
-            FireStoreImageUploader.getInstance(this).deleteDataFromFireStore(item.documentId, item.imageUrl, new FireStoreImageUploader.ImageDeleteCallback() {
-                @Override
-                public void onSuccess() {
-                    Toast.makeText(ImageAiActivity.this, "Image Deleted Successfully", Toast.LENGTH_SHORT).show();
-                }
+            new AlertDialog.Builder(ImageAiActivity.this, R.style.CustomAlertDialogTheme).
+                    setTitle("Want to delete").setMessage("Are you sure!!!").setPositiveButton("Delete", (dialog, which) -> {
+                        FireStoreImageUploader.getInstance(this).deleteDataFromFireStore(item.documentId, item.imageUrl, new FireStoreImageUploader.ImageDeleteCallback() {
+                            @Override
+                            public void onSuccess() {
+                                Toast.makeText(ImageAiActivity.this, "Image Deleted Successfully", Toast.LENGTH_SHORT).show();
+                            }
 
-                @Override
-                public void onFailure(String errorMessage) {
-                    Toast.makeText(ImageAiActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-                }
-            });
+                            @Override
+                            public void onFailure(String errorMessage) {
+                                Toast.makeText(ImageAiActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    }).setNegativeButton("Cancel", (dialog, which) -> {
+                    }).show();
+
             return;
         }
         selectedRenderItem = item;
@@ -164,12 +174,20 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
 
         findViewById(R.id.addnew_item).setVisibility(View.GONE);
         findViewById(R.id.delete_item).setVisibility(View.GONE);
+        findViewById(R.id.refreshButton).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.delete_item)).setTextColor(Color.WHITE);
         isAdminDeleteMode = false;
         uploadAsAdmin = false;
         if (AppSettings.IS_ADMIN_MODE) {
             findViewById(R.id.addnew_item).setVisibility(View.VISIBLE);
             findViewById(R.id.delete_item).setVisibility(View.VISIBLE);
+            findViewById(R.id.refreshButton).setVisibility(View.VISIBLE);
+
+            findViewById(R.id.refreshButton).setOnClickListener(v -> {
+                ImageLoader.getInstance().clearAllCache(ImageAiActivity.this);
+                startActivity(new Intent(ImageAiActivity.this, MainActivity.class));
+                finish();
+            });
             findViewById(R.id.delete_item).setOnClickListener(v -> {
                 if (isAdminDeleteMode) {
                     isAdminDeleteMode = false;
@@ -179,19 +197,15 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                     ((TextView) findViewById(R.id.delete_item)).setTextColor(Color.RED);
                 }
             });
-            findViewById(R.id.addnew_item).setOnClickListener(v -> new AlertDialog.Builder(ImageAiActivity.this, R.style.CustomAlertDialogTheme).setTitle("Admin Mode").setMessage("How do you want to add new item?").setPositiveButton("URL", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    AdminFragmentDialog adminFragment = AdminFragmentDialog.newInstance(selectedRenderItem, null, null);
-//                            adminFragment.show(getSupportFragmentManager(), "AdminFragmentDialog");
-                    showImageInFragment(adminFragment);
-                }
-            }).setNegativeButton("Gallery", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    uploadAsAdmin = true;
-                    openImagePicker(pickSource);
-                }
-            }).show());
+            findViewById(R.id.addnew_item).setOnClickListener(v -> new AlertDialog.Builder(ImageAiActivity.this, R.style.CustomAlertDialogTheme).
+                    setTitle("Admin Mode").setMessage("How do you want to add new item?").setPositiveButton("URL", (dialog, which) -> {
+                        AdminFragmentDialog adminFragment = AdminFragmentDialog.newInstance(selectedRenderItem, null, null);
+                        //                            adminFragment.show(getSupportFragmentManager(), "AdminFragmentDialog");
+                        showImageInFragment(adminFragment);
+                    }).setNegativeButton("Gallery", (dialog, which) -> {
+                        uploadAsAdmin = true;
+                        openImagePicker(pickSource);
+                    }).show());
         }
     }
 
@@ -208,11 +222,6 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
         findViewById(R.id.subscribeButton).setOnClickListener(view -> {
             SubscriptionFragment fragment = new SubscriptionFragment();
             fragment.show(getSupportFragmentManager(), "SubscriptionFragment");
-        });
-        findViewById(R.id.refreshButton).setOnClickListener(v -> {
-            ImageLoader.getInstance().clearAllCache(ImageAiActivity.this);
-            startActivity(new Intent(ImageAiActivity.this, ImageAiActivity.class));
-            finish();
         });
         findViewById(R.id.newButton).setOnClickListener(v -> {
             openImagePicker(pickSource);
@@ -233,7 +242,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                         @Override
                         public void onClick(View v) {
                             ImageLoader.getInstance().loadBitmap(ImageAiActivity.this, result.getData().getData(), -1, (bitmap, keyValue, position) -> {
-                                selectedRenderItem = new MenuItem(0, "Monster", "Monster", 0, EditingCategories.ImageCreationType.MONSTER_AI, "");
+                                selectedRenderItem = new MenuItem(0, "Monster", "Monster", 0, EditingCategories.ImageCreationType.MONSTER_AI_IMG_TO_IMG, "");
                                 loadImage(result.getData().getData(), 0);
                             }, true);
                         }
@@ -301,8 +310,15 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
             case MLB_BACKGROUND_REMOVE:
                 imageEffect = new ImageRemoveBgService(API_KEY, context);
                 break;
-            case MONSTER_AI:
-                imageEffect = new MonsterApiClient(MONSTER_TOKEN, context, selectedRenderItem.prompt);
+            case MLB_AI_AVATAR:
+                imageEffect = new AvatarEffectService(selectedRenderItem.prompt,
+                        API_KEY, context);
+                break;
+            case MONSTER_AI_IMG_TO_IMG:
+            case MONSTER_AI_PIX_TO_PIX:
+            case MONSTER_AI_PHOTO_MAKER:
+                imageEffect = new MonsterApiClient(MONSTER_TOKEN, context, selectedRenderItem.prompt, selectedRenderItem.getImageCreationType());
+                RLog.d("MonsterApiClient", "MonsterApiClient" + selectedRenderItem.prompt + ">>" + selectedRenderItem.getImageCreationType().getValue());
                 break;
             default:
                 imageEffect = new BackgroundRemoveFML();

@@ -139,9 +139,13 @@ public class ImageLoader {
     }
 
     public void loadBitmap(Context context, String url, String key2, OnImageLoadedListener listener) {
+        loadBitmap(context, url, key2, listener, false);
+    }
+
+    public void loadBitmap(Context context, String url, String key2, OnImageLoadedListener listener, boolean clearCache) {
         Bitmap cachedBitmap = bitmapCache.getBitmapFromCache(key2);
 
-        if (cachedBitmap != null) {
+        if (cachedBitmap != null && !clearCache) {
             listener.onImageLoaded(cachedBitmap, key2, 0);
         } else {
             Glide.with(context).asBitmap().load(url).into(new com.bumptech.glide.request.target.SimpleTarget<Bitmap>() {

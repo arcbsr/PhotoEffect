@@ -3,6 +3,7 @@ package com.crop.phototocartooneffect.dialogfragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,8 +22,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
 
 import com.crop.phototocartooneffect.R;
+import com.crop.phototocartooneffect.activities.FullscreenImageActivity;
 import com.crop.phototocartooneffect.activities.ImageAiActivity;
 import com.crop.phototocartooneffect.firabsehelper.FireStoreImageUploader;
 import com.crop.phototocartooneffect.enums.EditingCategories;
@@ -31,9 +34,12 @@ import com.crop.phototocartooneffect.fragments.ImageAiFragment;
 import com.crop.phototocartooneffect.imageloader.ImageLoader;
 import com.crop.phototocartooneffect.models.MenuItem;
 import com.crop.phototocartooneffect.renderengins.ImageEffect;
+import com.crop.phototocartooneffect.repositories.AppResources;
 import com.crop.phototocartooneffect.utils.AppSettings;
 import com.crop.phototocartooneffect.utils.RLog;
 import com.crop.phototocartooneffect.utils.ScreenUtils;
+
+import java.util.ArrayList;
 
 public class AdminFragmentDialog extends BaseFragmentInterface {
 
@@ -49,8 +55,7 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
         AdminFragmentDialog fragment = new AdminFragmentDialog();
         fragment.selectedBitmapUri = selectedBitmap;
         fragment.selectedRenderItem = selectedRenderItem;
-        if (bitmap != null) fragment.bitmap = ScreenUtils.createScaledBitmap(bitmap, 400);
-        ;
+        if (bitmap != null) fragment.bitmap = bitmap;//ScreenUtils.createScaledBitmap(bitmap, 400);
         return fragment;
     }
 
@@ -128,7 +133,29 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
 
             }
         });
+        view.findViewById(R.id.previewImageView_generated).setOnClickListener(v -> {
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((ImageView) view.findViewById(R.id.previewImageView_generated)), "imageTransition");
+            Intent intent = new Intent(getContext(), FullscreenImageActivity.class);
+            intent.putExtra(FullscreenImageActivity.IMAGE_LOADER_KEY, generateBitmapKey); // Pass the image resource ID
+            startActivity(intent, options.toBundle());
+        });
+
+        view.findViewById(R.id.previewImageView).setOnClickListener(v -> {
+            ImageLoader.getInstance().loadBitmap("adminimage", bitmap);
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((ImageView) view.findViewById(R.id.previewImageView)), "imageTransition");
+            Intent intent = new Intent(getContext(), FullscreenImageActivity.class);
+            intent.putExtra(FullscreenImageActivity.IMAGE_LOADER_KEY, "adminimage"); // Pass the image resource ID
+            startActivity(intent, options.toBundle());
+        });
         view.findViewById(R.id.prepareButton).setOnClickListener(v -> {
+            String prompt = ((EditText) view.findViewById(R.id.promptEditText)).getText().toString();
+
+            if (prompt.isEmpty()) {
+//                    ((EditText) view.findViewById(R.id.promptEditText)).setError("Prompt is required");
+//                    return;
+                prompt = "";
+            }
+            selectedRenderItem.prompt = prompt;
             ImageLoader.getInstance().loadBitmap("adminimage", bitmap);
             ImageAiActivity.createImageEffect(selectedRenderItem, "adminimage", getContext(), new ImageEffect.ImageEffectCallback() {
                 @Override
@@ -136,10 +163,8 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
                     new Handler(Looper.getMainLooper()).post(() -> {
                         onFinished();
                         if (result != null) {
-                            int width = 400;
-//                            int height = (int) (result.getHeight() * (400.0 / result.getWidth()));
-//                            bitmap = Bitmap.createScaledBitmap(result, width, height, true);
-                            bitmap = ScreenUtils.createScaledBitmap(result, width);
+                            generateBitmapKey = key;
+                            bitmap = result;
                             ((ImageView) view.findViewById(R.id.previewImageView_generated)).setImageBitmap(bitmap);
                         } else {
                             Toast.makeText(getContext(), "Error NULL", Toast.LENGTH_SHORT).show();
@@ -150,18 +175,19 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
                 @Override
                 public void onError(Exception e) {
                     new Handler(Looper.getMainLooper()).post(() -> {
+                        onFinished();
                         Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                     });
                 }
 
                 @Override
                 public void onStartProcess() {
-
+                    view.findViewById(R.id.animationView).setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onFinished() {
-
+                    view.findViewById(R.id.animationView).setVisibility(View.GONE);
                 }
             });
         });
@@ -175,6 +201,7 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
 //                    return;
                     prompt = "";
                 }
+                view.findViewById(R.id.animationView).setVisibility(View.VISIBLE);
 //                FireStoreImageUploader.getInstance(this).uploadImage(uri, "featured",
 //                "Transform the image into a cartoon object, maintaining the original colors and textures. "
 //                + "The result should resemble a recognizable snack item (e.g., potato chip, cookie, or candy)"
@@ -191,11 +218,13 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
                         RLog.e("aiType", aiType);
                         RLog.e("creationtype", creationType);
                         RLog.e("prompt", finalPrompt);
+                        view.findViewById(R.id.animationView).setVisibility(View.GONE);
                         Toast.makeText(getContext(), "Successfully uploaded image to Firestore: " + url, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(String errorMessage) {
+                        view.findViewById(R.id.animationView).setVisibility(View.GONE);
                         Toast.makeText(getContext(), "Failed to upload image to Firestore: " + errorMessage, Toast.LENGTH_SHORT).show();
                         RLog.e("FireStoreImageUploader", errorMessage);
                     }
@@ -224,16 +253,38 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
             EditText imageUrl = view.findViewById(R.id.txt_image_Url);
             String url = imageUrl.getText().toString().trim();
             if (!url.isEmpty()) {
-                ImageLoader.getInstance().loadBitmap(getContext(), url, "admin_url", new ImageLoader.OnImageLoadedListener() {
-                    @Override
-                    public void onImageLoaded(Bitmap bitmap2, String keyValue, int position) {
-                        int width = 400;
-//                        int height = (int) (bitmap2.getHeight() * (400.0 / bitmap2.getWidth()));
-//                        bitmap = Bitmap.createScaledBitmap(bitmap2, width, height, true);
-                        bitmap = ScreenUtils.createScaledBitmap(bitmap2, width);
-                        ((ImageView) view.findViewById(R.id.previewImageView)).setImageBitmap(bitmap);
-                    }
-                });
+                ImageLoader.getInstance().loadBitmap(getContext(), url, "admin_url", (bitmap2, keyValue, position) -> {
+                    bitmap = bitmap2;
+                    ((ImageView) view.findViewById(R.id.previewImageView)).setImageBitmap(bitmap);
+                }, true);
+            }
+        });
+
+        AppResources.getInstance().getAllPromptsItems(getContext(), new AppResources.OnAppResourcesUpdatedListener() {
+            @Override
+            public void onFeaturedItemsUpdated() {
+                setupPrompts(view, AppResources.getInstance().getAllPrompts());
+            }
+        });
+    }
+
+    private String generateBitmapKey;
+
+    private void setupPrompts(View view, ArrayList<String> allPrompts) {
+
+        Spinner spinner2 = view.findViewById(R.id.promptsTypeSpinner);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, allPrompts);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner2.setAdapter(adapter2);
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View v, int i, long l) {
+                ((EditText) view.findViewById(R.id.promptEditText)).setText(allPrompts.get(i));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
     }

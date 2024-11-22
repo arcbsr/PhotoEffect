@@ -69,6 +69,26 @@ public class AppResources {
         });
     }
 
+    public void getAllPromptsItems(Context context, OnAppResourcesUpdatedListener listener) {
+        this.allItems.clear();
+        FireStoreImageUploader.getInstance(context).getAllPrompts(new FireStoreImageUploader.GetAllImagesCallback() {
+            @Override
+            public void onSuccess(List<Map<String, Object>> imagesList) {
+                allPrompts.clear();
+                allPrompts.add(0, "");
+                for (Map<String, Object> image : imagesList) {
+                    final String prompt = image.get("prompt") != null ? image.get("prompt").toString() : "";
+                    allPrompts.add(prompt);
+                }
+                listener.onFeaturedItemsUpdated();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                listener.onFeaturedItemsUpdated();
+            }
+        });
+    }
 
     public List<MenuItem> getItems(EditingCategories.AITypeFirebaseEDB aiType) {
         if (!allItems.containsKey(aiType.getValue())) {
@@ -77,19 +97,39 @@ public class AppResources {
         if (allItems.get(aiType.getValue()).size() == 0) {
             ArrayList<MenuItem> items = new ArrayList<>();
             if (aiType == EditingCategories.AITypeFirebaseEDB.USERCREATIONS) {
-                items.add(AppSettings.DEFAULT_ITEM);
-                items.add(AppSettings.DEFAULT_ITEM);
-                items.add(AppSettings.DEFAULT_ITEM);
-                items.add(AppSettings.DEFAULT_ITEM);
+                items.add(AppSettings.getRandomItem());
+                items.add(AppSettings.getRandomItem());
+                items.add(AppSettings.getRandomItem());
+                items.add(AppSettings.getRandomItem());
             } else if (aiType == EditingCategories.AITypeFirebaseEDB.USERCREATIONS_BANNER) {
-                items.add(AppSettings.DEFAULT_ITEM);
+//                items.add(AppSettings.DEFAULT_ITEM);
             } else {
-                items.add(AppSettings.DEFAULT_ITEM);
+                items.add(AppSettings.getRandomItem());
             }
             return items;
-        } else {
-            return allItems.get(aiType.getValue());
         }
+
+        if (aiType == EditingCategories.AITypeFirebaseEDB.USERCREATIONS) {
+            int remainder = allItems.get(aiType.getValue()).size() % 4;
+            if (remainder != 0) {
+                for (int i = 0; i < 4 - remainder; i++) {
+                    allItems.get(aiType.getValue()).add(AppSettings.getRandomItem());
+                }
+            }
+            int divider = allItems.get(aiType.getValue()).size() / 4;
+            if (!allItems.containsKey(EditingCategories.AITypeFirebaseEDB.USERCREATIONS_BANNER.getValue())) {
+                allItems.put(EditingCategories.AITypeFirebaseEDB.USERCREATIONS_BANNER.getValue(), new ArrayList<>());
+            }
+            int diffForBanner = divider - (!allItems.containsKey(EditingCategories.AITypeFirebaseEDB.USERCREATIONS_BANNER.getValue()) ? 0 :
+                    allItems.get(EditingCategories.AITypeFirebaseEDB.USERCREATIONS_BANNER.getValue()).size());
+            if (diffForBanner > 0) {
+                for (int i = 0; i < diffForBanner; i++) {
+                    allItems.get(EditingCategories.AITypeFirebaseEDB.USERCREATIONS_BANNER.getValue()).add(AppSettings.DEFAULT_ITEM);
+                }
+            }
+        }
+        return allItems.get(aiType.getValue());
+
     }
 
     public void setItem(MenuItem dataItem, EditingCategories.AITypeFirebaseEDB aiType) {
@@ -101,6 +141,12 @@ public class AppResources {
     }
 
     HashMap<String, ArrayList<MenuItem>> allItems = new HashMap<>();
+
+    public ArrayList<String> getAllPrompts() {
+        return allPrompts;
+    }
+
+    ArrayList<String> allPrompts = new ArrayList<>();
 
     public interface OnAppResourcesUpdatedListener {
         void onFeaturedItemsUpdated();

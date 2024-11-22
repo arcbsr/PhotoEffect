@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:padding="10dp"
     tools:context=".dialogfragment.MenuFragmentDialog">
 
     <androidx.cardview.widget.CardView
@@ -20,6 +19,7 @@
         app:cardUseCompatPadding="false">
 
         <RelativeLayout
+            android:background="@drawable/background_gradient"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

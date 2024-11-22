@@ -2,7 +2,10 @@ package com.crop.phototocartooneffect.enums;
 
 public class EditingCategories {
     public enum ImageCreationType {
-        FIREBASE_ML_SEGMENTATION("Firebase_ML_Segmentation"), IMAGE_EFFECT_IMG2IMG("MLB_Img2Img"), IMAGE_EFFECT_FASHION("MLB_fashion"), MLB_BACKGROUND_REMOVE("MLB_Background_Remove"), MONSTER_AI("Monster_AI");
+        FIREBASE_ML_SEGMENTATION("Firebase_ML_Segmentation"),
+        MLB_AI_AVATAR("MLB_Avatar"),
+        IMAGE_EFFECT_IMG2IMG("MLB_Img2Img"), IMAGE_EFFECT_FASHION("MLB_fashion"), MLB_BACKGROUND_REMOVE("MLB_Background_Remove"),
+        MONSTER_AI_IMG_TO_IMG("Monster_AI_Img_Img"), MONSTER_AI_PHOTO_MAKER("Monster_AI_Photo_Maker"), MONSTER_AI_PIX_TO_PIX("Monster_AI_Pix_Pix");
 
         private final String value;
 

@@ -81,6 +81,7 @@ public class MainFragment extends Fragment {
         adapter.setData(AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.FEATUREAI));
         recyclerView.setAdapter(adapter);
 
+
         RecyclerView recyclerView2 = view.findViewById(R.id.recyclerView_2);
         ItemAdapter adapter2 = new ItemAdapter(getContext(), listener); // Replace YourAdapter with your actual adapter
         adapter2.setData(AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.FEATUREAI2));
@@ -93,5 +94,14 @@ public class MainFragment extends Fragment {
         view.findViewById(R.id.gallery_button).setOnClickListener(v -> {
             listener.onItemClick(AppSettings.DEFAULT_ITEM);
         });
+        if (AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.FEATUREAI).size() == 0) {
+            view.findViewById(R.id.show_all_text).setVisibility(View.INVISIBLE);
+            view.findViewById(R.id.title_text).setVisibility(View.INVISIBLE);
+        }
+        if (AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.FEATUREAI2).size() == 0) {
+            view.findViewById(R.id.show_all_text2).setVisibility(View.INVISIBLE);
+            view.findViewById(R.id.title_text2).setVisibility(View.INVISIBLE);
+        }
+
     }
 }

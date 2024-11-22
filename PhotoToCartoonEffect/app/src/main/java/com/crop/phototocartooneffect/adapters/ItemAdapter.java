@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.crop.phototocartooneffect.R;
+import com.crop.phototocartooneffect.enums.EditingCategories;
 import com.crop.phototocartooneffect.models.MenuItem;
 import com.crop.phototocartooneffect.utils.AppSettings;
 import com.crop.phototocartooneffect.utils.RLog;
@@ -36,7 +37,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     public void setData(List<MenuItem> menuItems) {
         if (menuItems != null) {
-            this.menuItems = menuItems;
+//            this.menuItems.add(AppSettings.DEFAULT_ITEM);
+//            this.menuItems.get(0).setImageCreationType(EditingCategories.ImageCreationType.MONSTER_AI_IMG_TO_IMG);
+//            this.menuItems.get(0).imageUrl = "https://drive.usercontent.google.com/download?id=1me37mbGzEl4AvZbWSwpiODOCI7Zab3Bm";
+//            this.menuItems.get(0).prompt = "Transform this image into a surreal, dreamlike scene with glowing, vibrant colors.";
+            this.menuItems.addAll(menuItems);
         } else {
             RLog.d("ItemAdapter", "menuItems is null");
         }
@@ -68,7 +73,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
         // Set the width to fit columns and apply a varying height for staggered effect
         ViewGroup.LayoutParams layoutParams = holder.cardView.getLayoutParams();
-        layoutParams.height = (int) (itemWidth * (3.0 / 3.0)); // Set height based on aspect ratio (4:3)
+        layoutParams.height = (int) (itemWidth * (4.0 / 3.0)); // Set height based on aspect ratio (4:3)
         layoutParams.width = itemWidth;
 
         // Get margin value from resources
@@ -110,7 +115,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
         public void bind(final MenuItem item) {
             thumbImageView.setImageResource(item.getThumbResId());
-            Glide.with(context).load(item.imageUrl).placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER_ERROR).into(thumbImageView);
+            Glide.with(context).load(item.imageUrl == null ? item.getThumbResId() : item.imageUrl).
+                    placeholder(AppSettings.IMAGE_PLACE_HOLDER).error(AppSettings.IMAGE_PLACE_HOLDER).into(thumbImageView);
             proView.setVisibility(View.GONE);
             if (item.isPro) {
                 proView.setVisibility(View.VISIBLE);
