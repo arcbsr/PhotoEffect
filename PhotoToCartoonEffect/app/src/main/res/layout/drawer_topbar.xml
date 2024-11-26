@@ -4,12 +4,11 @@
     android:layout_height="?attr/actionBarSize">
 
     <RelativeLayout
-        android:background="@color/semi_white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <View
-            android:layout_width="40dp"
+            android:layout_width="30dp"
             android:layout_height="4dp"
             android:layout_centerInParent="true"
             android:alpha=".2"

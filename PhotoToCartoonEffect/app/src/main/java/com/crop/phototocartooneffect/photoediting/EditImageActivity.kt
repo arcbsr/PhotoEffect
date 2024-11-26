@@ -34,12 +34,14 @@ import com.burhanrashid52.photoediting.tools.EditingToolsAdapter
 import com.burhanrashid52.photoediting.tools.EditingToolsAdapter.OnItemSelected
 import com.burhanrashid52.photoediting.tools.ToolType
 import com.crop.phototocartooneffect.R
+import com.crop.phototocartooneffect.activities.ImageAiActivity
 import com.crop.phototocartooneffect.imageloader.ImageLoader
 import com.crop.phototocartooneffect.photoediting.EmojiBSFragment.EmojiListener
 import com.crop.phototocartooneffect.photoediting.StickerBSFragment.StickerListener
 import com.crop.phototocartooneffect.photoediting.base.BaseActivity
 import com.crop.phototocartooneffect.photoediting.filters.FilterListener
 import com.crop.phototocartooneffect.photoediting.filters.FilterViewAdapter
+import com.crop.phototocartooneffect.popeffect.color_splash_tool.ColorSplashActivity
 import com.crop.phototocartooneffect.utils.RLog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener
@@ -429,7 +431,13 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
     override fun onToolSelected(toolType: ToolType) {
         when (toolType) {
             ToolType.COLOR_POP -> {
-
+                val imageKey: String? = intent.getStringExtra("image_path")
+                val intent = Intent(this, ColorSplashActivity::class.java)
+                ColorSplashActivity.colorBitmap = ImageLoader.getInstance().getBitmap(imageKey)
+                startActivity(intent)
+                ColorSplashActivity.setBitmapReadyListener { bitmap ->
+                    mPhotoEditorView.source.setImageBitmap(bitmap)
+                }
             }
 
             ToolType.SHAPE -> {
