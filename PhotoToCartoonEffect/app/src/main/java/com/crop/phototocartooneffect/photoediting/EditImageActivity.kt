@@ -14,7 +14,6 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AnticipateOvershootInterpolator
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -34,7 +33,6 @@ import com.burhanrashid52.photoediting.tools.EditingToolsAdapter
 import com.burhanrashid52.photoediting.tools.EditingToolsAdapter.OnItemSelected
 import com.burhanrashid52.photoediting.tools.ToolType
 import com.crop.phototocartooneffect.R
-import com.crop.phototocartooneffect.activities.ImageAiActivity
 import com.crop.phototocartooneffect.imageloader.ImageLoader
 import com.crop.phototocartooneffect.photoediting.EmojiBSFragment.EmojiListener
 import com.crop.phototocartooneffect.photoediting.StickerBSFragment.StickerListener
@@ -197,7 +195,7 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
 
         val imgClose: ImageView = findViewById(R.id.imgClose)
         imgClose.setOnClickListener(this)
-        val imgCloseTop: Button = findViewById(R.id.closeIcon)
+        val imgCloseTop: ImageView = findViewById(R.id.closeIcon)
         imgCloseTop.setOnClickListener(this)
 
         val imgShare: ImageView = findViewById(R.id.imgShare)

@@ -1,11 +1,27 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:top="-10dp"
+    <!-- Background rectangle for the gradient stroke -->
+    <item
         android:left="-10dp"
-        android:right="-10dp">
+        android:right="-10dp"
+        android:top="-10dp">
         <shape android:shape="rectangle">
-            <solid android:color="@android:color/transparent"/>
-            <stroke android:width="2dp"
-                android:color="@color/black"/>
+            <gradient
+                android:angle="0"
+                android:centerColor="@color/white_700"
+                android:endColor="@color/black"
+                android:startColor="@color/black"
+                android:type="linear" />
+        </shape>
+    </item>
+
+    <!-- Inner transparent rectangle to create the stroke effect -->
+    <item
+        android:bottom="2dp"
+        android:left="2dp"
+        android:right="2dp"
+        android:top="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
         </shape>
     </item>
 </layer-list>

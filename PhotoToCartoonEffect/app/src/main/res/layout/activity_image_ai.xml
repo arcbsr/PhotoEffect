@@ -20,18 +20,6 @@
             app:title=""
             app:titleTextColor="@color/gold">
 
-            <ImageButton
-                android:id="@+id/refreshButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:contentDescription="Refresh"
-                android:padding="12dp"
-                android:src="@drawable/ic_refresh_24"
-                app:tint="@color/semi_black_transparent" />
-
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/subscribeButton"
                 android:layout_width="wrap_content"
@@ -52,6 +40,18 @@
                 android:visibility="visible"
                 app:backgroundTint="@color/semi_black_transparent" />
 
+
+            <ImageButton
+                android:id="@+id/refreshButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="Refresh"
+                android:padding="12dp"
+                android:src="@drawable/ic_refresh_24"
+                app:tint="@color/icons" />
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/addnew_item"
                 android:layout_width="wrap_content"

@@ -92,6 +92,7 @@ public class LoadingDialog extends DialogFragment {
         return view;
     }
 
+
     LottieAnimationView lottieAnimationView;
 
     private void init(View view, PaletteExtractor paletteExtractor) {
