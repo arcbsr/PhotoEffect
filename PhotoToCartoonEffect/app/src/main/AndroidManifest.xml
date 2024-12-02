@@ -5,7 +5,7 @@
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
+        android:required="true" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
@@ -42,8 +42,8 @@
             android:exported="false" />
         <activity
             android:name=".photoediting.EditImageActivity"
-            android:theme="@style/AppTheme"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/AppTheme">
 
         </activity>
         <activity

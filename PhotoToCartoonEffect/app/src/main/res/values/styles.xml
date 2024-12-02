@@ -44,7 +44,7 @@
 
         <!-- Title text color -->
         <item name="android:textColorPrimary">#FF5722</item>
-
+        <item name="android:textSize">10sp</item>
         <!-- Message text color -->
         <item name="android:textColorSecondary">#757575</item>
 

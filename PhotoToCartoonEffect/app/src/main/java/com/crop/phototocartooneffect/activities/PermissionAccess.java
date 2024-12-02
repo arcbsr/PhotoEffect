@@ -51,15 +51,15 @@ public class PermissionAccess {
                 permissionCallback.onPermissionGranted();
             }
         } else {
-            PermissionX.init(activity).permissions(android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .request((allGranted, grantedList, deniedList) -> {
-                        if (allGranted) {
-                            permissionCallback.onPermissionGranted();
-                        } else {
-                            permissionCallback.onPermissionDenied();
-                        }
-                    });
+        PermissionX.init(activity).permissions(android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .request((allGranted, grantedList, deniedList) -> {
+                    if (allGranted) {
+                        permissionCallback.onPermissionGranted();
+                    } else {
+                        permissionCallback.onPermissionDenied();
+                    }
+                });
         }
     }
 
