@@ -37,6 +37,7 @@ import com.crop.phototocartooneffect.fragments.MainFragment;
 import com.crop.phototocartooneffect.imageloader.ImageLoader;
 import com.crop.phototocartooneffect.models.MenuItem;
 import com.crop.phototocartooneffect.photoediting.EditImageActivity;
+import com.crop.phototocartooneffect.popeffect.color_splash_tool.ColorSplashActivity;
 import com.crop.phototocartooneffect.renderengins.ImageEffect;
 import com.crop.phototocartooneffect.renderengins.apis.fashion.FashionEffectService;
 import com.crop.phototocartooneffect.renderengins.apis.imgtoimage.ImageToImageService;
@@ -74,9 +75,16 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
 //                Intent intent = new Intent(ImageAiActivity.this, ColorSplashActivity.class);
 //                ColorSplashActivity.colorBitmap = ImageLoader.getInstance().getBitmap(key);
 //                startActivity(intent);
-                Intent intent = new Intent(ImageAiActivity.this, EditImageActivity.class);
-                intent.putExtra("image_path", key);
-                startActivity(intent);
+                if (selectedRenderItem.getImageCreationType() == EditingCategories.ImageCreationType.FIREBASE_ML_SEGMENTATION
+                        || selectedRenderItem.getImageCreationType() == EditingCategories.ImageCreationType.MLB_BACKGROUND_REMOVE) {
+                    Intent intent = new Intent(this, ColorSplashActivity.class);
+                    ColorSplashActivity.colorBitmap = ImageLoader.getInstance().getBitmap(key);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(ImageAiActivity.this, EditImageActivity.class);
+                    intent.putExtra("image_path", key);
+                    startActivity(intent);
+                }
             }
         });
 

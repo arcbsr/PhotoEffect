@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
@@ -78,6 +79,7 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
     private lateinit var mRootView: ConstraintLayout
     private val mConstraintSet = ConstraintSet()
     private var mIsFilterVisible = false
+    private var imageKey: String = ""
 
     @VisibleForTesting
     var mSaveImageUri: Uri? = null
@@ -88,11 +90,10 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
         super.onCreate(savedInstanceState)
 //        makeFullScreen()
         setContentView(R.layout.activity_edit_image)
-
         initViews()
 
 //        handleIntentImage(mPhotoEditorView.source)
-        val imageKey: String? = intent.getStringExtra("image_path")
+        imageKey = intent.getStringExtra("image_path")!!
         RLog.d("image_path", imageKey)
         val bitmap = ImageLoader.getInstance().getBitmap(imageKey)
         //MediaStore.Images.Media.getBitmap(contentResolver, uri)
@@ -137,7 +138,7 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
 
         //Set Image Dynamically
 //        mPhotoEditorView.source.setImageResource(R.drawable.paris_tower)
-        mPhotoEditor.setFilterEffect(PhotoFilter.NONE)
+        mPhotoEditor.setFilterEffect(PhotoFilter.AUTO_FIX)
         mSaveFileHelper = FileSaveHelper(this)
     }
 
@@ -414,7 +415,7 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
 
     @SuppressLint("MissingPermission")
     private fun showSaveDialog() {
-        val builder = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
         builder.setMessage(getString(R.string.msg_save_image))
         builder.setPositiveButton("Save") { _: DialogInterface?, _: Int -> saveImage() }
         builder.setNegativeButton("Cancel") { dialog: DialogInterface, _: Int -> dialog.dismiss() }
@@ -429,13 +430,17 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
     override fun onToolSelected(toolType: ToolType) {
         when (toolType) {
             ToolType.COLOR_POP -> {
-                val imageKey: String? = intent.getStringExtra("image_path")
-                val intent = Intent(this, ColorSplashActivity::class.java)
-                ColorSplashActivity.colorBitmap = ImageLoader.getInstance().getBitmap(imageKey)
-                startActivity(intent)
-                ColorSplashActivity.setBitmapReadyListener { bitmap ->
-                    mPhotoEditorView.source.setImageBitmap(bitmap)
-                }
+//                if (imageKey.isNullOrEmpty()) {
+//                    showSnackbar("Feature not available for this image")
+//                    return
+//                }
+//                val intent = Intent(this, ColorSplashActivity::class.java)
+//                ColorSplashActivity.colorBitmap = ImageLoader.getInstance().getBitmap(imageKey)
+//                startActivity(intent)
+//                ColorSplashActivity.setBitmapReadyListener { bitmap ->
+//                    mPhotoEditorView.source.setImageBitmap(bitmap)
+//                }
+                showSnackbar("Feature not available for this image")
             }
 
             ToolType.SHAPE -> {
@@ -514,10 +519,14 @@ class EditImageActivity : BaseActivity(), OnPhotoEditorListener, View.OnClickLis
         if (mIsFilterVisible) {
             showFilter(false)
             mTxtCurrentTool.setText(R.string.app_name)
-        } else if (!mPhotoEditor.isCacheEmpty) {
+        }
+//        else if (!mPhotoEditor.isCacheEmpty) {
+//            showSaveDialog()
+//        } else {
+//            super.onBackPressed()
+//        }
+        else {
             showSaveDialog()
-        } else {
-            super.onBackPressed()
         }
     }
 

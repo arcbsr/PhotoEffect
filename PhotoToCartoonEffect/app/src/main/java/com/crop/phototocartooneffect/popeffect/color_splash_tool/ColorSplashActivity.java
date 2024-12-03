@@ -3,6 +3,7 @@ package com.crop.phototocartooneffect.popeffect.color_splash_tool;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
@@ -46,7 +47,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.crop.phototocartooneffect.BuildConfig;
 import com.crop.phototocartooneffect.R;
+import com.crop.phototocartooneffect.activities.ImageAiActivity;
 import com.crop.phototocartooneffect.fragments.ImageAiFragment;
+import com.crop.phototocartooneffect.imageloader.ImageLoader;
+import com.crop.phototocartooneffect.photoediting.EditImageActivity;
 import com.crop.phototocartooneffect.popeffect.support.Constants;
 import com.crop.phototocartooneffect.popeffect.support.ImageUtils;
 import com.crop.phototocartooneffect.popeffect.support.StoreManager;
@@ -354,37 +358,44 @@ public class ColorSplashActivity extends AppCompatActivity implements OnClickLis
                 listener.onBitmapReady(tiv.drawingBitmap);
                 finish();
                 return;
+            } else {
+                String key = System.currentTimeMillis() + "";
+                ImageLoader.getInstance().loadBitmap(key, tiv.drawingBitmap);
+                Intent intent = new Intent(this, EditImageActivity.class);
+                intent.putExtra("image_path", key);
+                startActivity(intent);
             }
-            String fileName = "image_" + System.currentTimeMillis() + ".png";
-            File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            File file = new File(downloadDir, fileName);
-
-            // Ensure the download directory exists
-            if (!downloadDir.exists()) {
-                downloadDir.mkdirs();
-            }
-
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(file);
-                tiv.drawingBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                fos.flush();
-                RLog.d("SaveImage", "Image saved successfully: " + file.getAbsolutePath());
-                Toast.makeText(this, "Image saved successfully", Toast.LENGTH_SHORT).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
-            } finally {
-                try {
-                    if (fos != null) {
-                        fos.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            Toast.makeText(this, "No image to save", Toast.LENGTH_SHORT).show();
+//            String fileName = "image_" + System.currentTimeMillis() + ".png";
+//            File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+//            File file = new File(downloadDir, fileName);
+//
+//            // Ensure the download directory exists
+//            if (!downloadDir.exists()) {
+//                downloadDir.mkdirs();
+//            }
+//
+//            FileOutputStream fos = null;
+//            try {
+//                fos = new FileOutputStream(file);
+//                tiv.drawingBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+//                fos.flush();
+//                RLog.d("SaveImage", "Image saved successfully: " + file.getAbsolutePath());
+//                Toast.makeText(this, "Image saved successfully", Toast.LENGTH_SHORT).show();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
+//            } finally {
+//                try {
+//                    if (fos != null) {
+//                        fos.close();
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        } else {
+//            Toast.makeText(this, "No image to save", Toast.LENGTH_SHORT).show();
+//        }
         }
     }
 
