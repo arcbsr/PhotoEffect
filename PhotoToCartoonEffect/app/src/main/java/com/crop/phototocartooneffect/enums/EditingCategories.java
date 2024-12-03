@@ -63,6 +63,25 @@ public class EditingCategories {
             return value;
         }
 
+        public String getTitle() {
+            String title = "Unknown";
+            switch (fromString(value)) {
+                case FEATUREAI:
+                    title = "Feature AI";
+                    break;
+                case FEATUREAI2:
+                    title = "Feature AI 2";
+                    break;
+                case USERCREATIONS:
+                    title = "User Creations";
+                    break;
+                default:
+                    title = "Unknown";
+                    break;
+            }
+            return title.toUpperCase();
+        }
+
         public static AITypeFirebaseEDB fromString(String value) {
             for (AITypeFirebaseEDB type : AITypeFirebaseEDB.values()) {
                 if (type.getValue().equalsIgnoreCase(value)) {

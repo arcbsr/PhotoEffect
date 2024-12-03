@@ -73,7 +73,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
         // Set the width to fit columns and apply a varying height for staggered effect
         ViewGroup.LayoutParams layoutParams = holder.cardView.getLayoutParams();
-        layoutParams.height = (int) (itemWidth * (4.0 / 3.0)); // Set height based on aspect ratio (4:3)
+        layoutParams.height = (int) (itemWidth * (3.5 / 3.0)); // Set height based on aspect ratio (4:3)
         layoutParams.width = itemWidth;
 
         // Get margin value from resources

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -16,6 +17,8 @@ import com.crop.phototocartooneffect.dialogfragment.ShowAllBottomFragment;
 import com.crop.phototocartooneffect.enums.EditingCategories;
 import com.crop.phototocartooneffect.repositories.AppResources;
 import com.crop.phototocartooneffect.utils.AppSettings;
+import com.github.florent37.expansionpanel.ExpansionLayout;
+import com.github.florent37.expansionpanel.viewgroup.ExpansionLayoutCollection;
 
 public class MainFragment extends Fragment {
     private ItemAdapter.OnItemClickListener listener;
@@ -61,47 +64,64 @@ public class MainFragment extends Fragment {
             view.findViewById(R.id.root_view).setVisibility(View.GONE);
 
         }
+
+        View item = view.findViewById(R.id.item1);
+        View item2 = view.findViewById(R.id.item2);
+        View item3 = view.findViewById(R.id.item3);
         // TODO: Initialize your views here
         view.findViewById(R.id.header_tryButton).setOnClickListener(v -> {
             listener.onItemClick(AppSettings.DEFAULT_ITEM);
         });
-        view.findViewById(R.id.show_all_text).setOnClickListener(v -> {
+        item.findViewById(R.id.show_all_text).setOnClickListener(v -> {
 
-            ShowAllBottomFragment.newInstance(listener,
-                    EditingCategories.AITypeFirebaseEDB.FEATUREAI).show(getActivity().getSupportFragmentManager(), "ShowAllBottomFragment");
+            ShowAllBottomFragment.newInstance(listener, EditingCategories.AITypeFirebaseEDB.FEATUREAI).show(getActivity().getSupportFragmentManager(), "ShowAllBottomFragment");
         });
-        view.findViewById(R.id.show_all_text2).setOnClickListener(v -> {
+        item2.findViewById(R.id.show_all_text).setOnClickListener(v -> {
 
-            ShowAllBottomFragment.newInstance(listener,
-                    EditingCategories.AITypeFirebaseEDB.FEATUREAI2).show(getActivity().getSupportFragmentManager(), "ShowAllBottomFragment");
+            ShowAllBottomFragment.newInstance(listener, EditingCategories.AITypeFirebaseEDB.FEATUREAI2).show(getActivity().getSupportFragmentManager(), "ShowAllBottomFragment");
         });
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_top);
+
+        RecyclerView recyclerView = item.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.HORIZONTAL, false));
         ItemAdapter adapter = new ItemAdapter(getContext(), listener); // Replace YourAdapter with your actual adapter
         adapter.setData(AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.FEATUREAI));
         recyclerView.setAdapter(adapter);
 
 
-        RecyclerView recyclerView2 = view.findViewById(R.id.recyclerView_2);
+        RecyclerView recyclerView2 = item2.findViewById(R.id.recyclerView);
         ItemAdapter adapter2 = new ItemAdapter(getContext(), listener); // Replace YourAdapter with your actual adapter
         adapter2.setData(AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.FEATUREAI2));
         recyclerView2.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.HORIZONTAL, false));
         recyclerView2.setAdapter(adapter2);
 
-        RecyclerView recyclerView3 = view.findViewById(R.id.recyclerView_3);
+        RecyclerView recyclerView3 = item3.findViewById(R.id.recyclerView);
         recyclerView3.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.VERTICAL, false));
         recyclerView3.setAdapter(new ItemAdapterFull(getContext(), listener));
         view.findViewById(R.id.gallery_button).setOnClickListener(v -> {
             listener.onItemClick(AppSettings.DEFAULT_ITEM);
         });
-        if (AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.FEATUREAI).size() == 0) {
-            view.findViewById(R.id.show_all_text).setVisibility(View.INVISIBLE);
-            view.findViewById(R.id.title_text).setVisibility(View.INVISIBLE);
+        ((TextView) item.findViewById(R.id.title_text)).setText(EditingCategories.AITypeFirebaseEDB.FEATUREAI.getTitle() +
+                " ( " + AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.FEATUREAI).size() + " )");
+        ((TextView) item2.findViewById(R.id.title_text)).setText(
+                EditingCategories.AITypeFirebaseEDB.FEATUREAI2.getTitle() +
+                        " ( " + AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.FEATUREAI2).size() + " )");
+        ((TextView) item3.findViewById(R.id.title_text)).setText(
+                EditingCategories.AITypeFirebaseEDB.USERCREATIONS.getTitle() +
+                        " ( " + AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.USERCREATIONS).size() + " )");
+        if (AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.FEATUREAI).size() < 6) {
+            item.findViewById(R.id.show_all_text).setVisibility(View.GONE);
+//            item.findViewById(R.id.title_text).setVisibility(View.INVISIBLE);
         }
-        if (AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.FEATUREAI2).size() == 0) {
-            view.findViewById(R.id.show_all_text2).setVisibility(View.INVISIBLE);
-            view.findViewById(R.id.title_text2).setVisibility(View.INVISIBLE);
+        if (AppResources.getInstance().getItems(EditingCategories.AITypeFirebaseEDB.FEATUREAI2).size() < 6) {
+            item2.findViewById(R.id.show_all_text).setVisibility(View.GONE);
+//            item.findViewById(R.id.title_text).setVisibility(View.INVISIBLE);
         }
+        final ExpansionLayoutCollection expansionLayoutCollection = new ExpansionLayoutCollection();
+        expansionLayoutCollection.add(item.findViewById(R.id.expansionLayout));
+        expansionLayoutCollection.add(item2.findViewById(R.id.expansionLayout));
+        expansionLayoutCollection.add(item3.findViewById(R.id.expansionLayout));
+        expansionLayoutCollection.openOnlyOne(true);
+        ((ExpansionLayout)item3.findViewById(R.id.expansionLayout)).expand(true);
 
     }
 }
