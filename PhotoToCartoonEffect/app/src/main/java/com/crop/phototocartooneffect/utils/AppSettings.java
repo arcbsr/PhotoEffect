@@ -15,7 +15,7 @@ public class AppSettings {
     public static final int IMAGE_PLACE_HOLDER_ERROR_BANNER = R.drawable.thumb2;
 
     public static final boolean IS_TESTING_MODE = false;
-    public static final boolean IS_TESTING_MODE_MINOR = true;
+    public static final boolean IS_TESTING_MODE_MINOR = false;
     public static final boolean IS_ADMIN_MODE = true;
 
     public static String getAppVersion(Context context) {

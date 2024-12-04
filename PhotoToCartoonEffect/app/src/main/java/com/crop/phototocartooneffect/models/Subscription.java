@@ -6,6 +6,15 @@ public class Subscription {
     private double price;
     private String description;
 
+    public String getFacilities() {
+        return facilities;
+    }
+
+    public void setFacilities(String facilities) {
+        this.facilities = facilities;
+    }
+
+    private String facilities = "";
     // Constructors
     public Subscription() {
     }

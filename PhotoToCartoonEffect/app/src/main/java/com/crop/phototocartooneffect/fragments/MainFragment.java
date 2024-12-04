@@ -116,12 +116,18 @@ public class MainFragment extends Fragment {
             item2.findViewById(R.id.show_all_text).setVisibility(View.GONE);
 //            item.findViewById(R.id.title_text).setVisibility(View.INVISIBLE);
         }
-        final ExpansionLayoutCollection expansionLayoutCollection = new ExpansionLayoutCollection();
-        expansionLayoutCollection.add(item.findViewById(R.id.expansionLayout));
-        expansionLayoutCollection.add(item2.findViewById(R.id.expansionLayout));
-        expansionLayoutCollection.add(item3.findViewById(R.id.expansionLayout));
-        expansionLayoutCollection.openOnlyOne(true);
-        ((ExpansionLayout)item3.findViewById(R.id.expansionLayout)).expand(true);
+        recyclerView3.post(new Runnable() {
+            @Override
+            public void run() {
+
+                final ExpansionLayoutCollection expansionLayoutCollection = new ExpansionLayoutCollection();
+                expansionLayoutCollection.add(item.findViewById(R.id.expansionLayout));
+                expansionLayoutCollection.add(item2.findViewById(R.id.expansionLayout));
+                expansionLayoutCollection.add(item3.findViewById(R.id.expansionLayout));
+                expansionLayoutCollection.openOnlyOne(true);
+                ((ExpansionLayout)item3.findViewById(R.id.expansionLayout)).expand(true);
+            }
+        });
 
     }
 }

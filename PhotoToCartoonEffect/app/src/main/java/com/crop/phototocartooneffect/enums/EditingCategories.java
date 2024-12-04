@@ -5,7 +5,8 @@ public class EditingCategories {
         FIREBASE_ML_SEGMENTATION("Firebase_ML_Segmentation"),
         MLB_AI_AVATAR("MLB_Avatar"),
         IMAGE_EFFECT_IMG2IMG("MLB_Img2Img"), IMAGE_EFFECT_FASHION("MLB_fashion"), MLB_BACKGROUND_REMOVE("MLB_Background_Remove"),
-        MONSTER_AI_IMG_TO_IMG("Monster_AI_Img_Img"), MONSTER_AI_PHOTO_MAKER("Monster_AI_Photo_Maker"), MONSTER_AI_PIX_TO_PIX("Monster_AI_Pix_Pix");
+        MONSTER_AI_IMG_TO_IMG("Monster_AI_Img_Img"), MONSTER_AI_PHOTO_MAKER("Monster_AI_Photo_Maker"),
+        MONSTER_AI_PIX_TO_PIX("Monster_AI_Pix_Pix"), AI_LAB_FACE_EXPRESSION("face_expression");
 
         private final String value;
 
@@ -89,6 +90,89 @@ public class EditingCategories {
                 }
             }
             return AITypeFirebaseEDB.UNKNOWN; // Default case if no match is found
+        }
+    }
+
+    public enum AILabExpressionType {
+        NONE(-1),
+        BIG_LAUGH(0),
+        POUTING(1),
+        FEEL_SAD(2),
+        SMILE(3),
+        DIMPLE_SMILE(10),
+        PEAR_DIMPLE_SMILE(11),
+        BIG_GRIN(12),
+        STANDARD_GRIN(13),
+        COOL_POSE(14),
+        SAD(15),
+        FORCED_SMILE(16),
+        OPENING_EYES(100);
+
+        private final int value;
+
+        AILabExpressionType(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public String getTitle() {
+            String title;
+            switch (fromString(value)) {
+                case POUTING:
+                    title = "Pouting";
+                    break;
+                case FEEL_SAD:
+                    title = "Feel Sad";
+                    break;
+                case SMILE:
+                    title = "Smile";
+                    break;
+                case DIMPLE_SMILE:
+                    title = "Dimple Smile";
+                    break;
+                case PEAR_DIMPLE_SMILE:
+                    title = "Pear Dimple Smile";
+                    break;
+                case BIG_GRIN:
+                    title = "Big Grin";
+                    break;
+                case STANDARD_GRIN:
+                    title = "Standard Grin";
+                    break;
+                case COOL_POSE:
+                    title = "Cool Pose";
+                    break;
+                case SAD:
+                    title = "Sad";
+                    break;
+                case FORCED_SMILE:
+                    title = "Forced Smile";
+                    break;
+                case OPENING_EYES:
+                    title = "Opening Eyes";
+                    break;
+                default:
+                    title = "Big Laugh";
+                    break;
+
+            }
+            return title.toUpperCase();
+        }
+
+        public static AILabExpressionType fromString2(String value) {
+            return fromString(Integer.parseInt(value));
+        }
+
+        public static AILabExpressionType fromString(int value) {
+            for (AILabExpressionType type : AILabExpressionType.values()) {
+                if (type.getValue() == value) {
+                    return type;
+                }
+            }
+            return AILabExpressionType.NONE; // Default case if no match is found
         }
     }
 }

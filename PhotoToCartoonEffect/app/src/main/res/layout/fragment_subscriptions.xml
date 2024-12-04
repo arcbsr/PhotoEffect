@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@drawable/background_gradient"
     android:layout_height="match_parent">
 
 
@@ -18,33 +19,33 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/splash" />
+            android:scaleType="centerCrop" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/gradient_overlay" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:gravity="center"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight=".3" />
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="?attr/actionBarSize" />-->
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="16dp"
-                android:layout_weight="1">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="?attr/actionBarSize">
 
                 <LinearLayout
+                    android:id="@+id/root_view_sublist"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
                     <include
@@ -60,9 +61,15 @@
                         layout="@layout/subs_item" />
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
-        </LinearLayout>
+        </RelativeLayout>
 
 
+
+        <include
+            layout="@layout/layout_footer_policy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
         <include layout="@layout/drawer_topbar" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -81,7 +81,7 @@ public class FireStoreImageUploader {
         uploadImage(imageUri, aiType.getValue(), new ImageDownloadCallback() {
             @Override
             public void onSuccess(String url) {
-                saveImageUrlToFirestorm(userId, url, prompt, aiType, imageCreationType, downloadCallback, aiTypeFirebaseClothTypeEDB.getValue(), isPro);
+                saveImageUrlToFirestorm(userId, url, prompt, aiType, imageCreationType, downloadCallback, aiTypeFirebaseClothTypeEDB.getValue(), "", isPro);
             }
 
             @Override
@@ -94,12 +94,18 @@ public class FireStoreImageUploader {
 
     }
 
-    public void uploadImageToDB(boolean isPro, Bitmap bitmap, String userId, String prompt, EditingCategories.AITypeFirebaseEDB aiType, EditingCategories.ImageCreationType imageCreationType, EditingCategories.AITypeFirebaseClothTypeEDB aiTypeFirebaseClothTypeEDB, ImageDownloadCallback downloadCallback) {
+    public void uploadImageToDB(boolean isPro, Bitmap bitmap, String userId, String prompt, EditingCategories.AITypeFirebaseEDB aiType,
+                                EditingCategories.ImageCreationType imageCreationType,
+                                EditingCategories.AITypeFirebaseClothTypeEDB aiTypeFirebaseClothTypeEDB,
+                                EditingCategories.AILabExpressionType aiLabExpressionType,
+                                ImageDownloadCallback downloadCallback) {
 
         uploadImage(bitmap, aiType.getValue(), new ImageDownloadCallback() {
             @Override
             public void onSuccess(String url) {
-                saveImageUrlToFirestorm(userId, url, prompt, aiType, imageCreationType, downloadCallback, aiTypeFirebaseClothTypeEDB.getValue(), isPro);
+                saveImageUrlToFirestorm(userId, url, prompt, aiType, imageCreationType, downloadCallback, aiTypeFirebaseClothTypeEDB.getValue()
+                        ,
+                        aiLabExpressionType.getValue() + "", isPro);
             }
 
             @Override
@@ -176,16 +182,19 @@ public class FireStoreImageUploader {
     }
 
     private void saveImageUrlToFirestorm(boolean isPro, String userId, String downloadUrl, String prompt, EditingCategories.AITypeFirebaseEDB aiType, EditingCategories.ImageCreationType imageCreationType, ImageDownloadCallback downloadCallback) {
-        saveImageUrlToFirestorm(userId, downloadUrl, prompt, aiType, imageCreationType, downloadCallback, "", isPro);
+        saveImageUrlToFirestorm(userId, downloadUrl, prompt, aiType, imageCreationType, downloadCallback, "", "", isPro);
     }
 
-    private void saveImageUrlToFirestorm(String userId, String downloadUrl, String prompt, EditingCategories.AITypeFirebaseEDB aiType, EditingCategories.ImageCreationType imageCreationType, ImageDownloadCallback downloadCallback, String clothType, boolean isPro) {
+    private void saveImageUrlToFirestorm(String userId, String downloadUrl, String prompt, EditingCategories.AITypeFirebaseEDB aiType,
+                                         EditingCategories.ImageCreationType imageCreationType, ImageDownloadCallback downloadCallback,
+                                         String clothType, String expressionType, boolean isPro) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> data = new HashMap<>();
         data.put("userId", userId);
         data.put("imageUrl", downloadUrl);
         data.put("prompt", prompt);
         data.put("clothtype", clothType);
+        data.put("expressiontype", expressionType);
         data.put("menutype", aiType.getValue());
         data.put("creationtype", imageCreationType.getValue());
         data.put("isPro", isPro);
@@ -226,6 +235,7 @@ public class FireStoreImageUploader {
             callback.onError("Error retrieving images: " + e.getMessage());
         });
     }
+
     public void getAllPrompts(GetAllImagesCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -247,6 +257,7 @@ public class FireStoreImageUploader {
             callback.onError("Prompts retrieving images: " + e.getMessage());
         });
     }
+
     public void deleteDataFromFireStore(String documentId, String ImageUrl, ImageDeleteCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(STORAGE_NAME).document(documentId).delete().addOnSuccessListener(aVoid -> {

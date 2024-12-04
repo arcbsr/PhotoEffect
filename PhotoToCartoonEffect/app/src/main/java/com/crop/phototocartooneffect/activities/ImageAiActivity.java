@@ -39,6 +39,7 @@ import com.crop.phototocartooneffect.models.MenuItem;
 import com.crop.phototocartooneffect.photoediting.EditImageActivity;
 import com.crop.phototocartooneffect.popeffect.color_splash_tool.ColorSplashActivity;
 import com.crop.phototocartooneffect.renderengins.ImageEffect;
+import com.crop.phototocartooneffect.renderengins.apis.ailabs.AiLabApiClient;
 import com.crop.phototocartooneffect.renderengins.apis.fashion.FashionEffectService;
 import com.crop.phototocartooneffect.renderengins.apis.imgtoimage.ImageToImageService;
 import com.crop.phototocartooneffect.renderengins.apis.imgupload.AvatarEffectService;
@@ -117,6 +118,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
             Toast.makeText(this, "It's a demo data", Toast.LENGTH_SHORT).show();
             return;
         }
+        RLog.e("Clicked MenuItem", item.toString());
         if (isAdminDeleteMode) {
             new AlertDialog.Builder(ImageAiActivity.this, R.style.CustomAlertDialogTheme).
                     setTitle("Want to delete").setMessage("Are you sure!!!").setPositiveButton("Delete", (dialog, which) -> {
@@ -327,6 +329,9 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
             case MONSTER_AI_PHOTO_MAKER:
                 imageEffect = new MonsterApiClient(MONSTER_TOKEN, context, selectedRenderItem.prompt, selectedRenderItem.getImageCreationType());
                 RLog.d("MonsterApiClient", "MonsterApiClient" + selectedRenderItem.prompt + ">>" + selectedRenderItem.getImageCreationType().getValue());
+                break;
+            case AI_LAB_FACE_EXPRESSION:
+                imageEffect = new AiLabApiClient("rcPpexdTGBkOBRg8M2vyD38ioQmTdFDVh0yWb2fs1P5vtt1Ua5jVKsxGfNjYSlw0", context, "", selectedRenderItem.getImageCreationType());
                 break;
             default:
                 imageEffect = new BackgroundRemoveFML();

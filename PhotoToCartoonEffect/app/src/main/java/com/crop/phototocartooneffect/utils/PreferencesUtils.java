@@ -77,4 +77,12 @@ public class PreferencesUtils {
         sharedPreferences.edit().clear().apply();
     }
 
+    public void setSubscriptionStatus(boolean hasActiveSubscription) {
+        setBoolean("subscription_status", hasActiveSubscription);
+    }
+
+    public boolean getSubscriptionStatus() {
+        return getBoolean("subscription_status", false);
+    }
+
 }

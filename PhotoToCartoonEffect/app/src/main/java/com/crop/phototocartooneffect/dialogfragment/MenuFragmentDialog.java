@@ -1,9 +1,13 @@
 package com.crop.phototocartooneffect.dialogfragment;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,6 +47,14 @@ public class MenuFragmentDialog extends BaseBottomFragment {
             // Handle rate action
             dismiss();
         });
+        TextView tvLinks = view.findViewById(R.id.tvLinks);
+        String privacyText = getString(R.string.privacy);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            tvLinks.setText(Html.fromHtml(privacyText, Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            tvLinks.setText(Html.fromHtml(privacyText));
+        }
+        tvLinks.setMovementMethod(LinkMovementMethod.getInstance());
 //        view.findViewById(R.id.privacy).setOnClickListener(v -> {
 //            // Handle privacy action
 //        });

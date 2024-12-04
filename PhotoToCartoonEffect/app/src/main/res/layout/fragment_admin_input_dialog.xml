@@ -168,6 +168,17 @@
                     android:spinnerMode="dropdown" />
 
                 <Spinner
+                    android:id="@+id/expressions_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/border_only_btn"
+                    android:drawableEnd="@android:drawable/arrow_down_float"
+                    android:drawableRight="@android:drawable/arrow_down_float"
+                    android:padding="16dp"
+                    android:spinnerMode="dropdown" />
+
+                <Spinner
                     android:id="@+id/promptsTypeSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

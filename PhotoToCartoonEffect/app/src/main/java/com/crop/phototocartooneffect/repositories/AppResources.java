@@ -47,6 +47,9 @@ public class AppResources {
                             true // Assuming this is always true
                     );
                     menuItem.clothType = image.get("clothtype") != null ? EditingCategories.AITypeFirebaseClothTypeEDB.fromString(image.get("clothtype").toString()) : EditingCategories.AITypeFirebaseClothTypeEDB.NONE;
+                    menuItem.expressionType = image.get("expressiontype") != null ?
+                            EditingCategories.AILabExpressionType.fromString2(image.get("expressiontype").toString()) :
+                            EditingCategories.AILabExpressionType.NONE;
                     menuItem.isPro = image.get("isPro") != null ? (boolean) image.get("isPro") : false;
                     menuItem.documentId = image.get("documentId") != null ? image.get("documentId").toString() : "";
                     final String menutype = image.get("menutype") != null ? image.get("menutype").toString() : "";

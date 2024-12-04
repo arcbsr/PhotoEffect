@@ -98,18 +98,29 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
 
         final Spinner spinnerFashion = view.findViewById(R.id.modelTypeDress);
         spinnerFashion.setVisibility(View.GONE);
+        final Spinner spinnerExpressions = view.findViewById(R.id.expressions_spinner);
+        spinnerExpressions.setVisibility(View.GONE);
+
         Spinner spinner2 = view.findViewById(R.id.modelTypeSpinner);
         ArrayAdapter<EditingCategories.ImageCreationType> adapter2 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, EditingCategories.ImageCreationType.values());
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner2.setAdapter(adapter2);
         spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemSelected(AdapterView<?> adapterView, View v, int i, long l) {
                 selectedRenderItem.setImageCreationType(EditingCategories.ImageCreationType.values()[i]);
                 if (EditingCategories.ImageCreationType.values()[i] == EditingCategories.ImageCreationType.IMAGE_EFFECT_FASHION) {
                     spinnerFashion.setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.prepareButton).setVisibility(View.GONE);
                 } else {
                     spinnerFashion.setVisibility(View.GONE);
+                    view.findViewById(R.id.prepareButton).setVisibility(View.VISIBLE);
+                }
+                if (selectedRenderItem.getImageCreationType() == EditingCategories.ImageCreationType.AI_LAB_FACE_EXPRESSION) {
+                    spinnerExpressions.setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.prepareButton).setVisibility(View.VISIBLE);
+                } else {
+                    spinnerExpressions.setVisibility(View.GONE);
                 }
             }
 
@@ -122,6 +133,21 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFashion.setAdapter(adapterFashion);
         adapterFashion.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ArrayAdapter<EditingCategories.AILabExpressionType> adapterExpressions =
+                new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, EditingCategories.AILabExpressionType.values());
+        spinnerExpressions.setAdapter(adapterExpressions);
+        spinnerExpressions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedRenderItem.expressionType = EditingCategories.AILabExpressionType.values()[i];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         spinnerFashion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -211,7 +237,11 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
                 String creationType = selectedRenderItem.getImageCreationType().getValue();
                 CheckBox checkbox = view.findViewById(R.id.ispro);
                 String finalPrompt = prompt;
-                FireStoreImageUploader.getInstance(getContext()).uploadImageToDB(checkbox.isChecked(), bitmap, "featured", prompt, aiTypeFirebaseDB, selectedRenderItem.getImageCreationType(), spinnerFashion.getVisibility() == View.VISIBLE ? selectedRenderItem.clothType : EditingCategories.AITypeFirebaseClothTypeEDB.NONE, new FireStoreImageUploader.ImageDownloadCallback() {
+                FireStoreImageUploader.getInstance(getContext()).uploadImageToDB(checkbox.isChecked(), bitmap, "featured", prompt,
+                        aiTypeFirebaseDB, selectedRenderItem.getImageCreationType(),
+                        spinnerFashion.getVisibility() == View.VISIBLE ? selectedRenderItem.clothType : EditingCategories.AITypeFirebaseClothTypeEDB.NONE,
+                        spinnerExpressions.getVisibility() == View.VISIBLE ? selectedRenderItem.expressionType : EditingCategories.AILabExpressionType.NONE,
+                        new FireStoreImageUploader.ImageDownloadCallback() {
                     @Override
                     public void onSuccess(String url) {
                         RLog.e("FireStoreImageUploader", "Successfully uploaded image to Firestore: " + url);

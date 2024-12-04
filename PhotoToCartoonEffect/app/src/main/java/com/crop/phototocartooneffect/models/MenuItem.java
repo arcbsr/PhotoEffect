@@ -7,8 +7,9 @@ import com.crop.phototocartooneffect.enums.EditingCategories;
 
 public class MenuItem {
     public ValueAnimator animator;
-//    public String cloth = "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/livewire-tmp/5BDmwvtizESFRO24uGDW1iu1u5TXhB-metaM2JmZmFkY2U5NDNkOGU3MDJhZDE0YTk2OTY2NjQ0NjYuanBn-.jpg";
+    //    public String cloth = "https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/livewire-tmp/5BDmwvtizESFRO24uGDW1iu1u5TXhB-metaM2JmZmFkY2U5NDNkOGU3MDJhZDE0YTk2OTY2NjQ0NjYuanBn-.jpg";
     public EditingCategories.AITypeFirebaseClothTypeEDB clothType = EditingCategories.AITypeFirebaseClothTypeEDB.NONE;
+    public EditingCategories.AILabExpressionType expressionType = EditingCategories.AILabExpressionType.NONE;
     private int iconResId;
     private String title;
     public Bitmap bitmap;
@@ -77,4 +78,23 @@ public class MenuItem {
     public EditingCategories.ImageCreationType getImageCreationType() {
         return imageCreationType;
     }
+
+    @Override
+    public String toString() {
+        return "MenuItem{" +
+                "iconResId=" + iconResId +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", thumbResId=" + thumbResId +
+                ", isPro=" + isPro +
+                ", imageCreationType=" + imageCreationType.getValue() +
+                ", prompt='" + prompt + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", documentId='" + documentId + '\'' +
+                ", clothType=" + clothType.getValue() +
+                ", expressionType=" + expressionType.getValue() +
+                '}';
+    }
+
+
 }

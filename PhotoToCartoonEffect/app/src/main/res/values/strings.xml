@@ -41,6 +41,10 @@
     <string name="msg_save_image_to_share">Please save image to share</string>
     <string name="msg_share_image">Share Image</string>
     <string name="see_all">See All</string>
+    <string name="privacy"><![CDATA[By using this app, you agree to our <a href="https://www.example.com/privacy">Privacy Policy</a> and <a href=\"https://www.example.com/terms\">Terms & Conditions</a>.]]></string>
+
+    <string name="terms"><![CDATA[<a href=\"https://www.example.com/terms\">Terms & Conditions</a>.]]></string>
+
     <string-array name="photo_editor_emoji">
 
         <!-- Smiles -->

@@ -2,6 +2,7 @@ package com.crop.phototocartooneffect.imageloader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Base64;
@@ -77,6 +78,21 @@ public class ImageLoader {
         }
 
         return base64;
+    }
+
+    public Bitmap base64ToBitmap(String base64String) {
+        try {
+            // Remove the data:image/jpeg;base64, prefix if present
+            if (base64String.contains(",")) {
+                base64String = base64String.split(",")[1];
+            }
+
+            byte[] decodedBytes = Base64.decode(base64String, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+        } catch (IllegalArgumentException e) {
+            RLog.e("base64ToBitmap", "Error decoding base64 string: " + e.getMessage());
+            return null;
+        }
     }
 
     public String getBitmapAsBase64(String key) {

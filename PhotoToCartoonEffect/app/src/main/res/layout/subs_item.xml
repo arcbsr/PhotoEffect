@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="6dp"
-        app:cardCornerRadius="12dp"
+        app:cardCornerRadius="4dp"
         app:cardElevation="8dp"
         app:cardUseCompatPadding="false"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,58 +20,114 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/card_prnt"
+            android:background="@color/white"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="5dp">
 
-            <!-- Title -->
-            <TextView
-                android:id="@+id/subscriptionTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Premium Subscription"
-                android:textColor="@color/head_title"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <!-- Price Section -->
-            <TextView
-                android:id="@+id/subscriptionPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
-                android:text="$9.99/month"
-                android:textColor="@color/gold"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <!-- Description -->
-            <TextView
-                android:id="@+id/subscriptionDescription"
+            <com.github.florent37.expansionpanel.ExpansionHeader
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:lineSpacingExtra="2dp"
-                android:text="Unlock premium features and enjoy ad-free experience."
-                android:textAlignment="center"
-                android:textColor="@color/title"
-                android:textSize="14sp" />
+                android:layout_height="?attr/actionBarSize"
+                app:expansion_headerIndicator="@id/headerIndicator"
+                app:expansion_layout="@id/expansionLayout"
+                app:expansion_toggleOnClick="true">
 
-            <!-- Subscribe Button -->
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/subscribeButton_action"
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/title_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_weight="1"
+                        android:text="@string/featured_ai"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/headerIndicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/circle_background"
+                        android:padding="2dp"
+                        app:tint="@color/black"
+                        app:srcCompat="@drawable/right_arrow" />
+                </RelativeLayout>
+
+
+            </com.github.florent37.expansionpanel.ExpansionHeader>
+
+            <com.github.florent37.expansionpanel.ExpansionLayout
+                android:id="@+id/expansionLayout"
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/button_selector_blk"
-                android:paddingBottom="5dp"
-                android:text="Subscribe"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/txt_underline" />
+                    <TextView
+                        android:id="@+id/subscriptionTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Premium Subscription"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <!-- Price Section -->
+                    <TextView
+                        android:id="@+id/subscriptionPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:text="$9.99/month"
+                        android:textColor="@color/gold"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <!-- Description -->
+                    <TextView
+                        android:id="@+id/subscriptionDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="Unlock premium features and enjoy ad-free experience."
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <!-- Subscribe Button -->
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/subscribeButton_action"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/button_selector_blk"
+                        android:paddingBottom="5dp"
+                        android:text="Subscribe"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+            </com.github.florent37.expansionpanel.ExpansionLayout>
 
         </LinearLayout>
 
