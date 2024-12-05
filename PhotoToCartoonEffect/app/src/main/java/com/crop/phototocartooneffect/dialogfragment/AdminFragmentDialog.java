@@ -67,6 +67,7 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
         return view;
     }
 
+    private String currentAdminImage = "adminImage";
     EditingCategories.AITypeFirebaseEDB aiTypeFirebaseDB = EditingCategories.AITypeFirebaseEDB.UNKNOWN;
 
     private void init(View view) {
@@ -167,11 +168,14 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
         });
 
         view.findViewById(R.id.previewImageView).setOnClickListener(v -> {
-            ImageLoader.getInstance().loadBitmap("adminimage", bitmap);
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((ImageView) view.findViewById(R.id.previewImageView)), "imageTransition");
+            currentAdminImage = System.currentTimeMillis()+"";
+            ImageLoader.getInstance().loadBitmap(currentAdminImage, bitmap);
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), view.findViewById(R.id.previewImageView), "imageTransition");
             Intent intent = new Intent(getContext(), FullscreenImageActivity.class);
-            intent.putExtra(FullscreenImageActivity.IMAGE_LOADER_KEY, "adminimage"); // Pass the image resource ID
+            intent.putExtra(FullscreenImageActivity.IMAGE_LOADER_KEY, currentAdminImage); // Pass the image resource ID
             startActivity(intent, options.toBundle());
+
+
         });
         view.findViewById(R.id.prepareButton).setOnClickListener(v -> {
             String prompt = ((EditText) view.findViewById(R.id.promptEditText)).getText().toString();
@@ -182,8 +186,11 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
                 prompt = "";
             }
             selectedRenderItem.prompt = prompt;
-            ImageLoader.getInstance().loadBitmap("adminimage", bitmap);
-            ImageAiActivity.createImageEffect(selectedRenderItem, "adminimage", getContext(), new ImageEffect.ImageEffectCallback() {
+            currentAdminImage = System.currentTimeMillis()+"";
+            ImageLoader.getInstance().loadBitmap(currentAdminImage, bitmap);
+
+            view.findViewById(R.id.animationView).setVisibility(View.VISIBLE);
+            new Handler().postDelayed(() -> ImageAiActivity.createImageEffect(selectedRenderItem, currentAdminImage, getContext(), new ImageEffect.ImageEffectCallback() {
                 @Override
                 public void onSuccess(Bitmap result, String key) {
                     new Handler(Looper.getMainLooper()).post(() -> {
@@ -208,14 +215,13 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
 
                 @Override
                 public void onStartProcess() {
-                    view.findViewById(R.id.animationView).setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onFinished() {
                     view.findViewById(R.id.animationView).setVisibility(View.GONE);
                 }
-            });
+            }), 1000);
         });
         view.findViewById(R.id.submitButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,23 +248,23 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
                         spinnerFashion.getVisibility() == View.VISIBLE ? selectedRenderItem.clothType : EditingCategories.AITypeFirebaseClothTypeEDB.NONE,
                         spinnerExpressions.getVisibility() == View.VISIBLE ? selectedRenderItem.expressionType : EditingCategories.AILabExpressionType.NONE,
                         new FireStoreImageUploader.ImageDownloadCallback() {
-                    @Override
-                    public void onSuccess(String url) {
-                        RLog.e("FireStoreImageUploader", "Successfully uploaded image to Firestore: " + url);
-                        RLog.e("aiType", aiType);
-                        RLog.e("creationtype", creationType);
-                        RLog.e("prompt", finalPrompt);
-                        view.findViewById(R.id.animationView).setVisibility(View.GONE);
-                        Toast.makeText(getContext(), "Successfully uploaded image to Firestore: " + url, Toast.LENGTH_SHORT).show();
-                    }
+                            @Override
+                            public void onSuccess(String url) {
+                                RLog.e("FireStoreImageUploader", "Successfully uploaded image to Firestore: " + url);
+                                RLog.e("aiType", aiType);
+                                RLog.e("creationtype", creationType);
+                                RLog.e("prompt", finalPrompt);
+                                view.findViewById(R.id.animationView).setVisibility(View.GONE);
+                                Toast.makeText(getContext(), "Successfully uploaded image to Firestore: " + url, Toast.LENGTH_SHORT).show();
+                            }
 
-                    @Override
-                    public void onFailure(String errorMessage) {
-                        view.findViewById(R.id.animationView).setVisibility(View.GONE);
-                        Toast.makeText(getContext(), "Failed to upload image to Firestore: " + errorMessage, Toast.LENGTH_SHORT).show();
-                        RLog.e("FireStoreImageUploader", errorMessage);
-                    }
-                });
+                            @Override
+                            public void onFailure(String errorMessage) {
+                                view.findViewById(R.id.animationView).setVisibility(View.GONE);
+                                Toast.makeText(getContext(), "Failed to upload image to Firestore: " + errorMessage, Toast.LENGTH_SHORT).show();
+                                RLog.e("FireStoreImageUploader", errorMessage);
+                            }
+                        });
             }
         });
         view.findViewById(R.id.btn_image_url_clear).setOnClickListener(v -> {

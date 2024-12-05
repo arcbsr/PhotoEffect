@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Layer with the image -->
     <item>
-        <shape android:shape="rectangle">
-            <gradient
-                android:startColor="@color/gradient_start_purple"
-                android:centerColor="@color/gradient_start_purple"
-                android:endColor="@color/semi_white"
-                android:angle="270" /> <!-- Adjust angle for gradient direction -->
-        </shape>
+        <bitmap
+            android:gravity="fill"
+            android:src="@drawable/bg_image" />
     </item>
-</layer-list>
+</layer-list><!--<?xml version="1.0" encoding="utf-8"?>-->
+    <!--<layer-list xmlns:android="http://schemas.android.com/apk/res/android">-->
+    <!--    <item>-->
+    <!--        <shape android:shape="rectangle">-->
+    <!--            <gradient-->
+    <!--                android:startColor="@color/gradient_start_purple"-->
+    <!--                android:centerColor="@color/gradient_start_purple"-->
+    <!--                android:endColor="@color/semi_white"-->
+    <!--                android:angle="270" /> &lt;!&ndash; Adjust angle for gradient direction &ndash;&gt;-->
+    <!--        </shape>-->
+    <!--    </item>-->
+    <!--</layer-list>-->

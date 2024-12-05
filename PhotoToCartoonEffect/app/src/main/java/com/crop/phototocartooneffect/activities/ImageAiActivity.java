@@ -79,6 +79,7 @@ public class ImageAiActivity extends AppCompatActivity implements ImageEffect.Im
                 if (selectedRenderItem.getImageCreationType() == EditingCategories.ImageCreationType.FIREBASE_ML_SEGMENTATION
                         || selectedRenderItem.getImageCreationType() == EditingCategories.ImageCreationType.MLB_BACKGROUND_REMOVE) {
                     Intent intent = new Intent(this, ColorSplashActivity.class);
+//                    ColorSplashActivity.colorBitmap = ImageLoader.getInstance().getBitmap(key);
                     ColorSplashActivity.colorBitmap = ImageLoader.getInstance().getBitmap(key);
                     startActivity(intent);
                 } else {
