@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -125,9 +126,30 @@ public class MainFragment extends Fragment {
                 expansionLayoutCollection.add(item2.findViewById(R.id.expansionLayout));
                 expansionLayoutCollection.add(item3.findViewById(R.id.expansionLayout));
                 expansionLayoutCollection.openOnlyOne(true);
-                ((ExpansionLayout)item3.findViewById(R.id.expansionLayout)).expand(true);
+                ((ExpansionLayout) item3.findViewById(R.id.expansionLayout)).expand(true);
             }
         });
+    }
 
+    private void createTheRecycleView(View view, String title) {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View item = inflater.inflate(R.layout.expand_item_layout, null);
+        item.findViewById(R.id.show_all_text).setOnClickListener(v -> {
+
+            ShowAllBottomFragment.newInstance(listener, EditingCategories.AITypeFirebaseEDB.FEATUREAI).
+                    show(getActivity().getSupportFragmentManager(), "ShowAllBottomFragment");
+        });
+        RecyclerView recyclerView = item.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.HORIZONTAL, false));
+        ItemAdapter adapter = new ItemAdapter(getContext(), listener); // Replace YourAdapter with your actual adapter
+        adapter.setData(AppResources.getInstance().getItemsByTitle(title));
+        recyclerView.setAdapter(adapter);
+        ((LinearLayout) view.findViewById(R.id.root_rv_holder)).addView(item);
+        ((TextView) item.findViewById(R.id.title_text)).setText(title +
+                " ( " + AppResources.getInstance().getItemsByTitle(title).size() + " )");
+        if (AppResources.getInstance().getItemsByTitle(title).size() < 6) {
+            item.findViewById(R.id.show_all_text).setVisibility(View.GONE);
+//            item.findViewById(R.id.title_text).setVisibility(View.INVISIBLE);
+        }
     }
 }

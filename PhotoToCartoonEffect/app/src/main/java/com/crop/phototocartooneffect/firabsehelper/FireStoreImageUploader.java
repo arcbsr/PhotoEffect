@@ -76,12 +76,12 @@ public class FireStoreImageUploader {
 //    }
 
 
-    public void uploadImageToDB(boolean isPro, Uri imageUri, String userId, String prompt, EditingCategories.AITypeFirebaseEDB aiType, EditingCategories.ImageCreationType imageCreationType, EditingCategories.AITypeFirebaseClothTypeEDB aiTypeFirebaseClothTypeEDB, ImageDownloadCallback downloadCallback) {
+    public void uploadImageToDB(boolean isPro, String title, Uri imageUri, String userId, String prompt, EditingCategories.AITypeFirebaseEDB aiType, EditingCategories.ImageCreationType imageCreationType, EditingCategories.AITypeFirebaseClothTypeEDB aiTypeFirebaseClothTypeEDB, ImageDownloadCallback downloadCallback) {
 
         uploadImage(imageUri, aiType.getValue(), new ImageDownloadCallback() {
             @Override
             public void onSuccess(String url) {
-                saveImageUrlToFirestorm(userId, url, prompt, aiType, imageCreationType, downloadCallback, aiTypeFirebaseClothTypeEDB.getValue(), "", isPro);
+                saveImageUrlToFirestorm(userId,title, url, prompt, aiType, imageCreationType, downloadCallback, aiTypeFirebaseClothTypeEDB.getValue(), "", isPro);
             }
 
             @Override
@@ -94,7 +94,7 @@ public class FireStoreImageUploader {
 
     }
 
-    public void uploadImageToDB(boolean isPro, Bitmap bitmap, String userId, String prompt, EditingCategories.AITypeFirebaseEDB aiType,
+    public void uploadImageToDB(boolean isPro, Bitmap bitmap, String userId,String title, String prompt, EditingCategories.AITypeFirebaseEDB aiType,
                                 EditingCategories.ImageCreationType imageCreationType,
                                 EditingCategories.AITypeFirebaseClothTypeEDB aiTypeFirebaseClothTypeEDB,
                                 EditingCategories.AILabExpressionType aiLabExpressionType,
@@ -103,7 +103,7 @@ public class FireStoreImageUploader {
         uploadImage(bitmap, aiType.getValue(), new ImageDownloadCallback() {
             @Override
             public void onSuccess(String url) {
-                saveImageUrlToFirestorm(userId, url, prompt, aiType, imageCreationType, downloadCallback, aiTypeFirebaseClothTypeEDB.getValue()
+                saveImageUrlToFirestorm(userId,title, url, prompt, aiType, imageCreationType, downloadCallback, aiTypeFirebaseClothTypeEDB.getValue()
                         ,
                         aiLabExpressionType.getValue() + "", isPro);
             }
@@ -182,16 +182,17 @@ public class FireStoreImageUploader {
     }
 
     private void saveImageUrlToFirestorm(boolean isPro, String userId, String downloadUrl, String prompt, EditingCategories.AITypeFirebaseEDB aiType, EditingCategories.ImageCreationType imageCreationType, ImageDownloadCallback downloadCallback) {
-        saveImageUrlToFirestorm(userId, downloadUrl, prompt, aiType, imageCreationType, downloadCallback, "", "", isPro);
+        saveImageUrlToFirestorm(userId, "", downloadUrl, prompt, aiType, imageCreationType, downloadCallback, "", "", isPro);
     }
 
-    private void saveImageUrlToFirestorm(String userId, String downloadUrl, String prompt, EditingCategories.AITypeFirebaseEDB aiType,
+    private void saveImageUrlToFirestorm(String userId, String title, String downloadUrl, String prompt, EditingCategories.AITypeFirebaseEDB aiType,
                                          EditingCategories.ImageCreationType imageCreationType, ImageDownloadCallback downloadCallback,
                                          String clothType, String expressionType, boolean isPro) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> data = new HashMap<>();
         data.put("userId", userId);
         data.put("imageUrl", downloadUrl);
+        data.put("title", title);
         data.put("prompt", prompt);
         data.put("clothtype", clothType);
         data.put("expressiontype", expressionType);

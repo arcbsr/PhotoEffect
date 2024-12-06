@@ -151,8 +151,20 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
         });
         spinnerFashion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemSelected(AdapterView<?> adapterView, View v, int i, long l) {
                 selectedRenderItem.clothType = EditingCategories.AITypeFirebaseClothTypeEDB.values()[i];
+                switch (selectedRenderItem.clothType) {
+                    case UPPER:
+                        selectedRenderItem.prompt = "A realistic photo of a model wearing a beautiful t-shirt or dress";
+                        break;
+                    case BOTTOM:
+                        selectedRenderItem.prompt = "A realistic photo of a model wearing a beautiful skirt, trouser or dress";
+                        break;
+                    case NONE:
+                        selectedRenderItem.prompt = "A realistic photo of a model wearing a beautiful dresses";
+                        break;
+                }
+                ((EditText) view.findViewById(R.id.promptEditText)).setText(selectedRenderItem.prompt);
             }
 
             @Override
@@ -168,7 +180,7 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
         });
 
         view.findViewById(R.id.previewImageView).setOnClickListener(v -> {
-            currentAdminImage = System.currentTimeMillis()+"";
+            currentAdminImage = System.currentTimeMillis() + "";
             ImageLoader.getInstance().loadBitmap(currentAdminImage, bitmap);
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), view.findViewById(R.id.previewImageView), "imageTransition");
             Intent intent = new Intent(getContext(), FullscreenImageActivity.class);
@@ -186,7 +198,7 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
                 prompt = "";
             }
             selectedRenderItem.prompt = prompt;
-            currentAdminImage = System.currentTimeMillis()+"";
+            currentAdminImage = System.currentTimeMillis() + "";
             ImageLoader.getInstance().loadBitmap(currentAdminImage, bitmap);
 
             view.findViewById(R.id.animationView).setVisibility(View.VISIBLE);
@@ -233,6 +245,10 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
 //                    return;
                     prompt = "";
                 }
+                String tilte = ((EditText) view.findViewById(R.id.titleEditText)).getText().toString();
+                if (tilte.isEmpty()) {
+                    tilte = selectedRenderItem.getImageCreationType().getValue();
+                }
                 view.findViewById(R.id.animationView).setVisibility(View.VISIBLE);
 //                FireStoreImageUploader.getInstance(this).uploadImage(uri, "featured",
 //                "Transform the image into a cartoon object, maintaining the original colors and textures. "
@@ -243,7 +259,7 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
                 String creationType = selectedRenderItem.getImageCreationType().getValue();
                 CheckBox checkbox = view.findViewById(R.id.ispro);
                 String finalPrompt = prompt;
-                FireStoreImageUploader.getInstance(getContext()).uploadImageToDB(checkbox.isChecked(), bitmap, "featured", prompt,
+                FireStoreImageUploader.getInstance(getContext()).uploadImageToDB(checkbox.isChecked(), bitmap, "featured", tilte, prompt,
                         aiTypeFirebaseDB, selectedRenderItem.getImageCreationType(),
                         spinnerFashion.getVisibility() == View.VISIBLE ? selectedRenderItem.clothType : EditingCategories.AITypeFirebaseClothTypeEDB.NONE,
                         spinnerExpressions.getVisibility() == View.VISIBLE ? selectedRenderItem.expressionType : EditingCategories.AILabExpressionType.NONE,

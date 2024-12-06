@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:background="@drawable/bg_card_rounded"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
     android:orientation="vertical">
 
     <com.github.florent37.expansionpanel.ExpansionHeader

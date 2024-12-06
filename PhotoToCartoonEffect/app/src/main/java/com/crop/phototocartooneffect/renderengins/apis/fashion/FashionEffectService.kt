@@ -128,6 +128,9 @@ class FashionEffectService(
                 if (uploadResponse.isSuccessful && uploadResponse.body() != null) {
                     val uploadResponseBody = uploadResponse.body()!!
                     val imageLink = uploadResponseBody.link
+                    if(image2ImageRequest.prompt!!.isNotEmpty()) {
+                        image2ImageRequest.prompt = "A realistic photo of a model wearing a beautiful dress"
+                    }
                     if (imageLink.isNotEmpty()) {
                         RLog.d("ImageLink:", imageLink)
                         image2ImageRequest.init_image = imageLink

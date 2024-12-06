@@ -47,9 +47,8 @@ public class AppResources {
                             true // Assuming this is always true
                     );
                     menuItem.clothType = image.get("clothtype") != null ? EditingCategories.AITypeFirebaseClothTypeEDB.fromString(image.get("clothtype").toString()) : EditingCategories.AITypeFirebaseClothTypeEDB.NONE;
-                    menuItem.expressionType = image.get("expressiontype") != null ?
-                            EditingCategories.AILabExpressionType.fromString2(image.get("expressiontype").toString()) :
-                            EditingCategories.AILabExpressionType.NONE;
+                    menuItem.title = image.get("title") != null ? image.get("title").toString() : menuItem.getImageCreationType().getValue();
+                    menuItem.expressionType = image.get("expressiontype") != null ? EditingCategories.AILabExpressionType.fromString2(image.get("expressiontype").toString()) : EditingCategories.AILabExpressionType.NONE;
                     menuItem.isPro = image.get("isPro") != null ? (boolean) image.get("isPro") : false;
                     menuItem.documentId = image.get("documentId") != null ? image.get("documentId").toString() : "";
                     final String menutype = image.get("menutype") != null ? image.get("menutype").toString() : "";
@@ -123,8 +122,7 @@ public class AppResources {
             if (!allItems.containsKey(EditingCategories.AITypeFirebaseEDB.USERCREATIONS_BANNER.getValue())) {
                 allItems.put(EditingCategories.AITypeFirebaseEDB.USERCREATIONS_BANNER.getValue(), new ArrayList<>());
             }
-            int diffForBanner = divider - (!allItems.containsKey(EditingCategories.AITypeFirebaseEDB.USERCREATIONS_BANNER.getValue()) ? 0 :
-                    allItems.get(EditingCategories.AITypeFirebaseEDB.USERCREATIONS_BANNER.getValue()).size());
+            int diffForBanner = divider - (!allItems.containsKey(EditingCategories.AITypeFirebaseEDB.USERCREATIONS_BANNER.getValue()) ? 0 : allItems.get(EditingCategories.AITypeFirebaseEDB.USERCREATIONS_BANNER.getValue()).size());
             if (diffForBanner > 0) {
                 for (int i = 0; i < diffForBanner; i++) {
                     allItems.get(EditingCategories.AITypeFirebaseEDB.USERCREATIONS_BANNER.getValue()).add(AppSettings.DEFAULT_ITEM);
@@ -135,15 +133,34 @@ public class AppResources {
 
     }
 
+    public List<MenuItem> getItemsByTitle(String title) {
+        ArrayList<MenuItem> items = new ArrayList<>();
+        if (!allItemsBytitle.containsKey(title)) {
+            return items;
+        }
+        if (allItemsBytitle.get(title).size() == 0) {
+            return items;
+        }
+        return allItemsBytitle.get(title);
+
+    }
+
     public void setItem(MenuItem dataItem, EditingCategories.AITypeFirebaseEDB aiType) {
         if (!allItems.containsKey(aiType.getValue())) {
             allItems.put(aiType.getValue(), new ArrayList<>());
         }
         allItems.get(aiType.getValue()).add(dataItem);
 
+        if (dataItem.title != null && dataItem.title.length() > 0) {
+            if (!allItemsBytitle.containsKey(dataItem.title)) {
+                allItemsBytitle.put(dataItem.title, new ArrayList<>());
+            }
+            allItemsBytitle.get(dataItem.title).add(dataItem);
+        }
     }
 
     HashMap<String, ArrayList<MenuItem>> allItems = new HashMap<>();
+    HashMap<String, ArrayList<MenuItem>> allItemsBytitle = new HashMap<>();
 
     public ArrayList<String> getAllPrompts() {
         return allPrompts;

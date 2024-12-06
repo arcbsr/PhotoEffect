@@ -29,7 +29,7 @@ public class EditingCategories {
     }
 
     public enum AITypeFirebaseClothTypeEDB {
-        NONE("none"), UPPER("upper_body"), BOTTOM("lower_body");
+        NONE("dresses"), UPPER("upper_body"), BOTTOM("lower_body");
 
         private final String value;
 

@@ -7,7 +7,7 @@ open class EffectRequest(
 
 data class FashionEffectRequest(
     val key: String?,
-    val prompt: String?,
+    var prompt: String?,
     val negative_prompt: String?,
     var init_image: String?,
     val cloth_image: String?,

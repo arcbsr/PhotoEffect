@@ -11,7 +11,7 @@ public class MenuItem {
     public EditingCategories.AITypeFirebaseClothTypeEDB clothType = EditingCategories.AITypeFirebaseClothTypeEDB.NONE;
     public EditingCategories.AILabExpressionType expressionType = EditingCategories.AILabExpressionType.NONE;
     private int iconResId;
-    private String title;
+    public String title;
     public Bitmap bitmap;
     private String description;
 
