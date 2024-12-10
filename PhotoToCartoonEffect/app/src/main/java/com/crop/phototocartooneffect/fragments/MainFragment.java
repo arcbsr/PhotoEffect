@@ -16,10 +16,14 @@ import com.crop.phototocartooneffect.adapters.ItemAdapter;
 import com.crop.phototocartooneffect.adapters.ItemAdapterFull;
 import com.crop.phototocartooneffect.dialogfragment.ShowAllBottomFragment;
 import com.crop.phototocartooneffect.enums.EditingCategories;
+import com.crop.phototocartooneffect.models.MenuItem;
 import com.crop.phototocartooneffect.repositories.AppResources;
 import com.crop.phototocartooneffect.utils.AppSettings;
 import com.github.florent37.expansionpanel.ExpansionLayout;
 import com.github.florent37.expansionpanel.viewgroup.ExpansionLayoutCollection;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainFragment extends Fragment {
     private ItemAdapter.OnItemClickListener listener;
@@ -95,6 +99,13 @@ public class MainFragment extends Fragment {
         recyclerView2.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.HORIZONTAL, false));
         recyclerView2.setAdapter(adapter2);
 
+
+        final ExpansionLayoutCollection expansionLayoutCollection = new ExpansionLayoutCollection();
+        HashMap<String, ArrayList<MenuItem>> listHashMap = AppResources.getInstance().getAllItemsBytitleList();
+        for (String key : listHashMap.keySet()) {
+            createTheRecycleView(view, key, expansionLayoutCollection);
+        }
+
         RecyclerView recyclerView3 = item3.findViewById(R.id.recyclerView);
         recyclerView3.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.VERTICAL, false));
         recyclerView3.setAdapter(new ItemAdapterFull(getContext(), listener));
@@ -120,8 +131,6 @@ public class MainFragment extends Fragment {
         recyclerView3.post(new Runnable() {
             @Override
             public void run() {
-
-                final ExpansionLayoutCollection expansionLayoutCollection = new ExpansionLayoutCollection();
                 expansionLayoutCollection.add(item.findViewById(R.id.expansionLayout));
                 expansionLayoutCollection.add(item2.findViewById(R.id.expansionLayout));
                 expansionLayoutCollection.add(item3.findViewById(R.id.expansionLayout));
@@ -131,7 +140,7 @@ public class MainFragment extends Fragment {
         });
     }
 
-    private void createTheRecycleView(View view, String title) {
+    private void createTheRecycleView(View view, String title, ExpansionLayoutCollection expansionLayoutCollection) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View item = inflater.inflate(R.layout.expand_item_layout, null);
         item.findViewById(R.id.show_all_text).setOnClickListener(v -> {
@@ -151,5 +160,6 @@ public class MainFragment extends Fragment {
             item.findViewById(R.id.show_all_text).setVisibility(View.GONE);
 //            item.findViewById(R.id.title_text).setVisibility(View.INVISIBLE);
         }
+        expansionLayoutCollection.add(item.findViewById(R.id.expansionLayout));
     }
 }

@@ -247,7 +247,7 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
                 }
                 String tilte = ((EditText) view.findViewById(R.id.titleEditText)).getText().toString();
                 if (tilte.isEmpty()) {
-                    tilte = selectedRenderItem.getImageCreationType().getValue();
+                    tilte = "";//selectedRenderItem.getImageCreationType().getValue();
                 }
                 view.findViewById(R.id.animationView).setVisibility(View.VISIBLE);
 //                FireStoreImageUploader.getInstance(this).uploadImage(uri, "featured",

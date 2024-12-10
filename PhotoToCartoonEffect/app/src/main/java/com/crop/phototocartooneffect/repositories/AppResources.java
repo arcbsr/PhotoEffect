@@ -47,7 +47,7 @@ public class AppResources {
                             true // Assuming this is always true
                     );
                     menuItem.clothType = image.get("clothtype") != null ? EditingCategories.AITypeFirebaseClothTypeEDB.fromString(image.get("clothtype").toString()) : EditingCategories.AITypeFirebaseClothTypeEDB.NONE;
-                    menuItem.title = image.get("title") != null ? image.get("title").toString() : menuItem.getImageCreationType().getValue();
+                    menuItem.title = image.get("title") != null ? image.get("title").toString() : "";
                     menuItem.expressionType = image.get("expressiontype") != null ? EditingCategories.AILabExpressionType.fromString2(image.get("expressiontype").toString()) : EditingCategories.AILabExpressionType.NONE;
                     menuItem.isPro = image.get("isPro") != null ? (boolean) image.get("isPro") : false;
                     menuItem.documentId = image.get("documentId") != null ? image.get("documentId").toString() : "";
@@ -160,6 +160,11 @@ public class AppResources {
     }
 
     HashMap<String, ArrayList<MenuItem>> allItems = new HashMap<>();
+
+    public HashMap<String, ArrayList<MenuItem>> getAllItemsBytitleList() {
+        return allItemsBytitle;
+    }
+
     HashMap<String, ArrayList<MenuItem>> allItemsBytitle = new HashMap<>();
 
     public ArrayList<String> getAllPrompts() {
