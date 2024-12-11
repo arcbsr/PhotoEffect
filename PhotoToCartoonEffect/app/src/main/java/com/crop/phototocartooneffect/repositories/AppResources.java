@@ -34,6 +34,7 @@ public class AppResources {
 //        String prompt = (String) imageData.get("prompt");
 
         this.allItems.clear();
+        this.allItemsBytitle.clear();
         FireStoreImageUploader.getInstance(context).getAllFeatureImages(new FireStoreImageUploader.GetAllImagesCallback() {
             @Override
             public void onSuccess(List<Map<String, Object>> imagesList) {
@@ -60,6 +61,23 @@ public class AppResources {
 //                        aiType = FireStoreImageUploader.AITYPEFIREBASEDB.FEATUREAI2;
 //                    }
                     setItem(menuItem, EditingCategories.AITypeFirebaseEDB.fromString(menutype));
+                }
+//        if (dataItem.title != null && dataItem.title.length() > 0) {
+//            if (!allItemsBytitle.containsKey(dataItem.title)) {
+//                allItemsBytitle.put(dataItem.title, new ArrayList<>());
+//            }
+//            allItemsBytitle.get(dataItem.title).add(dataItem);
+//        }
+                if (allItems.containsKey(EditingCategories.AITypeFirebaseEDB.UNKNOWN.getValue())) {
+                    for (MenuItem menuItem : allItems.get(EditingCategories.AITypeFirebaseEDB.UNKNOWN.getValue())) {
+                        if (menuItem.title == null || menuItem.title.length() == 0) {
+                            menuItem.title = "Extras";
+                        }
+                        if (!allItemsBytitle.containsKey(menuItem.title)) {
+                            allItemsBytitle.put(menuItem.title, new ArrayList<>());
+                        }
+                        allItemsBytitle.get(menuItem.title).add(menuItem);
+                    }
                 }
                 listener.onFeaturedItemsUpdated();
             }
@@ -150,13 +168,12 @@ public class AppResources {
             allItems.put(aiType.getValue(), new ArrayList<>());
         }
         allItems.get(aiType.getValue()).add(dataItem);
-
-        if (dataItem.title != null && dataItem.title.length() > 0) {
-            if (!allItemsBytitle.containsKey(dataItem.title)) {
-                allItemsBytitle.put(dataItem.title, new ArrayList<>());
-            }
-            allItemsBytitle.get(dataItem.title).add(dataItem);
-        }
+//        if (dataItem.title != null && dataItem.title.length() > 0) {
+//            if (!allItemsBytitle.containsKey(dataItem.title)) {
+//                allItemsBytitle.put(dataItem.title, new ArrayList<>());
+//            }
+//            allItemsBytitle.get(dataItem.title).add(dataItem);
+//        }
     }
 
     HashMap<String, ArrayList<MenuItem>> allItems = new HashMap<>();
