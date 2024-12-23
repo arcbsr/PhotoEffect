@@ -9,11 +9,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -81,7 +84,8 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
             ((ImageView) view.findViewById(R.id.previewImageView)).setImageBitmap(bitmap);
         }
         Spinner spinner = view.findViewById(R.id.typeSpinner);
-        ArrayAdapter<EditingCategories.AITypeFirebaseEDB> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, EditingCategories.AITypeFirebaseEDB.values());
+        ArrayAdapter<EditingCategories.AITypeFirebaseEDB> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item,
+                EditingCategories.AITypeFirebaseEDB.values());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -103,7 +107,8 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
         spinnerExpressions.setVisibility(View.GONE);
 
         Spinner spinner2 = view.findViewById(R.id.modelTypeSpinner);
-        ArrayAdapter<EditingCategories.ImageCreationType> adapter2 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, EditingCategories.ImageCreationType.values());
+        ArrayAdapter<EditingCategories.ImageCreationType> adapter2 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item,
+                EditingCategories.ImageCreationType.values());
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner2.setAdapter(adapter2);
         spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -235,6 +240,31 @@ public class AdminFragmentDialog extends BaseFragmentInterface {
                 }
             }), 1000);
         });
+        AutoCompleteTextView textView = ((AutoCompleteTextView) view.findViewById(R.id.titleEditText));
+        textView.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, AppResources.getInstance().getAllTitles()));
+        textView.setOnItemClickListener((parent, view1, position, id) -> {
+            String selectedTitle = (String) parent.getItemAtPosition(position);
+            selectedRenderItem.title = selectedTitle;
+            ((EditText) view.findViewById(R.id.titleEditText)).setText(selectedTitle);
+        });
+        EditText titleEditText = view.findViewById(R.id.titleEditText);
+        titleEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                 if(s.toString().length() > 0) {
+                     spinner.setSelection(adapter.getPosition(EditingCategories.AITypeFirebaseEDB.UNKNOWN));
+                 }
+            }
+        });
+
         view.findViewById(R.id.submitButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

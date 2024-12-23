@@ -110,6 +110,13 @@ public class AppResources {
         });
     }
 
+    public ArrayList<String> getAllTitles() {
+        ArrayList<String> titles = new ArrayList<>();
+        for (String title : allItemsBytitle.keySet()) {
+            titles.add(title);
+        }
+        return titles;
+    }
     public List<MenuItem> getItems(EditingCategories.AITypeFirebaseEDB aiType) {
         if (!allItems.containsKey(aiType.getValue())) {
             allItems.put(aiType.getValue(), new ArrayList<>());
