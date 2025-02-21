@@ -85,7 +85,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'com.tbuonomo:dotsindicator:5.0'
     implementation 'com.github.Andrew0000:ImagePickerPlus:1.0.3'
-
+    implementation 'com.github.tbruyelle:rxpermissions:0.12'
     implementation 'com.burhanrashid52:photoeditor:3.0.2'
     def lottieVersion = "3.4.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
@@ -107,10 +107,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth:23.1.0'
     implementation 'com.google.firebase:firebase-storage:21.0.1'
+    implementation 'com.android.billingclient:billing:6.0.1'
 
     implementation 'com.google.firebase:firebase-firestore:25.1.1'
     implementation 'com.google.firebase:firebase-analytics:22.1.2'
-
+    implementation 'com.google.android.gms:play-services-mlkit-subject-segmentation:16.0.0-beta1'
     implementation 'com.github.florent37:expansionpanel:1.2.4'
 
     testImplementation 'junit:junit:4.13.2'

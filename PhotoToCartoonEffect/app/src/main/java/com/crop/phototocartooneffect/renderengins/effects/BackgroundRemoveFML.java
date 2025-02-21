@@ -3,8 +3,6 @@ package com.crop.phototocartooneffect.renderengins.effects;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.annotation.NonNull;
 
@@ -18,7 +16,9 @@ import com.google.mlkit.vision.segmentation.SegmentationMask;
 import com.google.mlkit.vision.segmentation.Segmenter;
 import com.google.mlkit.vision.segmentation.selfie.SelfieSegmenterOptions;
 
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 
 public class BackgroundRemoveFML implements ImageEffect {
     private static final String IMAGE_TAG = "BackgroundRemoveFML";
@@ -33,7 +33,47 @@ public class BackgroundRemoveFML implements ImageEffect {
     public void applyEffect(@NonNull Bitmap bitmap, @NonNull ImageEffectCallback callback) {
         callback.onStartProcess();
         InputImage inputImage = InputImage.fromBitmap(bitmap, 0);
-
+//        SubjectSegmenterOptions.SubjectResultOptions subjectResultOptions =
+//                new SubjectSegmenterOptions.SubjectResultOptions.Builder()
+//                        .enableSubjectBitmap()
+//                        .build();
+//        SubjectSegmenterOptions options = new SubjectSegmenterOptions.Builder()
+//                .enableMultipleSubjects(subjectResultOptions)
+//                .build();
+//        SubjectSegmenter segmenter = SubjectSegmentation.getClient(options);
+//        segmenter.process(inputImage)
+//                .addOnSuccessListener(result -> {
+//                    // Task completed successfully
+//                    // ...
+//
+////                    RLog.d(IMAGE_TAG, "Rafiur>>. process: " + result.getSubjects().size());
+////                    if (result.getSubjects().size() > 0) {
+////                        createSegmentedBitmap(bitmap, result.getForegroundConfidenceMask(), callback);
+////                    }
+//                    List<Subject> subjects = result.getSubjects();
+//
+//                    int[] colors = new int[inputImage.getWidth() * inputImage.getHeight()];
+//                    for (Subject subject : subjects) {
+//                        FloatBuffer mask = subject.getConfidenceMask();
+//                        for (int i = 0; i < subject.getWidth() * subject.getHeight(); i++) {
+//                            float confidence = mask.get();
+//                            if (confidence > 0.5f) {
+//                                colors[inputImage.getWidth() * (subject.getStartY() - 1) + subject.getStartX()]
+//                                        = Color.argb(128, 255, 0, 255);
+//                            }
+//                        }
+//                    }
+//
+//                    Bitmap bitmapMask = Bitmap.createBitmap(
+//                            colors, inputImage.getWidth(), inputImage.getHeight(), Bitmap.Config.ARGB_8888
+//                    );
+//                    callback.onSuccess(bitmapMask, System.currentTimeMillis() + "");
+//                })
+//                .addOnFailureListener(e -> {
+//                    // Task failed with an exception
+//                    // ...
+//                    callback.onError(e);
+//                });
         Segmentation.getClient(new SelfieSegmenterOptions.Builder().setDetectorMode(SelfieSegmenterOptions.SINGLE_IMAGE_MODE).build()).process(inputImage).addOnSuccessListener(new OnSuccessListener<SegmentationMask>() {
             @Override
             public void onSuccess(SegmentationMask segmentationResult) {
@@ -83,5 +123,49 @@ public class BackgroundRemoveFML implements ImageEffect {
             callback.onSuccess(outputBitmap, System.currentTimeMillis() + "");
         }).start();
     }
+    private void createSegmentedBitmap(final Bitmap originalBitmap, final FloatBuffer maskBuffer, ImageEffectCallback callback) {
+        final int width = originalBitmap.getWidth();
+        final int height = originalBitmap.getHeight();
+        final Bitmap outputBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+        // Rewind the FloatBuffer to ensure reading starts from the beginning
+        maskBuffer.rewind();
+
+        // Check if the buffer has enough elements (width * height)
+        if (maskBuffer.remaining() < width * height) {
+            callback.onError(new IllegalArgumentException("Buffer does not have enough data for the image size"));
+            return;
+        }
+
+        new Thread(() -> {
+            try {
+                // Iterate over the image pixels
+                for (int y = 0; y < height; y++) {
+                    for (int x = 0; x < width; x++) {
+                        // Get the mask value from the FloatBuffer
+                        float maskValue = maskBuffer.get();
+
+                        // If the mask value is greater than 0.5f, retain the pixel from the original image, otherwise make it transparent
+                        if (maskValue > 0.5f) {
+                            outputBitmap.setPixel(x, y, originalBitmap.getPixel(x, y));
+                        } else {
+                            outputBitmap.setPixel(x, y, Color.TRANSPARENT);
+                        }
+                    }
+                }
+
+                // Use the ImageLoader to load the bitmap (or any other method you prefer)
+                ImageLoader.getInstance().loadBitmap(System.currentTimeMillis() + "", outputBitmap);
+
+                // Notify the callback with the segmented image
+                callback.onSuccess(outputBitmap, System.currentTimeMillis() + "");
+            } catch (BufferUnderflowException e) {
+                // Handle buffer underflow (if reading more data than the buffer contains)
+                callback.onError(new Exception(e.getMessage()));
+            }
+        }).start();
+    }
+
+
 }
 

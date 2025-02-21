@@ -1,31 +1,25 @@
 package com.crop.phototocartooneffect.activities;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
-import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.crop.phototocartooneffect.BuildConfig;
+import com.airbnb.lottie.BuildConfig;
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.firabsehelper.AnalyticsHelper;
-import com.crop.phototocartooneffect.firabsehelper.FireStoreImageUploader;
-import com.crop.phototocartooneffect.models.MenuItem;
 import com.crop.phototocartooneffect.repositories.AppResources;
 import com.crop.phototocartooneffect.utils.RLog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -122,24 +116,36 @@ public class MainActivity extends AppCompatActivity {
             checkPermission();
         });
     }
-
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    AnalyticsHelper.getInstance(MainActivity.this).
+                            logEvent("startapp", "permission_granted");
+                    startActivity(new Intent(MainActivity.this, ImageAiActivity.class));
+                    finish();
+                } else {
+                    findViewById(R.id.permission_view).setVisibility(View.VISIBLE);
+                    findViewById(R.id.loading_view).setVisibility(View.GONE);
+                }
+            });
     private void checkPermission() {
-        permissionAccess.checkRequestStoragePermission(this, new PermissionAccess.PermissionCallback() {
-            @Override
-            public void onPermissionGranted() {
-                AnalyticsHelper.getInstance(MainActivity.this).
-                        logEvent("startapp", "permission_granted");
-                startActivity(new Intent(MainActivity.this, ImageAiActivity.class));
-                finish();
-            }
-
-
-            @Override
-            public void onPermissionDenied() {
-                findViewById(R.id.permission_view).setVisibility(View.VISIBLE);
-                findViewById(R.id.loading_view).setVisibility(View.GONE);
-            }
-        });
+        requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES);
+//        permissionAccess.checkRequestStoragePermission(this, new PermissionAccess.PermissionCallback() {
+//            @Override
+//            public void onPermissionGranted() {
+//                AnalyticsHelper.getInstance(MainActivity.this).
+//                        logEvent("startapp", "permission_granted");
+//                startActivity(new Intent(MainActivity.this, ImageAiActivity.class));
+//                finish();
+//            }
+//
+//
+//            @Override
+//            public void onPermissionDenied() {
+//                findViewById(R.id.permission_view).setVisibility(View.VISIBLE);
+//                findViewById(R.id.loading_view).setVisibility(View.GONE);
+//            }
+//        });
     }
 
     @Override
