@@ -26,6 +26,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.crop.phototocartooneffect.BuildConfig;
 import com.crop.phototocartooneffect.R;
 import com.crop.phototocartooneffect.adapters.ItemAdapter;
+import com.crop.phototocartooneffect.animationmodels.NormalFrameDrawingStrategy;
 import com.crop.phototocartooneffect.dialogfragment.AdminFragmentDialog;
 import com.crop.phototocartooneffect.dialogfragment.ErrorDialog;
 import com.crop.phototocartooneffect.dialogfragment.LoadingDialog;

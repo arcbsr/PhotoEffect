@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.crop.phototocartooneffect"
     xmlns:tools="http://schemas.android.com/tools"
+    package="com.crop.phototocartooneffect"
     tools:ignore="CoarseFineLocation">
+
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
@@ -35,6 +36,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.ChattingActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="subject_segment" />
@@ -43,17 +48,14 @@
             android:value="imgseg" />
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
-            android:value="subject_segment" />
-        <!-- To use multiple models: android:value="subject_segment,model2,model3" -->
+            android:value="subject_segment" /> <!-- To use multiple models: android:value="subject_segment,model2,model3" -->
         <activity
             android:name=".activities.ImageAiActivity"
             android:exported="false" />
         <activity
             android:name=".photoediting.EditImageActivity"
             android:exported="true"
-            android:theme="@style/AppTheme">
-
-        </activity>
+            android:theme="@style/AppTheme"></activity>
         <activity
             android:name=".popeffect.color_splash_tool.ColorSplashActivity"
             android:exported="false"

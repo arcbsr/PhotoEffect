@@ -121,7 +121,8 @@ public class MainActivity extends AppCompatActivity {
                 if (isGranted) {
                     AnalyticsHelper.getInstance(MainActivity.this).
                             logEvent("startapp", "permission_granted");
-                    startActivity(new Intent(MainActivity.this, ImageAiActivity.class));
+//                    startActivity(new Intent(MainActivity.this, ImageAiActivity.class));
+                    startActivity(new Intent(MainActivity.this, ChattingActivity.class));
                     finish();
                 } else {
                     findViewById(R.id.permission_view).setVisibility(View.VISIBLE);

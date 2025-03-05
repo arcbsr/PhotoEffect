@@ -4,9 +4,8 @@
 
     <corners android:radius="@dimen/btn_radius" />
     <gradient
-        android:angle="90"
-        android:endColor="@color/btn_pressed_colorAccentLight"
-        android:centerColor="@color/btn_pressed_colorAccent"
-        android:startColor="@color/btn_pressed_colorAccent" />
+        android:angle="0"
+        android:endColor="#43387E"
+        android:startColor="#6E4C85" />
 
 </shape>

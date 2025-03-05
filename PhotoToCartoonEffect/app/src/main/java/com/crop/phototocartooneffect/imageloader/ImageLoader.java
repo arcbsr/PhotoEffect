@@ -182,6 +182,7 @@ public class ImageLoader {
         }
     }
 
+
     public void loadBitmap(Context context, Uri uri, int position, OnImageLoadedListener listener) {
         loadBitmap(context, uri, position, listener, false);
 
@@ -191,6 +192,28 @@ public class ImageLoader {
 
         String key2 = "original";
 //                System.currentTimeMillis() + "_" + position;
+        if (newImage) {
+            bitmapCache.clearCache();
+        }
+        Bitmap cachedBitmap = bitmapCache.getBitmapFromCache(key2);
+
+        if (cachedBitmap != null) {
+            listener.onImageLoaded(cachedBitmap, key2, position);
+        } else {
+            Glide.with(context).asBitmap().load(uri).into(new com.bumptech.glide.request.target.SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, com.bumptech.glide.request.transition.Transition<? super Bitmap> transition) {
+                    bitmapCache.addBitmapToCache(key2, resource);
+                    listener.onImageLoaded(resource, key2, position);
+                }
+            });
+        }
+
+    }
+
+    public void loadBitmapWithOriginalIndex(Context context, Uri uri, int position, boolean newImage, OnImageLoadedListener listener) {
+
+        String key2 = "original_" + System.currentTimeMillis() + "_" + position;
         if (newImage) {
             bitmapCache.clearCache();
         }
